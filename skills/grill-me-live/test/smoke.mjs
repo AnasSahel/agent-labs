@@ -99,6 +99,30 @@ try {
   assert.ok(snap.includes("window.__GRILL_SNAPSHOT__"));
   assert.ok(!snap.includes('src="d3.min.js"'));
 
+  // Receipt: settle the tree the way the agent would, then check how each decision is attributed.
+  fs.writeFileSync(path.join(dir, "state.json"), JSON.stringify({
+    ...state,
+    session: { ...state.session, round: 2, status: "done" },
+    nodes: {
+      a: { ...state.nodes.a, status: "settled", answer: "Yes" },
+      b: { ...state.nodes.b, status: "settled", answer: "Actually maybe" },
+      c: { ...state.nodes.c, status: "dropped", reason: "Out of scope" },
+      d: { title: "Under c", status: "waiting", parent: "c", seq: 4 },
+    },
+  }));
+  const md = grill("receipt");
+  assert.match(md, /# Receipt: Smoke test idea/);
+  assert.match(md, /\*\*Q1·R1 First\*\*: Yes _\(recommendation accepted\)_/);
+  assert.match(md, /\*\*Q2·R1 Second\*\*: Actually maybe _\(your words\)_/);
+  assert.match(md, /~~Later~~: Out of scope/);
+  assert.match(md, /Also dropped with their parent: Under c/);
+  assert.ok(fs.existsSync(path.join(dir, "receipt.html")) && fs.existsSync(path.join(dir, "receipt.md")));
+  const receiptPage = await fetch(base + "/receipt");
+  assert.equal(receiptPage.status, 200);
+  const receiptBody = await receiptPage.text();
+  assert.match(receiptBody, /Decision receipt/);
+  assert.match(receiptBody, /Shared understanding confirmed/);
+
   assert.match(grill("status"), /Running/);
   console.log("smoke test passed");
 } catch (e) {
