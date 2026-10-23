@@ -24,13 +24,13 @@ When the tracker has no tool in this session, say so and stop. With no issue, de
 
 ## Steps
 
-1. **Load.** Find the tracker (named in the request → the repo's `AGENTS.md`, `CLAUDE.md` or README → an `intent/` folder → none). Read the intent (`intent/<id>-<slug>.md`, from the factory-plan skill): its problem, success, scope and constraints bind the spec, and its open questions are yours to answer. Read the issue and every comment, the code it touches, the README, docs, existing screens and related specs in `specs/`. Collect the **rules**: the built-in security, risk and privacy reviewers, every rule the repo's `AGENTS.md` or `CLAUDE.md` names, and each file in `rules/` (`rules/risk-context.md` aside: it's the risk agent's context, not a rule). Read two settings there too: the review **rounds** (`factory-design: review rounds <n>`, 1 by default) and the **threshold** (`factory-design: ask from <low | medium | high>`, `medium` by default). Done when you can name who is affected, which code areas change, and every rule.
+1. **Load.** Find the tracker (named in the request → the repo's `AGENTS.md`, `CLAUDE.md` or README → an `intent/` folder → none). Read the intent (`intent/<id>-<slug>.md`, from the factory-plan skill): its problem, success, scope and constraints bind the spec, and its open questions are yours to answer. Read the issue and every comment, the code it touches, the README, docs, existing screens and related specs in `specs/`. Collect the **rules**: the built-in security, risk and privacy reviewers, every rule the repo's `AGENTS.md` or `CLAUDE.md` names, and each file in `rules/` (`rules/risk-context.md` aside: it's the risk agent's context, not a rule). Read three settings there too: the review **rounds** (`factory-design: review rounds <n>`, 1 by default), the **threshold** (`factory-design: ask from <low | medium | high>`, `medium` by default) and the **frames** (`factory-design: frames text` for text only, text and mockup by default). Done when you can name who is affected, which code areas change, and every rule.
 
 2. **Define what.** Problem and users in 2 to 4 sentences. When the change is size `M` or bigger, 2 to 5 goals and non-goals. Acceptance criteria AC1, AC2… as Given / When / Then: one behaviour each, observable results, numbers instead of adjectives. Done when a test author could write a failing test for each without asking anything.
 
 3. **Define how.** For the main choice, 2 or 3 options with what each costs and risks; pick one and say why. Weigh what each would leave for the user to decide: prefer the option that leaves fewer decisions, when it meets the intent as well. Follow the stack and conventions already in the code; an option that changes them says so. Then the **structure** (files or modules to add or change, the criteria each serves), the **data** (tables, fields, routes, settings, with names and types, or "None."), and the **build order** (every criterion, the foundation first, one line on why). Done when a developer knows where each criterion's code goes, and in which order.
 
-4. **Frames.** When the change adds or alters a screen, hand the `ui-designer` the criteria, the approach and the paths of the existing screens. Add its assumptions to yours. For a process with several actors, draw a Mermaid `flowchart` yourself, one `subgraph` per actor. Done when each screen state a criterion names has a frame, or there's no screen.
+4. **Frames.** When the change adds or alters a screen, hand the `ui-designer` the criteria, the approach, the paths of the existing screens and their styles, and, unless frames are text only, the mockup path `specs/<id>-<slug>/frames.html`. Add its assumptions to yours. When a headless browser is at hand (Playwright, Chrome), render the mockup to `specs/<id>-<slug>/frames.png`. When an answer in step 6 changes a screen, hand the `ui-designer` the change to redraw it. For a process with several actors, draw a Mermaid `flowchart` yourself, one `subgraph` per actor. Done when each screen state a criterion names has a frame, or there's no screen.
 
 5. **Review.** Hand every reviewer, in parallel, the **draft** (steps 2 to 4) and the code paths: `security`, `risk` (with `rules/risk-context.md` when it exists) and `privacy` always, `rule-reviewer` once per repo rule with that rule's text. Number the findings F1, F2… in one list, each with the reviewer it came from. Findings that describe the same harm are one finding, its `From` naming each reviewer: each still checks its answer. Add their notes to your assumptions or open questions. Done when every reviewer has answered.
 
@@ -38,7 +38,7 @@ When the tracker has no tool in this session, say so and stop. With no issue, de
    - a **constraint** C1, C2…: the safe behaviour the code must keep, where it lives, and the test that checks it through a public entry point (a page, a route, a command, a file); fold any change it needs into steps 2 to 4; status `open`.
    - `needs-decision`, with the question and your recommended answer, when only a person can settle it (a retention period, a legal basis, a trade-off with the intent).
 
-   A constraint that closes only part of a finding is kept, and the rest is `needs-decision`. When an answer changes a screen, update its frames and say so.
+   A constraint that closes only part of a finding is kept, and the rest is `needs-decision`.
 
    A finding below the threshold that no simple constraint closes is `accepted` by default, with "below threshold": the user set that bar, and can reopen it at the gate.
 
@@ -46,7 +46,7 @@ When the tracker has no tool in this session, say so and stop. With no issue, de
 
 7. **Split.** Look for 2 to 4 groups of criteria that each give users something that works on its own. Propose a split when the change is size `L`, or when the change has a `high` finding and a group carries none, so it could ship with less scrutiny. For each part, in build order (safest first): title, problem in one sentence, size, its criteria and findings by ID, the parts it comes after. A criterion that spans parts is reworded so each part tests its share alone, written in full and marked `(reworded)`. Done when every criterion and finding has a part, or there's no split.
 
-8. **Publish.** Write `specs/<id>-<slug>.md`, with the intent's id and slug, using the template below, and commit it on the default branch (a pull request when the repo forbids that). Comment on the issue with the comment template, criteria in full, editing that comment in place when it exists, and label it `needs-design`.
+8. **Publish.** Write `specs/<id>-<slug>.md`, with the intent's id and slug, using the template below, and commit it with the mockup and its image on the default branch (a pull request when the repo forbids that). Comment on the issue with the comment template, criteria in full, the mockup's image when there is one, editing that comment in place when it exists, and label it `needs-design`.
 
    **Public repo or tracker** (or unknown): no finding ever reaches it. The committed spec and the comment keep the constraints as plain requirements, with no `For` column, but drop the Findings section and the "Questions for you" count, and say "Review notes kept privately."; write the findings to the private path the repo's `AGENTS.md` or `CLAUDE.md` names, otherwise `~/.claude/factory-design/<repo>/<id>-<slug>.md`, and say where in the reply.
 
@@ -101,7 +101,9 @@ status: <needs-design | designed>
 
 ## Frames
 
-<the ui-designer's frames, or the flowchart; drop when there's neither>
+Mockup: [frames.html](<id>-<slug>/frames.html) <and its image, when rendered>
+
+<the ui-designer's text frames, or the flowchart; drop the section when there's neither>
 
 ## Constraints
 
@@ -145,6 +147,8 @@ Status is `open` (a constraint answers it, waiting for code), `needs-decision` (
 - Then <observable result>
 
 </details>
+
+<when there's a mockup:> ![Frames](<link to frames.png>) · [mockup](<link to frames.html>)
 
 <when a split is proposed:> **Split proposed** into <n> parts: <part titles>.
 
