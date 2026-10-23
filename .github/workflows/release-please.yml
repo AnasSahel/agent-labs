@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   release-please:
-    if: github.event_name == 'workflow_dispatch' || startsWith(github.event.head_commit.message, 'chore: release')
+    if: "github.event_name == 'workflow_dispatch' || startsWith(github.event.head_commit.message, 'chore: release')"
     runs-on: ubuntu-latest
     steps:
       - uses: googleapis/release-please-action@v4
