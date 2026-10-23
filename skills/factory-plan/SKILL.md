@@ -3,7 +3,7 @@ name: factory-plan
 description: Plan phase. Turn a bug, idea or request into an intent — the problem in the originator's words, brainstormed until concrete — committed to the repo as intent/<id>-<slug>.md and tracked by an issue in any tracker (GitHub, Linear, Plane, a folder in the repo…), one per feature that ships on its own, after the user's go. Use when someone brings a new bug, idea or request.
 metadata:
   author: Anas Sahel
-  version: 2.0.0
+  version: 1.0.0 # x-release-please-version
   credits: Plan phase of Anthropic's AI-native SDLC playbook (https://claude.com/resources/articles/the-ai-native-sdlc-playbook)
 ---
 
