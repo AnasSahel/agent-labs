@@ -18,7 +18,7 @@ The skill works with any **tracker**. It needs five operations: read an issue wi
 |---|---|
 | GitHub | `gh` CLI, with `--repo <owner/name>` |
 | Linear, Plane, Jira… | its MCP server or CLI, when one is connected |
-| Files | the intent file is the issue: its state (`needs-design`, `designed`, `split`) is its front matter `status`, never a label; comment by appending `## Comment` with the template's body under it (edit that section in place); a part is its own intent file with `parent: <id>` |
+| Files | the intent file is the issue: its state (`needs-design`, `designed`, `split`) is its front matter `status`, never a label; comment by appending `## Comment` with the template's body under it, its own heading dropped (edit that section in place); a part is its own intent file with `parent: <id>` |
 
 When the tracker has no tool in this session, say so and stop. With no issue, design from the intent or the conversation and skip the tracker.
 
@@ -40,7 +40,7 @@ When the tracker has no tool in this session, say so and stop. With no issue, de
 
    Then hand each reviewer, as a fresh subagent, its findings answered by a constraint (its check mode). Revise the answers it marks not closed and check again, up to the rounds from step 1; a finding still not closed, or answered after the last check, becomes `needs-decision` with that answer as your recommendation. Done when every finding is `open` with a closed constraint, or `needs-decision`.
 
-7. **Split.** Look for 2 to 4 groups of criteria that each give users something that works on its own. Propose a split when the change is size `L`, or when a group carries no `high` finding and could ship with less scrutiny. For each part, in build order (safest first): title, problem in one sentence, size, its criteria and findings by ID, the parts it comes after. A criterion that spans parts is reworded so each part tests its share alone, written in full and marked `(reworded)`. Done when every criterion and finding has a part, or there's no split.
+7. **Split.** Look for 2 to 4 groups of criteria that each give users something that works on its own. Propose a split when the change is size `L`, or when the change has a `high` finding and a group carries none, so it could ship with less scrutiny. For each part, in build order (safest first): title, problem in one sentence, size, its criteria and findings by ID, the parts it comes after. A criterion that spans parts is reworded so each part tests its share alone, written in full and marked `(reworded)`. Done when every criterion and finding has a part, or there's no split.
 
 8. **Publish.** Write `specs/<id>-<slug>.md`, with the intent's id and slug, using the template below, and commit it on the default branch (a pull request when the repo forbids that). Comment on the issue with the comment template, criteria in full, editing that comment in place when it exists, and label it `needs-design`.
 
