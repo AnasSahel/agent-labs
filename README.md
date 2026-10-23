@@ -24,5 +24,5 @@ Each skill has its own version, changelog and tags (`<skill>-v<version>`), manag
 
 - Commit with [Conventional Commits](https://www.conventionalcommits.org), scoped by the skill: `fix(factory-plan): …` bumps the patch, `feat(factory-plan): …` the minor, `feat(factory-plan)!: …` the major. `docs`, `chore`, `ci` bump nothing.
 - The bump goes to every skill whose folder the commit touches: keep one skill per commit.
-- Pushing to `main` releases nothing. When you want a release, run `gh workflow run release-please.yml --repo AnasSahel/agent-labs`: it opens one PR, "chore: release skills", with every skill changed since its last release (version in `SKILL.md` and `version.txt`, `CHANGELOG.md`). Merging it tags each skill and publishes its GitHub release.
+- Pushing to `main` releases nothing. When you want a release, run `gh workflow run release-please.yml --repo AnasSahel/agent-labs`: it opens one PR, "chore: release main", with every skill changed since its last release (version in `SKILL.md` and `version.txt`, `CHANGELOG.md`). Merging it tags each skill and publishes its GitHub release.
 - A new skill: add its folder to `release-please-config.json` only, with `version: 1.0.0` and the marker in its `SKILL.md`. Its first release PR is `1.0.0` and adds it to `.release-please-manifest.json`. A renamed skill is a new skill.
