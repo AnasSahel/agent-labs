@@ -3,7 +3,7 @@ name: factory-brainstorm
 description: Brainstorm an idea, plan or decision with the user until it's concrete enough to write down, in short rounds of questions with recommended answers, then a builder check that ends it, and keeps a trace of every question and answer. Works inside the current project's limits or outside them. Use when the user wants to brainstorm, explore an idea, think something through or flesh it out, or before writing an intent or a spec.
 metadata:
   author: Anas Sahel
-  version: 2.0.0
+  version: 1.0.0 # x-release-please-version
   credits: Structure and stop rules adapted from obra's superpowers brainstorming (https://github.com/obra/superpowers), MIT. Rounds with recommended answers from Matt Pocock's grilling (https://github.com/mattpocock/skills), MIT.
 ---
 

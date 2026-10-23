@@ -5,13 +5,13 @@ argument-hint: "What should the skill do? (or a path to an existing SKILL.md)"
 disable-model-invocation: true
 metadata:
   author: Anas Sahel
-  version: 1.0.0
+  version: 1.0.0 # x-release-please-version
   credits: Method adapted from Matt Pocock's writing-for-agents (https://github.com/mattpocock/skills)
 ---
 
 Write a `SKILL.md` the agent follows the same way every run, in as few lines as it takes. The method is Matt Pocock's [writing-for-agents](https://github.com/mattpocock/skills/tree/main/skills/productivity/writing-for-agents).
 
-If the argument is a path to an existing skill, read it: this run is a **rewrite**, and the version gets bumped.
+If the argument is a path to an existing skill, read it: this run is a **rewrite**.
 
 ## Steps
 
@@ -52,7 +52,7 @@ metadata:
 ---
 </frontmatter-template>
 
-`version` is semver. A new skill starts at `1.0.0`. On a rewrite: patch when only wording changes, minor when a step or branch is added, major when invocation, arguments or output change.
+`version` is never edited by hand: release-please bumps it from the commits that touch the skill's folder (see the README). A new skill starts at `1.0.0`: keep the release-please marker comment on its `version` line, add a `version.txt`, and register the folder in `release-please-config.json` and `.release-please-manifest.json`.
 
 ## Rules
 
