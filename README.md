@@ -8,6 +8,7 @@ Skills and agents for Claude Code.
 - [factory-brainstorm](skills/factory-brainstorm/SKILL.md): brainstorm an idea until it's concrete, inside the current project's limits or outside them: rounds of up to 3 questions with recommended answers, then one builder check that ends it, with a trace of every question and answer. Adapted from [obra's superpowers brainstorming](https://github.com/obra/superpowers/blob/main/skills/brainstorming/SKILL.md) and [Matt Pocock's grilling](https://github.com/mattpocock/skills/blob/main/skills/productivity/grilling/SKILL.md).
 - [factory-plan](skills/factory-plan/SKILL.md): Plan phase. Brainstorm a bug, idea or request into an intent in your words, committed as `intent/<id>-<slug>.md` and tracked in any tracker (GitHub, Linear, Plane, files), after your go. Follows the Plan phase of [Anthropic's AI-native SDLC playbook](https://claude.com/resources/articles/the-ai-native-sdlc-playbook).
 - [spec](skills/spec/SKILL.md): turn an issue into a spec with Given/When/Then criteria, a security risk level, a sketch and an optional split, in any tracker, after your approval.
+- [grill-me-live](skills/grill-me-live/README.md): get grilled on an idea while its decision tree grows live in your browser: answer on the page or in chat, and dropped branches fade with everything under them. Runs a small local server (Node). Interview method from [Matt Pocock's grilling](https://github.com/mattpocock/skills/blob/main/skills/productivity/grilling/SKILL.md).
 
 ## Versioning
 
