@@ -8,7 +8,7 @@ metadata:
   agents: [ui-designer, security, risk, privacy, rule-reviewer]
 ---
 
-Turn an **intent** (or an issue) into a **spec**: what to build and how, in one session, with the project's rules applied while it's written. Work unattended: never ask the user anything before the gate. Each unknown gets the plainest default, written down as an **assumption** the user can correct at the gate.
+Turn an **intent** (or an issue) into a **spec**: what to build and how, in one session, with the project's rules applied while it's written. Work unattended: never ask anyone anything before the gate. That's why another skill or a job (a CI run when an intent lands on the default branch, for instance) can start it. Each unknown gets the plainest default, written down as an **assumption** the user can correct at the gate.
 
 The spec is written by you, the **designer**. Specialized agents in this skill's `agents/` folder do the rest: the `ui-designer` draws frames, the reviewers (`security`, `risk`, `privacy`, `rule-reviewer`) raise **findings**. Start each as a fresh subagent with its file as its instructions. Reviewers never write fixes and you never judge your own: that keeps the review independent.
 
@@ -24,7 +24,7 @@ When the tracker has no tool in this session, say so and stop. With no issue, de
 
 ## Steps
 
-1. **Load.** Find the tracker (named in the request → the repo's `AGENTS.md`, `CLAUDE.md` or README → an `intent/` folder → none). Read the intent (`intent/<id>-<slug>.md`, from the factory-plan skill): its problem, success, scope and constraints bind the spec, and its open questions are yours to answer. Read the issue and every comment, the code it touches, the README, docs, existing screens and related specs in `specs/`. Collect the **rules**: the built-in security, risk and privacy reviewers, every rule the repo's `AGENTS.md` or `CLAUDE.md` names, and each file in `rules/` (`rules/risk-context.md` aside: it's the risk agent's context, not a rule). Read three settings there too: the review **rounds** (`factory-design: review rounds <n>`, 1 by default), the **threshold** (`factory-design: ask from <low | medium | high>`, `medium` by default) and the **frames** (`factory-design: frames text` for text only, text and mockup by default). Done when you can name who is affected, which code areas change, and every rule.
+1. **Load.** Find the tracker (named in the request → the repo's `AGENTS.md`, `CLAUDE.md` or README → an `intent/` folder → none). Read the intent (`intent/<id>-<slug>.md`, from the factory-plan skill): its problem, success, scope and constraints bind the spec, and its open questions are yours to answer. Read the issue and every comment, the code it touches, the README, docs, existing screens and related specs in `specs/`. Collect the **rules**: the built-in security, risk and privacy reviewers, every rule the repo's `AGENTS.md` or `CLAUDE.md` names, and each file in `rules/` (`rules/risk-context.md` aside: it's the risk agent's context, not a rule). Read the settings there too: the review **rounds** (`factory-design: review rounds <n>`, 1 by default), the **threshold** (`factory-design: ask from <low | medium | high>`, `medium` by default), the **frames** (`factory-design: frames text` for text only, text and mockup by default), and the **owners**: who settles each reviewer's questions (`factory-design: owner <security | risk | privacy> <who>`, or `owner:` in a rule file's front matter) and the **tech lead** (`factory-design: tech lead <who>`). Anyone unnamed is the user. Done when you can name who is affected, which code areas change, and every rule.
 
 2. **Define what.** Problem and users in 2 to 4 sentences. When the change is size `M` or bigger, 2 to 5 goals and non-goals. Acceptance criteria AC1, AC2… as Given / When / Then: one behaviour each, observable results, numbers instead of adjectives. Done when a test author could write a failing test for each without asking anything.
 
@@ -42,19 +42,19 @@ When the tracker has no tool in this session, say so and stop. With no issue, de
 
    A finding below the threshold that no simple constraint closes is `accepted` by default, with "below threshold": the user set that bar, and can reopen it at the gate.
 
-   Then hand each reviewer, as a fresh subagent, its findings answered by a constraint (its check mode). Revise the answers it marks not closed and check again, up to the rounds from step 1; a new finding raised in check mode is answered like the others; a finding still not closed, or answered after the last check, becomes `needs-decision` with that answer as your recommendation (below the threshold: `accepted`, "below threshold"). Done when every finding is `open` with a closed constraint, or `needs-decision`.
+   Then fold every answer into the draft, and hand each reviewer, as a fresh subagent, the revised draft and its findings answered by a constraint (its check mode). A merged finding is closed only when each of its reviewers closes it. Revise the answers it marks not closed and check again, up to the rounds from step 1; a new finding raised in check mode is answered like the others; a finding still not closed, or answered after the last check, becomes `needs-decision` with that answer as your recommendation (below the threshold: `accepted`, "below threshold"). Done when every finding is `open` with a closed constraint, or `needs-decision`.
 
 7. **Split.** Look for 2 to 4 groups of criteria that each give users something that works on its own. Propose a split when the change is size `L`, or when the change has a `high` finding and a group carries none, so it could ship with less scrutiny. For each part, in build order (safest first): title, problem in one sentence, size, its criteria and findings by ID, the parts it comes after. A criterion that spans parts is reworded so each part tests its share alone, written in full and marked `(reworded)`. Done when every criterion and finding has a part, or there's no split.
 
 8. **Publish.** Write `specs/<id>-<slug>.md`, with the intent's id and slug, using the template below, and commit it with the mockup and its image on the default branch (a pull request when the repo forbids that). Comment on the issue with the comment template, criteria in full, the mockup's image when there is one, editing that comment in place when it exists, and label it `needs-design`.
 
-   **Public repo or tracker** (or unknown): no finding ever reaches it. The committed spec and the comment keep the constraints as plain requirements, with no `For` column, but drop the Findings section and the "Questions for you" count, and say "Review notes kept privately."; write the findings to the private path the repo's `AGENTS.md` or `CLAUDE.md` names, otherwise `~/.claude/factory-design/<repo>/<id>-<slug>.md`, and say where in the reply.
+   **Public repo or tracker** (or unknown): no finding ever reaches it. The committed spec and the comment keep the constraints as plain requirements, with no `For` column, but drop the Findings section and the questions, and say "Review notes kept privately."; write the findings to the private path the repo's `AGENTS.md` or `CLAUDE.md` names, otherwise `~/.claude/factory-design/<repo>/<id>-<slug>.md`, and say where in the reply.
 
    Done when the spec is committed and the issue shows the comment and `needs-design`.
 
-9. **Gate.** When the user is in the conversation, show in one message: the spec's link, the criteria, the chosen approach, the frames, then four lists: **assumptions**, the questions for them (one question per decision, covering every finding it settles, each with your recommended answer), findings accepted below the threshold, and the split. They can approve, change, or reject; "yes" approves and takes every recommended answer. A finding they settle becomes a constraint, a scope change, or `accepted` (with the date: only the user accepts a risk). Approval waits until no finding is `needs-decision`. On a change, revise from the step it touches and show again; on reject, keep their reason under Open questions and return to step 2. On approval, label the issue `designed` (an approved split: create each part as its own issue linked to the parent, labelled `designed`, and the parent `split`) and commit the updated spec. When no user is in the conversation, stop at `needs-design`: the gate runs when the user later answers.
+9. **Gate.** When the user is in the conversation, show in one message: the spec's link, the criteria, the chosen approach, the frames, then four lists: **assumptions**, the **questions** (one per decision, covering every finding it settles, each with its owner and your recommended answer), findings accepted below the threshold, and the split. A question's **owners** are the owners of the reviewers that raised its findings; a `high` finding's question also goes to the tech lead, who must agree. Each owner answers their own questions, in the conversation or on the issue (read its comments); the user answers the rest and decides the spec: approve, change, or reject. "yes" takes every recommended answer the speaker owns. A settled finding becomes a constraint, a scope change, or `accepted` (with the date and who accepted it: only an owner accepts a risk). Approval waits until no finding is `needs-decision`. On a change, revise from the step it touches and show again; on reject, keep their reason under Open questions and return to step 2. On approval, label the issue `designed` (an approved split: create each part as its own issue linked to the parent, labelled `designed`, and the parent `split`) and commit the updated spec. When no one is in the conversation, stop at `needs-design`: the gate runs when the owners and the user later answer.
 
-Reply with the links (issue, spec, each part) and where it stands: `designed`, `split`, or `needs-design` with what waits for the user.
+Reply with the links (issue, spec, each part) and where it stands: `designed`, `split`, or `needs-design` with what waits, and for whom.
 
 <spec-template>
 
@@ -111,17 +111,19 @@ Mockup: [frames.html](<id>-<slug>/frames.html) <and its image, when rendered>
 |---|---|---|---|---|
 | C1 | F1 | <safe behaviour, one line> | <file or module> | <how a test checks it> |
 
+A constraint you recommend in a question is listed too, its ID marked `(proposed, Q<n>)` until the question is settled.
+
 ## Findings
 
 | ID | From | Finding | Level | Answer | Status |
 |---|---|---|---|---|---|
 | F1 | security | <effect, never an attack> | <level> | C1 | open |
 
-Status is `open` (a constraint answers it, waiting for code), `needs-decision` (waits for the user), `mitigated` (a test proves its constraint), `accepted` (by the user with the date, or "below threshold") or `dropped` (the scope changed). "No finding." when there's none.
+Status is `open` (a constraint answers it, waiting for code), `needs-decision` (waits for its owner), `mitigated` (a test proves its constraint), `accepted` (by its owner, with the date, or "below threshold") or `dropped` (the scope changed). A finding partly answered carries both, e.g. `open (C1) · needs-decision (Q2)`. "No finding." when there's none.
 
-## Questions for you
+## Questions
 
-<one per decision: the question, the findings it settles, your recommended answer; "None." when nothing waits>
+<one per decision: **Q1 · @owner** (and the tech lead, for a high finding): the question, the findings it settles, your recommended answer; "None." when nothing waits>
 
 ## Assumptions
 
@@ -140,7 +142,7 @@ Status is `open` (a constraint answers it, waiting for code), `needs-decision` (
 
 ## Spec
 
-**Criteria** <n> · **Constraints** <n> · **Questions for you** <n> · **Spec** <link or path>
+**Criteria** <n> · **Constraints** <n> · **Questions** <n> · **Spec** <link or path>
 
 <details>
 <summary>Criteria (<n>)</summary>
@@ -153,6 +155,8 @@ Status is `open` (a constraint answers it, waiting for code), `needs-decision` (
 </details>
 
 <when there's a mockup:> ![Frames](<link to frames.png>) · [mockup](<link to frames.html>)
+
+<when questions wait:> **Waiting for** <each owner, mentioned in the tracker's way>: Q1, Q2…
 
 <when a split is proposed:> **Split proposed** into <n> parts: <part titles>.
 
