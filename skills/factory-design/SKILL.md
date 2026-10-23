@@ -32,7 +32,7 @@ When the tracker has no tool in this session, say so and stop. With no issue, de
 
 4. **Frames.** When the change adds or alters a screen, hand the `ui-designer` the criteria, the approach, the paths of the existing screens and their styles, and, unless frames are text only, the mockup path `specs/<id>-<slug>/frames.html`. Add its assumptions to yours. When a headless browser is at hand (Playwright, Chrome), render the mockup to `specs/<id>-<slug>/frames.png`. When an answer in step 6 changes a screen, hand the `ui-designer` the change to redraw it. For a process with several actors, draw a Mermaid `flowchart` yourself, one `subgraph` per actor. Done when each screen state a criterion names has a frame, or there's no screen.
 
-5. **Review.** Hand every reviewer, in parallel, the **draft** (steps 2 to 4) and the code paths: `security`, `risk` (with `rules/risk-context.md` when it exists) and `privacy` always, `rule-reviewer` once per repo rule with that rule's text. Number the findings F1, F2… in one list, each with the reviewer it came from. Findings that describe the same harm are one finding, its `From` naming each reviewer: each still checks its answer. Add their notes to your assumptions or open questions. Done when every reviewer has answered.
+5. **Review.** Hand every reviewer, in parallel, the **draft** (steps 2 to 4) and the code paths: `security`, `risk` (with `rules/risk-context.md` when it exists) and `privacy` always, `rule-reviewer` once per repo rule with that rule's text. Number the findings F1, F2… in one list, each with the reviewer it came from. Findings that describe the same harm are one finding, its `From` naming each reviewer and its level the highest: each of them checks its answer. Add their notes to your assumptions or open questions. Done when every reviewer has answered.
 
 6. **Answer.** For each finding, either:
    - a **constraint** C1, C2…: the safe behaviour the code must keep, where it lives, and the test that checks it through a public entry point (a page, a route, a command, a file); fold any change it needs into steps 2 to 4; status `open`.
@@ -118,6 +118,10 @@ Mockup: [frames.html](<id>-<slug>/frames.html) <and its image, when rendered>
 | F1 | security | <effect, never an attack> | <level> | C1 | open |
 
 Status is `open` (a constraint answers it, waiting for code), `needs-decision` (waits for the user), `mitigated` (a test proves its constraint), `accepted` (by the user with the date, or "below threshold") or `dropped` (the scope changed). "No finding." when there's none.
+
+## Questions for you
+
+<one per decision: the question, the findings it settles, your recommended answer; "None." when nothing waits>
 
 ## Assumptions
 
