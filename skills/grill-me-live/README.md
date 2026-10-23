@@ -57,3 +57,22 @@ node skills/grill-me-live/test/smoke.mjs
 ```
 
 Covers the page, live updates, the request guards, answering, Send and `wait`, and snapshots.
+
+## Evals
+
+`evals/` holds a [`claude plugin eval`](https://code.claude.com/docs/en/plugin-evals) suite that checks how an agent follows the skill:
+
+| Case | What it checks |
+|---|---|
+| `first-round` | Starts the server, writes a valid `.grill/state.json`, waits for Send in the background, posts round 1 with Q numbers matching the tree and questions a "yes" can accept |
+| `answers-from-page` | Reads answers sent from the page, archives them, settles accepts and pushback, drops with a reason, never deletes a node, and builds round 2 on the answers |
+| `remote-session` | When the browser can't reach `localhost`, grills in chat without starting the server, still records the tree, and offers a snapshot |
+
+```
+skills/grill-me-live/evals/run.sh            # all cases, 3 runs each
+skills/grill-me-live/evals/run.sh --runs 1 --case first-round
+```
+
+`run.sh` wraps the skill in a throwaway plugin (this repo isn't one) and runs the suite with a Sonnet judge. The cases grant Bash, so the runner needs Claude Code's OS sandbox: run it as a normal user, and on Linux install `bubblewrap` and `socat`. Results go to `evals/results/` (git-ignored).
+
+In a headless run, the background `wait` keeps the session open until the case's `timeout_seconds`, because nobody presses Send. The round has been posted and the tree written by then, which is what the graders check.

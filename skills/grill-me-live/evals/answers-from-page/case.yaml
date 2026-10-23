@@ -1,0 +1,52 @@
+schema_version: "1.1"
+name: answers-from-page
+description: The user answered round 1 on the page and pressed Send. The agent reads those answers, settles, drops and reshapes the tree, and posts round 2.
+tags: [core]
+context:
+  scaffold_script: scaffold.sh
+execution:
+  max_turns: 40
+  timeout_seconds: 420
+  allowed_tools: [Bash, Write, Edit, Read, Glob, Grep, Skill]
+  prompt: |
+    /grill-me-live:grill-me-live We're mid-session: round 1 is in .grill/state.json. I answered on the page and pressed Send. (I'm running you in my own terminal; my browser is on this machine.)
+graders:
+  - name: read-page-answers
+    type: tool_used
+    tool: Bash
+    input_match: '^(?=.*grill\.mjs)(?=.*\b(answers|wait)\b)'
+  - name: archived-round-1
+    type: file_exists
+    path: .grill/history/round-1-answers.json
+  - name: state-is-round-2
+    type: regex
+    pattern: '"session"\s*:\s*\{[^}]*"round"\s*:\s*2\b'
+    target: { source: file, path: .grill/state.json }
+  - name: accepted-why-settled
+    type: regex
+    pattern: '"why"\s*:\s*\{(?=[^}]*"status"\s*:\s*"settled")'
+    target: { source: file, path: .grill/state.json }
+  - name: pushback-form-settled
+    type: regex
+    pattern: '"form"\s*:\s*\{(?=[^}]*"status"\s*:\s*"settled")(?=[^}]*(PWA|home screen|phone))'
+    flags: i
+    target: { source: file, path: .grill/state.json }
+  - name: schedule-dropped-with-reason
+    type: regex
+    pattern: '"schedule"\s*:\s*\{(?=[^}]*"status"\s*:\s*"dropped")(?=[^}]*"reason"\s*:\s*"[^"]+")'
+    target: { source: file, path: .grill/state.json }
+  - name: no-node-deleted
+    type: regex
+    pattern: '"(why|form|types|schedule|streaks|reminders|storage)"\s*:\s*\{'
+    match: "count:7"
+    target: { source: file, path: .grill/state.json }
+  - name: round-2-builds-on-answers
+    type: llm
+    weight: 2
+    focus: last_message
+    criteria: |
+      The user answered round 1 of a habit-tracker grilling on a web page: accepted "why build it", answered "A phone-first PWA I can add to my home screen; no CLI" for the platform question, accepted "done/not done only", and dropped the scheduling question ("Everything is daily for me"). PASS only if the reply:
+      - acknowledges these answers (briefly) including the drop,
+      - asks a new round 2 of numbered questions (Q1, Q2, …), each with a recommended answer,
+      - does not re-ask any of the four settled or dropped questions,
+      - asks at least one question that follows from the PWA / phone-first answer (for example hosting, offline use, installing it, reminders on a phone, or where data is stored on the device).
