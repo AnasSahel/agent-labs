@@ -3,7 +3,7 @@ name: spec
 description: Turn an issue or a request into a spec — what to build and why, with Given/When/Then acceptance criteria, a security risk level and a sketch, and a split into smaller issues when parts can ship apart — then wait for the user's approval. Works with any tracker (GitHub, Linear, Plane, a folder in the repo…). Use when the user asks to spec, scope or split an issue.
 metadata:
   author: Anas Sahel
-  version: 1.0.0
+  version: 1.0.0 # x-release-please-version
 ---
 
 Turn an **issue** into a **spec**: what to build and why, in the user's words. How to build it comes later; the spec never names a solution the user didn't ask for.
