@@ -4,6 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Grill Tree</title>
+<script>
+  // Apply a saved theme before first paint; with nothing saved the page follows the system setting.
+  try { const t = localStorage.getItem("grill-tree-theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (_) {}
+</script>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,6 +30,7 @@
   --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
   --frontier-wash: color-mix(in srgb, var(--frontier) 9%, var(--panel));
   --dropped-wash: color-mix(in srgb, var(--dropped) 6%, var(--paper));
+  color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
@@ -85,6 +90,17 @@ body {
 }
 .state-pill[data-state="done"] { border-color: var(--settled); color: var(--settled); }
 .state-pill[data-state="idle"] { border-color: var(--line); color: var(--muted); }
+.theme-btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  font: 500 12px var(--font-mono); color: var(--ink); background: var(--panel);
+  border: 1px solid var(--line); border-radius: 4px; padding: 5px 10px; cursor: pointer;
+}
+.theme-btn:hover { border-color: var(--ink); }
+.theme-btn:focus-visible { outline: 2px solid var(--frontier); outline-offset: 2px; }
+/* The dot shows the mode: half-filled follows the system, hollow is light, filled is dark. */
+.theme-btn i { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid var(--ink); box-sizing: border-box; }
+.theme-btn[data-mode="system"] i { background: linear-gradient(90deg, var(--ink) 50%, transparent 50%); }
+.theme-btn[data-mode="dark"] i { background: var(--ink); }
 
 /* ---------- main ---------- */
 main { display: grid; grid-template-columns: minmax(0, 1fr) 340px; min-height: 0; }
@@ -300,6 +316,7 @@ main { display: grid; grid-template-columns: minmax(0, 1fr) 340px; min-height: 0
     <span class="lbl">Round</span><span class="num" id="roundNum">0</span>
   </div>
   <span class="state-pill" id="statePill" data-state="idle">Not started</span>
+  <button type="button" class="theme-btn" id="themeBtn" data-mode="system"><i aria-hidden="true"></i><span id="themeText">System</span></button>
 </header>
 
 <main>
@@ -405,6 +422,23 @@ main { display: grid; grid-template-columns: minmax(0, 1fr) 340px; min-height: 0
   $("followBtn").onclick = () => { setFollow(!follow); if (follow) fit(); };
   $("fitBtn").onclick = () => { setFollow(true); fit(true); };
   $("dClose").onclick = () => select(null);
+
+  // Theme: System (follow the OS) → Light → Dark. Remembered per browser.
+  const THEMES = ["system", "light", "dark"];
+  const THEME_LABEL = { system: "System", light: "Light", dark: "Dark" };
+  function setTheme(mode, save) {
+    if (mode === "system") delete document.documentElement.dataset.theme;
+    else document.documentElement.dataset.theme = mode;
+    const btn = $("themeBtn");
+    const next = THEMES[(THEMES.indexOf(mode) + 1) % THEMES.length];
+    btn.dataset.mode = mode;
+    $("themeText").textContent = THEME_LABEL[mode];
+    btn.setAttribute("aria-label", `Theme: ${THEME_LABEL[mode]}. Switch to ${THEME_LABEL[next]}`);
+    btn.title = `Switch to ${THEME_LABEL[next].toLowerCase()} theme`;
+    if (save) { try { localStorage.setItem("grill-tree-theme", mode); } catch (_) {} }
+  }
+  setTheme(document.documentElement.dataset.theme || "system", false);
+  $("themeBtn").onclick = () => setTheme(THEMES[(THEMES.indexOf($("themeBtn").dataset.mode) + 1) % THEMES.length], true);
   function setOrient(o) {
     orient = o;
     $("vertBtn").setAttribute("aria-pressed", String(o === "v"));

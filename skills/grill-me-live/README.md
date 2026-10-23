@@ -22,6 +22,7 @@ you ── chat ──▶ agent ── writes ──▶ .grill/state.json
 - On the page: **Accept** the recommendation, **Answer** in your own words, or **Drop** the question, then **Send answers**.
 - The agent waits on `grill.mjs wait`, which returns your answers as soon as you press Send. You don't type "next".
 - `.grill/` stays in your project as the record of every decision, with each round's answers in `.grill/history/`.
+- The page follows your system's light or dark setting. The button at the top right switches between **System**, **Light** and **Dark**, and the browser remembers your choice.
 
 ## Install
 
