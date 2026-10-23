@@ -4,10 +4,10 @@
   "release-type": "simple",
   "include-component-in-tag": true,
   "separate-pull-requests": true,
-  "pull-request-title-pattern": "chore: release ${component} ${version}",
+  "pull-request-title-pattern": "chore: release${component} ${version}",
   "packages": {
     "skills/write-skill": { "component": "write-skill", "extra-files": ["SKILL.md"] },
-    "skills/brainstorm": { "component": "brainstorm", "extra-files": ["SKILL.md"] },
+    "skills/factory-brainstorm": { "component": "factory-brainstorm", "extra-files": ["SKILL.md"] },
     "skills/factory-plan": { "component": "factory-plan", "extra-files": ["SKILL.md"] },
     "skills/spec": { "component": "spec", "extra-files": ["SKILL.md"] }
   }
