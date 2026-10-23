@@ -96,6 +96,7 @@ body {
   border: 1px solid var(--line); border-radius: 4px; padding: 5px 10px; cursor: pointer;
 }
 .theme-btn:hover { border-color: var(--ink); }
+a.theme-btn { text-decoration: none; }
 .theme-btn:focus-visible { outline: 2px solid var(--frontier); outline-offset: 2px; }
 /* The dot shows the mode: half-filled follows the system, hollow is light, filled is dark. */
 .theme-btn i { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid var(--ink); box-sizing: border-box; }
@@ -316,6 +317,7 @@ main { display: grid; grid-template-columns: minmax(0, 1fr) 340px; min-height: 0
     <span class="lbl">Round</span><span class="num" id="roundNum">0</span>
   </div>
   <span class="state-pill" id="statePill" data-state="idle">Not started</span>
+  <a class="theme-btn" id="receiptLink" href="receipt" target="_blank" rel="noopener" title="Every decision so far, settled or dropped, and how it was made">Receipt</a>
   <button type="button" class="theme-btn" id="themeBtn" data-mode="system"><i aria-hidden="true"></i><span id="themeText">System</span></button>
 </header>
 
@@ -914,6 +916,7 @@ main { display: grid; grid-template-columns: minmax(0, 1fr) 340px; min-height: 0
   render();
   if (window.__GRILL_SNAPSHOT__) {
     canAnswer = false;
+    $("receiptLink").hidden = true; // served by the local server only
     setLive("idle", "Snapshot");
     applyPayload(window.__GRILL_SNAPSHOT__);
   } else {
