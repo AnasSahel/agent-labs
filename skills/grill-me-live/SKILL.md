@@ -33,7 +33,7 @@ Format a round in chat like so:
 ➡️ <your recommended answer>
 ```
 
-Word each question so "yes" accepts your recommended answer.
+Word each question so "yes" accepts your recommended answer: list any options first, then end the question with one yes/no question that proposes your recommendation ("Should it be a web app you install on your phone?"). A bare "A, B or C?" can't be answered with yes.
 
 Each round the user answers reshapes the tree: settled decisions push the frontier outward and unblock questions that depended on them. Recompute the frontier and ask the next round. A question whose answer depends on another question still open in this round belongs to a _later_ round, not this one.
 
@@ -56,16 +56,18 @@ Below, `grill.mjs` means `node <this skill's directory>/scripts/grill.mjs`, with
 ### Every round
 
 1. **Write the tree first.** Rewrite `.grill/state.json` with the new round: bump `session.round`; settle or drop what the user just answered; mark this round's frontier `open` with `round` and `q` numbers matching the chat; add the decisions you can already see downstream as `waiting` with `blockedBy`; mark facts being looked up as `research`; append events. The format is in [reference/state-format.md](reference/state-format.md). Read it before the first write.
-2. **Post the round in chat**, in the format above, and add one line: they can answer here or on the page and press **Send answers**.
-3. **Collect answers.** Run `grill.mjs wait`. It returns when the user presses Send on the page, printing each answer with its question, and clears the page for the next round.
-   - In Claude Code, run it in the background: you are woken when it exits, and the user can still type in chat meanwhile.
-   - Elsewhere, run it in the foreground. It exits after `--timeout` seconds (default 540) with code 2 and "No answers sent yet"; run it again.
+2. **Start listening for the page.** `grill.mjs wait` returns when the user presses Send, printing each answer with its question, and locks the page until the next round.
+   - In Claude Code, start it with the Bash tool's background option, as the plain command (no `&`, no `nohup`). It returns at once and wakes you when it exits; the user can still type in chat meanwhile.
+   - Elsewhere, run it in the foreground after step 3. It exits after `--timeout` seconds (default 540) with code 2 and "No answers sent yet"; run it again.
+3. **Post the round in chat** as the last thing in your turn, in the format above, ending with one line: they can answer here or on the page and press **Send answers**. Nothing after it: the round is what the user reads.
+4. **Take the answers.**
+   - When the background `wait` wakes you with answers, use them. When it wakes you with "No answers sent yet", start it again and post nothing in chat.
    - If the user answers in chat instead, use their chat answers, then run `grill.mjs answers --consume` to pick up anything they also saved on the page. Chat wins where the two disagree.
-4. **Interpret the answers.**
-   - `ACCEPTED`: the user took your recommendation.
-   - `ANSWERED`: their own words. Treat them as a real answer, and often as pushback that reshapes the tree, with new branches and moved prerequisites.
-   - `DROP`: mark the node `dropped` with their reason. Its subtree is pruned on the page automatically.
-   - Unanswered questions stay `open` and are asked again next round.
+   - Read each answer:
+     - `ACCEPTED`: the user took your recommendation.
+     - `ANSWERED`: their own words. Treat them as a real answer, and often as pushback that reshapes the tree, with new branches and moved prerequisites.
+     - `DROP`: mark the node `dropped` with their reason. Its subtree is pruned on the page automatically.
+     - Unanswered questions stay `open` and are asked again next round.
 5. Recompute the frontier and go back to step 1.
 
 When a sub-agent reports a fact, settle the `research` node with what it found, and unblock or reshape what depended on it.
