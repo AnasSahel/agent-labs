@@ -36,7 +36,9 @@ Reply with the **summary**: the destination's fields as settled, the approach pi
 
 ## Trace
 
-Keep a **trace** as you go: every question, its recommended answer, the answer and who settled it, so anyone can see later why the result is what it is. Write it to the path the caller gives; standalone, offer to save it to `docs/brainstorms/<YYYY-MM-DD>-<slug>.md`. Number questions across rounds (Q1, Q2…), and give each the questions it depends on, so the table reads as the decision tree. **Settled by** is one of: `user` (in their words), `yes` (accepted the recommendation), `call` (minor, you decided), `fact` (looked up, with its source), `builder` (raised by the builder check).
+Keep a **trace** as you go: every question, its recommended answer, the answer and who settled it, so anyone can see later why the result is what it is. Write it to the path the caller gives. When the caller gives none yet (its file name isn't known until later), hand the trace back with the summary and let the caller write it. Standalone, offer to save it to `docs/brainstorms/<YYYY-MM-DD>-<slug>.md`.
+
+Number every question Q1, Q2… across rounds, with no other ids, and give each the questions it depends on, so the table reads as the decision tree. Facts you looked up and calls you made get a row too. **Round** is the round number, or `builder` for a question the builder check raised. **Settled by** is exactly one of: `user` (in their words), `yes` (accepted the recommendation), `call` (minor, you decided), `fact: <source>` (looked up). The approach picked goes in the Approaches table, not in a row.
 
 <trace-template>
 
@@ -51,7 +53,7 @@ destination: <what had to be settled>
 
 | # | Round | Question | Recommended | Answer | Settled by | Depends on |
 |---|---|---|---|---|---|---|
-| Q1 | 1 | <question> | <recommended> | <answer> | <user · yes · call · fact: source · builder> | — |
+| Q1 | <1 · 2… · builder> | <question> | <recommended> | <answer> | <user · yes · call · fact: source> | — |
 
 ## Approaches
 
