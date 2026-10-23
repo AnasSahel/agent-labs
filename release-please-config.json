@@ -8,6 +8,7 @@
   "packages": {
     "skills/write-skill": { "component": "write-skill", "extra-files": ["SKILL.md"] },
     "skills/brainstorm": { "component": "brainstorm", "extra-files": ["SKILL.md"] },
-    "skills/factory-plan": { "component": "factory-plan", "extra-files": ["SKILL.md"] }
+    "skills/factory-plan": { "component": "factory-plan", "extra-files": ["SKILL.md"] },
+    "skills/spec": { "component": "spec", "extra-files": ["SKILL.md"] }
   }
 }

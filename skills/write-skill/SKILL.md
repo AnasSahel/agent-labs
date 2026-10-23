@@ -52,7 +52,7 @@ metadata:
 ---
 </frontmatter-template>
 
-`version` is never edited by hand: release-please bumps it from the commits that touch the skill's folder (see the README). A new skill starts at `1.0.0`: keep the release-please marker comment on its `version` line, add a `version.txt`, and register the folder in `release-please-config.json` and `.release-please-manifest.json`.
+`version` is never edited by hand: release-please bumps it from the commits that touch the skill's folder (see the README). A new skill starts at `1.0.0`: keep the release-please marker comment on its `version` line, add a `version.txt`, and register the folder in `release-please-config.json` only: its first release adds it to `.release-please-manifest.json`.
 
 ## Rules
 
