@@ -75,6 +75,7 @@ When a sub-agent reports a fact, settle the `research` node with what it found, 
 ### Finish
 
 - When the frontier is empty, set `session.status` to `confirming`, summarise the decisions in chat, and ask the user to confirm shared understanding. After they confirm, set it to `done`.
+- Hand over the receipt: `grill.mjs receipt` writes `.grill/receipt.html` and `.grill/receipt.md` (every decision, settled or dropped, why, and whether the user accepted your recommendation or answered in their own words) and prints the Markdown. Post that Markdown in chat as the session's summary and point the user to the HTML file. The page's **Receipt** link shows the same thing at any time.
 - Offer a shareable copy: `grill.mjs snapshot` writes one self-contained HTML file with the whole tree, read-only and offline.
 - Stop the server: `grill.mjs stop`.
 

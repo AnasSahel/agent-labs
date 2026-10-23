@@ -6,6 +6,7 @@
 //   node grill.mjs wait [--timeout 540]           block until the user presses Send, print answers
 //   node grill.mjs answers [--consume]            print answers saved on the page so far
 //   node grill.mjs snapshot [--out file.html]     write a self-contained, read-only copy of the tree
+//   node grill.mjs receipt                        write .grill/receipt.html + .md: every decision and how it was made
 //   node grill.mjs status | stop
 //
 // Every command takes --dir (default: .grill in the current directory).
@@ -16,6 +17,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { spawn } from "node:child_process";
 import { fileURLToPath } from "node:url";
+import { buildReceipt, receiptHtml, receiptMarkdown } from "./receipt.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const ASSETS = path.join(HERE, "..", "assets");
@@ -245,6 +247,17 @@ const commands = {
     console.log(`Snapshot written: ${out}`);
   },
 
+  async receipt() {
+    ensureDir();
+    const state = readJSON(STATE, null);
+    if (!state) throw new Error(`Can't read ${STATE}`);
+    const r = buildReceipt(state, HISTORY);
+    fs.writeFileSync(path.join(DIR, "receipt.html"), receiptHtml(r));
+    fs.writeFileSync(path.join(DIR, "receipt.md"), receiptMarkdown(r));
+    console.log(receiptMarkdown(r));
+    console.log(`Receipt written: ${path.join(DIR, "receipt.html")} and receipt.md`);
+  },
+
   async status() {
     const s = readJSON(SERVER, null);
     if (s && pidAlive(s.pid)) console.log(`Running: ${s.url} (pid ${s.pid})`);
@@ -300,6 +313,11 @@ async function handle(req, res, ctx) {
     }
     if (url.pathname === "/d3.min.js") {
       return send(res, 200, fs.readFileSync(path.join(ASSETS, "d3.min.js")), "text/javascript; charset=utf-8");
+    }
+    if (url.pathname === "/receipt") {
+      const state = readJSON(STATE, null);
+      if (!state) return send(res, 409, "The tree is being updated. Reload in a moment.", "text/plain; charset=utf-8");
+      return send(res, 200, receiptHtml(buildReceipt(state, HISTORY)), "text/html; charset=utf-8");
     }
     if (url.pathname === "/api/state") return send(res, 200, ctx.payload() || {});
     if (url.pathname === "/api/events") {
