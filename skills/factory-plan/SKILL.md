@@ -3,7 +3,7 @@ name: factory-plan
 description: Plan phase. Turn a bug, idea or request into an intent — the problem in the originator's words, brainstormed until concrete — committed to the repo as intent/<id>-<slug>.md and tracked by an issue in any tracker (GitHub, Linear, Plane, a folder in the repo…), one per feature that ships on its own, after the user's go. Use when someone brings a new bug, idea or request.
 metadata:
   author: Anas Sahel
-  version: 2.0.0
+  version: 2.1.0
   credits: Plan phase of Anthropic's AI-native SDLC playbook (https://claude.com/resources/articles/the-ai-native-sdlc-playbook)
 ---
 
@@ -27,7 +27,7 @@ When the tracker has no tool in this session, say so and stop.
 
 2. **Brainstorm.** Restate the request as the **problem**: who is affected and what goes wrong. When the request proposes a solution, keep it as evidence. Fill **title**, **problem**, **why now**, **success looks like** (what the affected people can do once it's solved, observable, never a solution), **out of scope**, **evidence** (logs, links, screenshots) and **source** (`user`, or `agent:<name>`). Keep the originator's words wherever they're clear.
 
-   When the user made the request and the `brainstorm` skill is installed, call it with these fields as its destination, scope inside (the problem lives in this project) and approaches skipped (an intent names no solution), and take its summary as the draft. Otherwise, run this short version: ask what the request and the code can't answer: at most 3 questions per round, each with a proposed default, and the draft built on those defaults beside them, so one answer settles both. Go round after round until each field is concrete; stop asking when the user says go. When another agent made the request, ask nothing: leave what it didn't say as `[to fill]`.
+   When the user made the request and the `factory-brainstorm` skill is installed, call it with these fields as its destination, its trace kept for step 7, scope inside (the problem lives in this project) and approaches skipped (an intent names no solution), and take its summary as the draft. Otherwise, run this short version: ask what the request and the code can't answer: at most 3 questions per round, each with a proposed default, and the draft built on those defaults beside them, so one answer settles both. Go round after round until each field is concrete; stop asking when the user says go. When another agent made the request, ask nothing: leave what it didn't say as `[to fill]`.
 
    When the request holds several problems that each ship on their own, draft one intent each and carry each through the next steps. Done when each problem fits in three sentences without naming a solution, and success looks like something you could check.
 
@@ -39,11 +39,11 @@ When the tracker has no tool in this session, say so and stop.
 
 6. **Publish the issue.** Create each issue with its kind, priority and size: the tracker's native field when it has one (Linear's priority, for instance), labels `kind:<kind>`, `priority:<priority>`, `size:<size>` otherwise. Reuse existing labels; create only the missing ones, so existing ones keep their colors. Done when each issue exists and you have its id.
 
-7. **Commit the intent.** Write `intent/<id>-<slug>.md` with the template below, and commit it on the default branch. Name it this way:
+7. **Commit the intent.** Write `intent/<id>-<slug>.md` with the template below and, when factory-brainstorm ran, its trace next to it as `intent/<id>-<slug>.decisions.md`, linked from the intent's `## Decisions`. Commit them on the default branch. Name it this way:
    - `<id>`: the issue's id as the tracker shows it, without `#`: `42` on GitHub, `ENG-42` on Linear or Jira, `WEB-42` on Plane. For files, the next free 3-digit number in `intent/` (`007`).
    - `<slug>`: from the title, lowercase, accents dropped (`é` → `e`), punctuation dropped, filler words dropped (articles, prepositions, auxiliaries: a, the, of, is, when, le, de, est…), at most 5 words joined by `-`. "Notes are lost when the page is reloaded" → `notes-lost-page-reloaded`.
 
-   When the repo's rules or a protected branch forbid committing on the default branch, open a pull request with it instead: its merge is the acceptance. Then replace the issue's body with a pointer: the problem's first sentence and the link to the intent. Done when the intent is committed (or its PR is open) and the issue links it.
+   When the repo's rules or a protected branch forbid committing on the default branch, open a pull request with it instead: its merge is the acceptance. Then replace the issue's body with a pointer: the problem's first sentence and the link to the intent. Done when the intent (and its trace) is committed, or its PR is open, and the issue links it.
 
 Reply with each issue's link and its intent's, or `needs-go` when it waits for the user.
 
@@ -80,5 +80,9 @@ status: <files only: open>
 ## Evidence
 
 <logs, links, screenshots; the original proposal when the request came as a solution>
+
+## Decisions
+
+<link to intent/<id>-<slug>.decisions.md, when factory-brainstorm ran; otherwise drop this section>
 
 </intent-template>
