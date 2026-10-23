@@ -7,6 +7,7 @@ Skills and agents for Claude Code.
 - [write-skill](skills/write-skill/SKILL.md): draft a new skill, or rewrite an existing one, short and built on leading words. Method adapted from [Matt Pocock's skills](https://github.com/mattpocock/skills).
 - [brainstorm](skills/brainstorm/SKILL.md): brainstorm an idea until it's concrete, inside the current project's limits or outside them: rounds of up to 3 questions with recommended answers, then one builder check that ends it. Adapted from [obra's superpowers brainstorming](https://github.com/obra/superpowers/blob/main/skills/brainstorming/SKILL.md) and [Matt Pocock's grilling](https://github.com/mattpocock/skills/blob/main/skills/productivity/grilling/SKILL.md).
 - [factory-plan](skills/factory-plan/SKILL.md): Plan phase. Brainstorm a bug, idea or request into an intent in your words, committed as `intent/<id>-<slug>.md` and tracked in any tracker (GitHub, Linear, Plane, files), after your go. Follows the Plan phase of [Anthropic's AI-native SDLC playbook](https://claude.com/resources/articles/the-ai-native-sdlc-playbook).
+- [spec](skills/spec/SKILL.md): turn an issue into a spec with Given/When/Then criteria, a security risk level, a sketch and an optional split, in any tracker, after your approval.
 
 ## Versioning
 
@@ -15,4 +16,4 @@ Each skill has its own version, changelog and tags (`<skill>-v<version>`), manag
 - Commit with [Conventional Commits](https://www.conventionalcommits.org), scoped by the skill: `fix(spec): …` bumps the patch, `feat(spec): …` the minor, `feat(spec)!: …` the major. `docs`, `chore`, `ci` bump nothing.
 - The bump goes to every skill whose folder the commit touches: keep one skill per commit.
 - After a merge to `main`, release-please opens one release PR per changed skill (version in `SKILL.md` and `version.txt`, `CHANGELOG.md`). Merging it tags the release.
-- A new skill: add its folder to `release-please-config.json` and `.release-please-manifest.json` at `1.0.0`.
+- A new skill: add its folder to `release-please-config.json` only, with `version: 1.0.0` and the marker in its `SKILL.md`. Its first release PR is `1.0.0` and adds it to `.release-please-manifest.json`. A renamed skill is a new skill.
