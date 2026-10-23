@@ -41,7 +41,7 @@ When the tracker has no tool in this session, say so and stop.
 
 7. **Commit the intent.** Write `intent/<id>-<slug>.md` with the template below, and commit it on the default branch. Name it this way:
    - `<id>`: the issue's id as the tracker shows it, without `#`: `42` on GitHub, `ENG-42` on Linear or Jira, `WEB-42` on Plane. For files, the next free 3-digit number in `intent/` (`007`).
-   - `<slug>`: from the title, lowercase, accents dropped (`é` → `e`), punctuation dropped, filler words dropped (a, the, of, le, la, de…), at most 5 words joined by `-`. "Notes are lost when the page is reloaded" → `notes-lost-page-reloaded`.
+   - `<slug>`: from the title, lowercase, accents dropped (`é` → `e`), punctuation dropped, filler words dropped (articles, prepositions, auxiliaries: a, the, of, is, when, le, de, est…), at most 5 words joined by `-`. "Notes are lost when the page is reloaded" → `notes-lost-page-reloaded`.
 
    When the repo's rules or a protected branch forbid committing on the default branch, open a pull request with it instead: its merge is the acceptance. Then replace the issue's body with a pointer: the problem's first sentence and the link to the intent. Done when the intent is committed (or its PR is open) and the issue links it.
 
