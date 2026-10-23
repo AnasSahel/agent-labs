@@ -4,11 +4,10 @@
   "release-type": "simple",
   "include-component-in-tag": true,
   "separate-pull-requests": false,
-  "group-pull-request-title-pattern": "chore: release skills",
   "packages": {
     "skills/write-skill": { "component": "write-skill", "extra-files": ["SKILL.md"] },
     "skills/factory-brainstorm": { "component": "factory-brainstorm", "extra-files": ["SKILL.md"] },
-    "skills/factory-plan": { "component": "factory-plan", "extra-files": ["SKILL.md"], "release-as": "1.1.0" },
+    "skills/factory-plan": { "component": "factory-plan", "extra-files": ["SKILL.md"] },
     "skills/factory-design": { "component": "factory-design", "extra-files": ["SKILL.md"] },
     "skills/grill-me-live": { "component": "grill-me-live", "extra-files": ["SKILL.md"] }
   }
