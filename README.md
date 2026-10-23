@@ -18,5 +18,5 @@ Each skill has its own version, changelog and tags (`<skill>-v<version>`), manag
 - Commit with [Conventional Commits](https://www.conventionalcommits.org), scoped by the skill: `fix(spec): …` bumps the patch, `feat(spec): …` the minor, `feat(spec)!: …` the major. `docs`, `chore`, `ci` bump nothing.
 - The bump goes to every skill whose folder the commit touches: keep one skill per commit.
 - After a merge to `main`, release-please opens one release PR per changed skill (version in `SKILL.md` and `version.txt`, `CHANGELOG.md`). Merging it tags the release.
-- A new skill: add its folder to `release-please-config.json` and `.release-please-manifest.json` at `1.0.0`.
+- A new skill: add its folder to `release-please-config.json` only, with `version: 1.0.0` and the marker in its `SKILL.md`. Its first release PR is `1.0.0` and adds it to `.release-please-manifest.json`. A renamed skill is a new skill.
 >>>>>>> origin/main
