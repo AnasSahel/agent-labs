@@ -20,7 +20,7 @@ When the tracker has no tool in this session, say so and stop. When the request 
 
 ## Steps
 
-1. **Load.** Find the tracker (named in the request → the repo's `AGENTS.md`, `CLAUDE.md` or README → an `issues/` folder → ask). Read the issue and every comment, so you don't re-ask what's answered, and its intent when it links one (`intent/<id>-<slug>.md`, from the factory-plan skill): the reference for the problem, success and scope. Read the code it touches, the README and docs, and related issues. Done when you can name who is affected and which code areas change.
+1. **Load.** Find the tracker (named in the request → the repo's `AGENTS.md`, `CLAUDE.md` or README → an `issues/` folder → ask). Read the issue and every comment, so you don't re-ask what's answered, and its intent when it links one (`intent/<id>-<slug>.md`, from the factory-plan skill): the reference for the problem, success, scope and constraints; its open questions are yours to answer. Read the code it touches, the README and docs, and related issues. Done when you can name who is affected and which code areas change.
 
 2. **Clarify.** List only what the code and docs can't answer: users, edge cases, constraints. At most 5 questions, each with a proposed default. Ask the user and wait; when no user is in the conversation, post them as one comment headed "Questions before the spec", label the issue `needs-info`, and stop. Done when every question has an answer or a safe default; the rest goes under Open questions.
 

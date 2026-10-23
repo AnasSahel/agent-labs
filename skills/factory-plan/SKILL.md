@@ -17,7 +17,7 @@ The skill works with any **tracker**. It needs four operations: list open issues
 |---|---|
 | GitHub | `gh` CLI, with `--repo <owner/name>` |
 | Linear, Plane, Jira… | its MCP server or CLI, when one is connected |
-| Files | the intent file is the issue: labels and `status` in its front matter; comment by appending a `## Comment` section. Steps 6 and 7 are one: publishing is writing and committing the intent, with `status: needs-go` while it waits for the user's go and `open` after it; there is no body to replace |
+| Files | the intent file is the issue: labels and `status` in its front matter; comment by appending a `## Comment` section. Steps 6 and 7 are one: publishing is writing and committing the intent, with `status: open` after the user's go, or `status: needs-go` when another agent made the request (step 5); there is no body to replace and no pointer to write |
 
 When the tracker has no tool in this session, say so and stop.
 
@@ -25,9 +25,9 @@ When the tracker has no tool in this session, say so and stop.
 
 1. **Find the tracker.** Use the tracker and project the request names; otherwise the one the repo's `AGENTS.md`, `CLAUDE.md` or README points to; otherwise files, when the repo has an `intent/` folder; otherwise ask, offering what's connected in this session. Done when you know the repo, the tracker, the project in it, and the tool for each operation.
 
-2. **Brainstorm.** Restate the request as the **problem**: who is affected and what goes wrong. When the request proposes a solution, keep it as evidence. Fill **title**, **problem**, **why now**, **success looks like** (what the affected people can do once it's solved, observable, never a solution), **out of scope**, **evidence** (logs, links, screenshots) and **source** (`user`, or `agent:<name>`). Keep the originator's words wherever they're clear.
+2. **Brainstorm.** Restate the request as the **problem**: who is affected, which systems are involved, and what goes wrong. When the request proposes a solution, keep it as evidence. Fill **title**, **problem**, **why now**, **success looks like** (what the affected people can do once it's solved, observable, never a solution), **out of scope**, **constraints** (what any solution must respect: a deadline, a budget, a rule, a system it can't change), **open questions** (what the brainstorm left unknown, for the spec to answer), **evidence** (logs, links, screenshots) and **source** (`user`, or `agent:<name>`). When the repo has its own `intent/TEMPLATE.md`, its sections and front matter fields replace these, `source` aside: the team chose them. Keep the originator's words wherever they're clear.
 
-   When the user made the request and the `factory-brainstorm` skill is installed, call it with these fields as its destination, no trace path (the file name needs the issue's id: keep the trace it hands back as a draft and write it at step 7), scope inside (the problem lives in this project) and approaches skipped (an intent names no solution), and take its summary as the draft. Otherwise, run this short version: ask what the request and the code can't answer: at most 3 questions per round, each with a proposed default, and the draft built on those defaults beside them, so one answer settles both. Go round after round until each field is concrete; stop asking when the user says go. When another agent made the request (a Claude session or a bot, not a person), ask nothing, but still look up the facts the code answers (what goes wrong today, where) and put them in the problem and the evidence; only decisions it didn't state (who matters most, why now, success, out of scope) stay `[to fill]`.
+   When the user made the request and the `factory-brainstorm` skill is installed, call it with these fields as its destination, no trace path (the file name needs the issue's id: keep the trace it hands back as a draft and write it at step 7), scope inside (the problem lives in this project) and approaches skipped (an intent names no solution), and take its summary as the draft. Otherwise, run this short version: ask what the request and the code can't answer: at most 3 questions per round, each with a proposed default, and the draft built on those defaults beside them, so one answer settles both. Go round after round until each field is concrete; stop asking when the user says go. When another agent made the request (a Claude session or a bot, not a person), ask nothing, but still look up the facts the code answers (what goes wrong today, where) and put them in the problem and the evidence; only decisions it didn't state (who matters most, why now, success, out of scope, constraints) stay `[to fill]`.
 
    When the request asks for several things that could each go live on its own, draft one intent each and carry each through the next steps. Done when each problem fits in three sentences without naming a solution, and success looks like something you could check, or, for another agent's request, is `[to fill]`.
 
@@ -39,13 +39,13 @@ When the tracker has no tool in this session, say so and stop.
 
 6. **Publish the issue.** Create each issue with its kind, priority and size: the tracker's native field when it has one (Linear's priority, for instance), labels `kind:<kind>`, `priority:<priority>`, `size:<size>` otherwise. Reuse existing labels; create only the missing ones, so existing ones keep their colors. Done when each issue exists and you have its id.
 
-7. **Commit the intent.** Write `intent/<id>-<slug>.md` with the template below and, when factory-brainstorm ran, its trace next to it as `intent/<id>-<slug>.decisions.md`, linked from the intent's `## Decisions`. Commit them on the default branch. Name it this way:
+7. **Commit the intent.** Write `intent/<id>-<slug>.md` with the repo's own `intent/TEMPLATE.md` when it has one (the organization's template: fill only its sections and fields, plus `status` with files and `## Decisions` at the end when there's a trace), otherwise the template below, and, when factory-brainstorm ran, its trace next to it as `intent/<id>-<slug>.decisions.md`, linked from the intent's `## Decisions`. Commit them on the default branch. Name it this way:
    - `<id>`: the issue's id as the tracker shows it, without `#`: `42` on GitHub, `ENG-42` on Linear or Jira, `WEB-42` on Plane. For files, the next free 3-digit number in `intent/` (`007`).
    - `<slug>`: from the title, lowercase, accents dropped (`é` → `e`), punctuation dropped, filler words dropped (articles, prepositions, auxiliaries: a, the, of, is, when, le, de, est…), at most 5 words joined by `-`. "Notes are lost when the page is reloaded" → `notes-lost-page-reloaded`.
 
-   When the repo's rules or a protected branch forbid committing on the default branch, open a pull request with it instead: its merge is the acceptance. Then replace the issue's body with a pointer: the problem's first sentence and the link to the intent. Done when the intent (and its trace) is committed, or its PR is open, and the issue links it.
+   When the repo's rules or a protected branch forbid committing on the default branch, open a pull request with it instead: its merge is the acceptance. Except with files, then replace the issue's body with a pointer: the problem's first sentence and the link to the intent. Done when the intent (and its trace) is committed, or its PR is open, and the issue links it (with files, the intent is the issue).
 
-Reply with each issue's link and its intent's, or `needs-go` when it waits for the user.
+Reply with each issue's link and its intent's (with files, the intent's path once), or `needs-go` when it waits for the user.
 
 <intent-template>
 
@@ -63,7 +63,7 @@ status: <files only: needs-go | open>
 
 ## Problem
 
-<who is affected, what goes wrong>
+<who is affected, which systems are involved, what goes wrong>
 
 ## Why now
 
@@ -76,6 +76,14 @@ status: <files only: needs-go | open>
 ## Out of scope
 
 <what this intent doesn't cover>
+
+## Constraints
+
+<what any solution must respect: deadline, budget, rules, systems it can't change; "None known" when there are none>
+
+## Open questions
+
+<what's still unknown, for the spec to answer; "None" when there are none>
 
 ## Evidence
 
