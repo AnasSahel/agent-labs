@@ -1,0 +1,31 @@
+#!/bin/sh
+# Copy each agent a skill lists (metadata.agents in its SKILL.md) from agents/ into skills/<skill>/agents/.
+# agents/ is the source: edit there, never in a skill's copy.
+# Usage: scripts/sync-agents          copy, and delete copies no longer listed
+#        scripts/sync-agents --check  change nothing; fail when a copy is missing, stale or extra
+set -eu
+cd "$(dirname "$0")/.."
+check=false; [ "${1:-}" = --check ] && check=true
+bad=0
+for skill in skills/*/; do
+  skill=${skill%/}
+  list=$(sed -n 's/^  agents: *\[\(.*\)\] *$/\1/p' "$skill/SKILL.md" | tr ',' ' ')
+  for a in $list; do
+    src="agents/$a.md"; dst="$skill/agents/$a.md"
+    [ -f "$src" ] || { echo "$skill lists $a, but $src doesn't exist"; bad=1; continue; }
+    if ! cmp -s "$src" "$dst"; then
+      if $check; then echo "$dst is missing or differs from $src"; bad=1
+      else mkdir -p "$skill/agents"; cp "$src" "$dst"; echo "copied $src → $dst"; fi
+    fi
+  done
+  [ -d "$skill/agents" ] || continue
+  for f in "$skill"/agents/*.md; do
+    [ -e "$f" ] || continue
+    name=$(basename "$f" .md)
+    case " $list " in *" $name "*) ;; *)
+      if $check; then echo "$f isn't listed in $skill/SKILL.md"; bad=1
+      else rm "$f"; echo "removed $f"; fi;;
+    esac
+  done
+done
+[ $bad = 0 ] || { echo "Run scripts/sync-agents and commit the result."; exit 1; }
