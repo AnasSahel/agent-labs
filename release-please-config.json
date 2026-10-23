@@ -3,12 +3,12 @@
   "bootstrap-sha": "a01f36ca815c5f610022dda9e850138482fa579e",
   "release-type": "simple",
   "include-component-in-tag": true,
-  "separate-pull-requests": true,
-  "pull-request-title-pattern": "chore: release${component} ${version}",
+  "separate-pull-requests": false,
+  "group-pull-request-title-pattern": "chore: release skills",
   "packages": {
     "skills/write-skill": { "component": "write-skill", "extra-files": ["SKILL.md"] },
     "skills/factory-brainstorm": { "component": "factory-brainstorm", "extra-files": ["SKILL.md"] },
-    "skills/factory-plan": { "component": "factory-plan", "extra-files": ["SKILL.md"] },
+    "skills/factory-plan": { "component": "factory-plan", "extra-files": ["SKILL.md"], "release-as": "1.1.0" },
     "skills/spec": { "component": "spec", "extra-files": ["SKILL.md"] }
   }
 }
