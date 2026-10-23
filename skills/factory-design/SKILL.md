@@ -42,7 +42,7 @@ When the tracker has no tool in this session, say so and stop. With no issue, de
 
    A finding below the threshold that no simple constraint closes is `accepted` by default, with "below threshold": the user set that bar, and can reopen it at the gate.
 
-   Then hand each reviewer, as a fresh subagent, its findings answered by a constraint (its check mode). Revise the answers it marks not closed and check again, up to the rounds from step 1; a new finding raised in check mode is answered like the others; a finding still not closed, or answered after the last check, becomes `needs-decision` with that answer as your recommendation (below the threshold: `accepted`, "below threshold"). Done when every finding is `open` with a closed constraint, or `needs-decision`.
+   Then fold every answer into the draft, and hand each reviewer, as a fresh subagent, the revised draft and its findings answered by a constraint (its check mode). A merged finding is closed only when each of its reviewers closes it. Revise the answers it marks not closed and check again, up to the rounds from step 1; a new finding raised in check mode is answered like the others; a finding still not closed, or answered after the last check, becomes `needs-decision` with that answer as your recommendation (below the threshold: `accepted`, "below threshold"). Done when every finding is `open` with a closed constraint, or `needs-decision`.
 
 7. **Split.** Look for 2 to 4 groups of criteria that each give users something that works on its own. Propose a split when the change is size `L`, or when the change has a `high` finding and a group carries none, so it could ship with less scrutiny. For each part, in build order (safest first): title, problem in one sentence, size, its criteria and findings by ID, the parts it comes after. A criterion that spans parts is reworded so each part tests its share alone, written in full and marked `(reworded)`. Done when every criterion and finding has a part, or there's no split.
 
@@ -52,7 +52,7 @@ When the tracker has no tool in this session, say so and stop. With no issue, de
 
    Done when the spec is committed and the issue shows the comment and `needs-design`.
 
-9. **Gate.** When the user is in the conversation, show in one message: the spec's link, the criteria, the chosen approach, the frames, then four lists: **assumptions**, the **questions** (one per decision, covering every finding it settles, each with its owner and your recommended answer), findings accepted below the threshold, and the split. A question's **owner** is the owner of the reviewer that raised it; a `high` finding's question also goes to the tech lead, who must agree. Each owner answers their own questions, in the conversation or on the issue (read its comments); the user answers the rest and decides the spec: approve, change, or reject. "yes" takes every recommended answer the speaker owns. A settled finding becomes a constraint, a scope change, or `accepted` (with the date and who accepted it: only an owner accepts a risk). Approval waits until no finding is `needs-decision`. On a change, revise from the step it touches and show again; on reject, keep their reason under Open questions and return to step 2. On approval, label the issue `designed` (an approved split: create each part as its own issue linked to the parent, labelled `designed`, and the parent `split`) and commit the updated spec. When no one is in the conversation, stop at `needs-design`: the gate runs when the owners and the user later answer.
+9. **Gate.** When the user is in the conversation, show in one message: the spec's link, the criteria, the chosen approach, the frames, then four lists: **assumptions**, the **questions** (one per decision, covering every finding it settles, each with its owner and your recommended answer), findings accepted below the threshold, and the split. A question's **owners** are the owners of the reviewers that raised its findings; a `high` finding's question also goes to the tech lead, who must agree. Each owner answers their own questions, in the conversation or on the issue (read its comments); the user answers the rest and decides the spec: approve, change, or reject. "yes" takes every recommended answer the speaker owns. A settled finding becomes a constraint, a scope change, or `accepted` (with the date and who accepted it: only an owner accepts a risk). Approval waits until no finding is `needs-decision`. On a change, revise from the step it touches and show again; on reject, keep their reason under Open questions and return to step 2. On approval, label the issue `designed` (an approved split: create each part as its own issue linked to the parent, labelled `designed`, and the parent `split`) and commit the updated spec. When no one is in the conversation, stop at `needs-design`: the gate runs when the owners and the user later answer.
 
 Reply with the links (issue, spec, each part) and where it stands: `designed`, `split`, or `needs-design` with what waits, and for whom.
 
@@ -111,13 +111,15 @@ Mockup: [frames.html](<id>-<slug>/frames.html) <and its image, when rendered>
 |---|---|---|---|---|
 | C1 | F1 | <safe behaviour, one line> | <file or module> | <how a test checks it> |
 
+A constraint you recommend in a question is listed too, its ID marked `(proposed, Q<n>)` until the question is settled.
+
 ## Findings
 
 | ID | From | Finding | Level | Answer | Status |
 |---|---|---|---|---|---|
 | F1 | security | <effect, never an attack> | <level> | C1 | open |
 
-Status is `open` (a constraint answers it, waiting for code), `needs-decision` (waits for its owner), `mitigated` (a test proves its constraint), `accepted` (by its owner, with the date, or "below threshold") or `dropped` (the scope changed). "No finding." when there's none.
+Status is `open` (a constraint answers it, waiting for code), `needs-decision` (waits for its owner), `mitigated` (a test proves its constraint), `accepted` (by its owner, with the date, or "below threshold") or `dropped` (the scope changed). A finding partly answered carries both, e.g. `open (C1) · needs-decision (Q2)`. "No finding." when there's none.
 
 ## Questions
 
