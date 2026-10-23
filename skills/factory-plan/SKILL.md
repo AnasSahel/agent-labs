@@ -7,7 +7,7 @@ metadata:
   credits: Plan phase of Anthropic's AI-native SDLC playbook (https://claude.com/resources/articles/the-ai-native-sdlc-playbook)
 ---
 
-Turn a **request** into an **intent**: the problem, not the solution, in the originator's words, brainstormed until it's concrete. Once the user says **go**, the intent is committed to the repo as `intent/<id>-<slug>.md`, the reference every later step reads, and an **issue** tracks it. A request that holds several features that ship apart becomes one intent per feature.
+Turn a **request** into an **intent**: the problem, not the solution, in the originator's words, brainstormed until it's concrete. Once the user says **go**, the intent is committed to the repo as `intent/<id>-<slug>.md`, the reference every later step reads, and an **issue** tracks it. When a request asks for several things that could each go live on its own, write one intent for each.
 
 The intent goes wherever the repo goes: it never says how the project could be attacked.
 
@@ -27,9 +27,9 @@ When the tracker has no tool in this session, say so and stop.
 
 2. **Brainstorm.** Restate the request as the **problem**: who is affected and what goes wrong. When the request proposes a solution, keep it as evidence. Fill **title**, **problem**, **why now**, **success looks like** (what the affected people can do once it's solved, observable, never a solution), **out of scope**, **evidence** (logs, links, screenshots) and **source** (`user`, or `agent:<name>`). Keep the originator's words wherever they're clear.
 
-   When the user made the request and the `factory-brainstorm` skill is installed, call it with these fields as its destination, its trace kept for step 7, scope inside (the problem lives in this project) and approaches skipped (an intent names no solution), and take its summary as the draft. Otherwise, run this short version: ask what the request and the code can't answer: at most 3 questions per round, each with a proposed default, and the draft built on those defaults beside them, so one answer settles both. Go round after round until each field is concrete; stop asking when the user says go. When another agent made the request, ask nothing: leave what it didn't say as `[to fill]`.
+   When the user made the request and the `factory-brainstorm` skill is installed, call it with these fields as its destination, its trace kept for step 7, scope inside (the problem lives in this project) and approaches skipped (an intent names no solution), and take its summary as the draft. Otherwise, run this short version: ask what the request and the code can't answer: at most 3 questions per round, each with a proposed default, and the draft built on those defaults beside them, so one answer settles both. Go round after round until each field is concrete; stop asking when the user says go. When another agent made the request (a Claude session or a bot, not a person), ask nothing: leave what it didn't say as `[to fill]`.
 
-   When the request holds several problems that each ship on their own, draft one intent each and carry each through the next steps. Done when each problem fits in three sentences without naming a solution, and success looks like something you could check.
+   When the request asks for several things that could each go live on its own, draft one intent each and carry each through the next steps. Done when each problem fits in three sentences without naming a solution, and success looks like something you could check.
 
 3. **Check for duplicates.** List the project's open issues and compare problems: same users and same failure means duplicate. On a duplicate, comment the new evidence on the existing issue and stop. Done when you've compared against every open issue.
 
