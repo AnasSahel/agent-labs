@@ -5,7 +5,7 @@ argument-hint: "What should the skill do? (or a path to an existing SKILL.md)"
 disable-model-invocation: true
 metadata:
   author: Anas Sahel
-  version: 1.0.0 # x-release-please-version
+  version: 1.1.0 # x-release-please-version
   credits: Method adapted from Matt Pocock's writing-for-agents (https://github.com/mattpocock/skills)
 ---
 
