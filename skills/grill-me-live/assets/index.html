@@ -301,6 +301,10 @@ main { display: grid; grid-template-columns: minmax(0, 1fr) 340px; min-height: 0
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+/* Embedded in the deck: the tree alone, on the light theme, the whole of it in view. */
+body.embed { grid-template-rows: 1fr; }
+body.embed .bar, body.embed .rail, body.embed .stage-tools { display: none; }
+body.embed main { grid-template-columns: minmax(0, 1fr); }
 </style>
 </head>
 <body>
@@ -318,6 +322,7 @@ main { display: grid; grid-template-columns: minmax(0, 1fr) 340px; min-height: 0
   </div>
   <span class="state-pill" id="statePill" data-state="idle">Not started</span>
   <a class="theme-btn" id="receiptLink" href="receipt" target="_blank" rel="noopener" title="Every decision so far, settled or dropped, and how it was made">Receipt</a>
+  <a class="theme-btn" id="deckLink" href="deck" target="_blank" rel="noopener" title="The session as slides, for the people who were not in the room">Deck</a>
   <button type="button" class="theme-btn" id="themeBtn" data-mode="system"><i aria-hidden="true"></i><span id="themeText">System</span></button>
 </header>
 
@@ -386,7 +391,8 @@ main { display: grid; grid-template-columns: minmax(0, 1fr) 340px; min-height: 0
   const ROW = 76, COL = 290, W = 224, H = 62;   // horizontal: row pitch, column pitch, card size
   const VCOL = W + 24, VROW = H + 70;            // vertical: sibling pitch, level pitch
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const DUR = reduced ? 0 : 650;
+  const embed = Boolean(window.__GRILL_SNAPSHOT__ && window.__GRILL_SNAPSHOT__.embed);
+  const DUR = reduced || embed ? 0 : 650; // 0: draw in place, no timers (print-safe)
   const STATUS_WORD = { open: "Open", research: "Looking up", waiting: "Waiting", settled: "Settled", dropped: "Dropped", root: "Idea" };
   const $ = (id) => document.getElementById(id);
 
@@ -508,7 +514,8 @@ main { display: grid; grid-template-columns: minmax(0, 1fr) 340px; min-height: 0
     $("empty").hidden = hasNodes || !!state.session;
     const h = hierarchy();
     const all = h.descendants();
-    const t = svg.transition().duration(DUR).ease(d3.easeCubicInOut);
+    const t = DUR ? svg.transition().duration(DUR).ease(d3.easeCubicInOut) : null;
+    const tr = (s, f) => f(t ? s.transition(t) : s); // animate when there is time for it, otherwise set at once
     const origin = (d) => {
       const p = d.parent && (pos.get(d.parent.id) || { x: d.parent.x, y: d.parent.y });
       return p || { x: d.x, y: d.y };
@@ -520,14 +527,13 @@ main { display: grid; grid-template-columns: minmax(0, 1fr) 340px; min-height: 0
       .join(
         (enter) => enter.append("path").attr("d", (l) => stubPath(origin(l.target))),
         (update) => update,
-        (exit) => exit.transition(t).style("opacity", 0).remove()
+        (exit) => tr(exit, (s) => s.style("opacity", 0).remove())
       )
       .attr("class", (l) => {
         const s = statusOf(l.target.data);
         return "link " + (l.target.pruned ? "pruned" : "to-" + s);
       })
-      .transition(t)
-      .attr("d", (l) => linkPath(l.source, l.target));
+      .call(tr, (s) => s.attr("d", (l) => linkPath(l.source, l.target)));
 
     // nodes
     gNodes.selectAll("g.node")
@@ -542,14 +548,12 @@ main { display: grid; grid-template-columns: minmax(0, 1fr) 340px; min-height: 0
           return g;
         },
         (update) => update,
-        (exit) => exit.transition(t).style("opacity", 0).remove()
+        (exit) => tr(exit, (s) => s.style("opacity", 0).remove())
       )
       .each(function (d) { fillCard(this.querySelector(".card"), d); })
       .on("click", (e, d) => select(d.id === selected ? null : d.id))
       .on("keydown", (e, d) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); select(d.id); } })
-      .transition(t)
-      .style("opacity", 1)
-      .attr("transform", (d) => cardTransform(d));
+      .call(tr, (s) => s.style("opacity", 1).attr("transform", (d) => cardTransform(d)));
 
     pos.clear();
     for (const d of all) pos.set(d.id, { x: d.x, y: d.y });
@@ -613,7 +617,7 @@ main { display: grid; grid-template-columns: minmax(0, 1fr) 340px; min-height: 0
     let b = bounds(h.descendants());
     const scaleFor = (b) => Math.min(1.05, (box.width - pad * 2) / (b.x1 - b.x0), (box.height - pad * 2 - 30) / (b.y1 - b.y0));
     let k = scaleFor(b);
-    if (k < 0.55) {
+    if (k < 0.55 && !embed) {
       // Too big to read whole: follow the live edge of the tree instead.
       const live = h.descendants().filter((d) => ["open", "research"].includes(d.data.status) && !d.pruned);
       const focus = live.length ? live.flatMap((d) => (d.parent ? [d, d.parent] : [d])) : h.descendants().slice(-6);
@@ -916,7 +920,8 @@ main { display: grid; grid-template-columns: minmax(0, 1fr) 340px; min-height: 0
   render();
   if (window.__GRILL_SNAPSHOT__) {
     canAnswer = false;
-    $("receiptLink").hidden = true; // served by the local server only
+    $("receiptLink").hidden = $("deckLink").hidden = true; // served by the local server only
+    if (embed) { document.body.classList.add("embed"); document.documentElement.dataset.theme = "light"; }
     setLive("idle", "Snapshot");
     applyPayload(window.__GRILL_SNAPSHOT__);
   } else {
