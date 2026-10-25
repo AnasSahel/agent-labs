@@ -3,7 +3,7 @@ name: factory-design
 description: Design phase. Turn an intent or an issue into a spec, what to build and how, in one unattended session, reviewed while it's written by specialized agents (security by OWASP, risk by EBIOS RM and ISO 27005, privacy by GDPR, and each of the project's own rules), then one pull request the user merges to approve it. Works with any tracker (GitHub, Linear, Plane, a folder in the repo…). Use when the user asks to design, spec, scope or split an intent or an issue.
 metadata:
   author: Anas Sahel
-  version: 1.0.0 # x-release-please-version
+  version: 1.1.0 # x-release-please-version
   credits: Design phase of Anthropic's AI-native SDLC playbook (https://claude.com/resources/articles/the-ai-native-sdlc-playbook)
   agents: [ui-designer, security, risk, privacy, rule-reviewer]
 ---
