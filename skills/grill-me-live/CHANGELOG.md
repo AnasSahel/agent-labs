@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+
+### Features
+
+* **grill-me-live:** `deck` command and Deck link: the session as offline slides for the people who were not in the room (title, tree, one slide per top-level decision with its sources, dropped decisions, next steps), one page per slide when printed
+
 ## 1.0.0 (2026-10-23)
 
 
