@@ -23,6 +23,7 @@ you ── chat ──▶ agent ── writes ──▶ .grill/state.json
 - The agent waits on `grill.mjs wait`, which returns your answers as soon as you press Send. You don't type "next".
 - `.grill/` stays in your project as the record of every decision, with each round's answers in `.grill/history/`.
 - **Receipt**: at the end (or any time, from the page's Receipt link) you get a receipt of the session: every decision settled or dropped, why, and whether you took the recommendation or answered in your own words.
+- **Deck**: `grill.mjs deck` (or the page's Deck link) turns the session into slides for the people who were not in the room: title, the whole tree, one slide per top-level decision with its settled answers and where each came from, the dropped decisions, and next steps. One offline HTML file; arrow keys move, Print gives one page per slide.
 - The page follows your system's light or dark setting. The button at the top right switches between **System**, **Light** and **Dark**, and the browser remembers your choice.
 
 ## Install
@@ -43,6 +44,7 @@ node scripts/grill.mjs wait           # wait for Send, print the answers
 node scripts/grill.mjs answers        # print answers saved so far
 node scripts/grill.mjs snapshot       # write a shareable HTML file
 node scripts/grill.mjs receipt        # write the session receipt (.grill/receipt.html + .md)
+node scripts/grill.mjs deck           # write the session as slides (.grill/deck.html)
 node scripts/grill.mjs stop
 ```
 
@@ -59,7 +61,7 @@ node scripts/grill.mjs stop
 node skills/grill-me-live/test/smoke.mjs
 ```
 
-Covers the page, live updates, the request guards, answering, Send and `wait`, and snapshots.
+Covers the page, live updates, the request guards, answering, Send and `wait`, snapshots, the receipt and the deck.
 
 ## Evals
 

@@ -123,6 +123,24 @@ try {
   assert.match(receiptBody, /Decision receipt/);
   assert.match(receiptBody, /Shared understanding confirmed/);
 
+  // Deck: one self-contained file, one slide per screen: title, tree, a and b (top-level, settled), dropped, next steps.
+  grill("deck");
+  const deck = fs.readFileSync(path.join(dir, "deck.html"), "utf8");
+  const slideKinds = [...deck.matchAll(/<section class="slide (s-[a-z]+)" data-n="(\d+)"/g)].map((m) => m[1]);
+  assert.deepEqual(slideKinds, ["s-title", "s-tree", "s-decision", "s-decision", "s-dropped", "s-next"]);
+  assert.match(deck, /data-slides="6"/);
+  assert.match(deck, /<h1>Smoke test idea<\/h1>/);
+  assert.match(deck, /RECOMMENDATION ACCEPTED|Recommendation accepted/);
+  assert.match(deck, /Own words/);
+  assert.match(deck, /Out of scope/);
+  assert.match(deck, /Also dropped with their parent: Under c/);
+  assert.match(deck, /<h2>Next steps<\/h2>/);
+  assert.ok(deck.includes("window.__GRILL_SNAPSHOT__") && deck.includes("&quot;embed&quot;:true"), "tree slide embeds the snapshot");
+  assert.ok(!/<(?:script|link)[^>]+(?:src|href)="https?:/.test(deck), "deck loads nothing from the network");
+  const deckPage = await fetch(base + "/deck");
+  assert.equal(deckPage.status, 200);
+  assert.match(await deckPage.text(), /data-slides="6"/);
+
   assert.match(grill("status"), /Running/);
   console.log("smoke test passed");
 } catch (e) {

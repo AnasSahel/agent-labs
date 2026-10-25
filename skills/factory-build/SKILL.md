@@ -1,9 +1,10 @@
 ---
 name: factory-build
-description: Build phase. Turn an approved spec into code in two halves: first a plan (plan.md, the files that change, the order, the risks and the tests that prove each criterion), drafted in plan mode without touching the code and accepted by the user (and the tech lead for a high-risk change); then the code and its tests, in one pass on a branch, done only when build, tests and lint pass, with a pull request when the repo has a code host. Works with any tracker (GitHub, Linear, Plane, a folder in the repo…) and any code host (GitHub, GitLab, none). Use when the user asks to plan or build an issue, a spec or an intent, or to implement a designed feature.
+description: Build phase. Turn an approved spec into code in two halves: first a plan (plan.md, the files that change, the order, the risks and the tests that prove each criterion), drafted in plan mode without touching the code and accepted by the user (and the tech lead for a high-risk change); then the code and its tests, in one pass on a branch, done only when build, tests and lint pass and a verifier agent, in a fresh context, has run the app against the spec, with a pull request when the repo has a code host. Works with any tracker (GitHub, Linear, Plane, a folder in the repo…) and any code host (GitHub, GitLab, none). Use when the user asks to plan or build an issue, a spec or an intent, or to implement a designed feature.
 metadata:
   author: Anas Sahel
   version: 1.0.0 # x-release-please-version
+  agents: [verifier]
   credits: Build phase of Anthropic's AI-native SDLC playbook (https://claude.com/resources/articles/the-ai-native-sdlc-playbook)
 ---
 
@@ -15,7 +16,7 @@ Turn an approved **spec** (`specs/<id>-<slug>.md`, from the factory-design skill
 
 Everything happens on one branch, `<id>-<slug>`, and reaches the default branch only through its pull request: never push to the default branch.
 
-You write the plan and you implement it: the plan's author keeps it true.
+You write the plan and you implement it: the plan's author keeps it true. Once you believe the work is done, the `verifier` in this skill's `agents/` folder checks it: start it as a fresh subagent with its file as its instructions, so its verdict isn't shaped by the assumptions behind the code.
 
 The skill works with any **tracker**. It needs three operations: read an issue with its comments, comment, and set labels (or the tracker's own fields). And with any **code host**:
 
@@ -80,12 +81,13 @@ Starts only from an accepted plan: the state is `planned`, `building` or `blocke
    - When a test fails, fix the code, not the test. A test that is wrong is a departure.
    - Keep every constraint of the spec, with its test.
    - Use what the project already has. A new dependency the plan doesn't name is a departure; read secrets from environment variables and list their names in the project's example env file.
-   - When the same correction comes up twice (a convention the code expects, a command that needs a flag, a mistake you had to undo), it belongs in the repo's `CLAUDE.md` or `AGENTS.md`, so the next session starts with it: propose the line under the pull request's "For CLAUDE.md"; never edit that file yourself.
+   - A criterion that changes a screen, when the spec has a mockup (`specs/<id>-<slug>/frames.html` or `frames.png`) and a headless browser is at hand: start the app, screenshot each state the frames show, compare it with the mockup, and adjust. 2 or 3 rounds is normal, 3 at most. Commit the last screenshots under `specs/<id>-<slug>/screens/`; a gap left after 3 rounds goes under the pull request's "Not covered by tests".
+   - When the same correction comes up twice (a convention the code expects, a command that needs a flag, a mistake you had to undo), it belongs in the repo's agent instructions, `AGENTS.md` or `CLAUDE.md` (whichever it has; `AGENTS.md` when it has neither), so the next session starts with it: propose the line under the pull request's "For AGENTS.md or CLAUDE.md". Propose there too, when that file lacks them, the build, test and lint commands each with a sample of healthy output, and the definition of done: all three pass and their output is shown. Never edit that file yourself.
    - A **departure** (a file, an order, a test or a dependency the plan didn't say) updates `plan.md` in the same commit, with a line under Departures: what changed and why. A departure that changes a criterion, a constraint, or what the gate accepted is a question: go to step 6.
 
    Done when every criterion has its commit.
 
-5. **Done.** Run the build, the full test suite and the lint, and show their output: the work is done only when all three pass. Then push the branch when there's a remote and replace the draft pull request's body with the PR template below; it stays a draft until it's verified. Comment on the issue with the build comment, editing it in place when it exists, and set the state `built`. On a public repo, the branch, the commits and the pull request name behaviours, never a finding (no `F<n>`, no finding text): the spec's constraints are already plain requirements. Done when the issue is `built` with its build comment pointing to the pull request or the branch.
+5. **Done.** Run the build, the full test suite and the lint, and show their output: the work is done only when all three pass. Then hand the `verifier` the spec, the plan, the worktree and the commands, how to start the app included. It runs once. For each failed check, fix the code (with a failing test first when one can show the problem) and run the three commands again; don't run the verifier a second time. A failure you can't fix without changing what the gate accepted goes to step 6. Then push the branch when there's a remote and replace the draft pull request's body with the PR template below; it stays a draft until it's verified. Comment on the issue with the build comment, editing it in place when it exists, and set the state `built`. On a public repo, the branch, the commits and the pull request name behaviours, never a finding (no `F<n>`, no finding text): the spec's constraints are already plain requirements. Done when the issue is `built` with its build comment pointing to the pull request or the branch.
 
 6. **Blocked.** When a question only a person can answer comes up (a departure from what was accepted, a criterion no test can check, 3 failed tries at the same step), commit the steps that pass, push the branch when there's a remote, comment on the issue with the blocked comment, and set the state `blocked`. Once answered, running the skill again resumes at the first step without a commit. Done when the issue is `blocked` with the question on it.
 
@@ -180,7 +182,13 @@ Closes <issue reference>. Spec: <link> · Plan: <link>
 
 <what no automated test can check, or "Nothing.">
 
-## For CLAUDE.md
+## Verifier
+
+**Verdict** <pass | fail> · **Checks** <n> · **App** <started | not started: why>
+
+<each failed check: what it saw, and the commit that fixed it>
+
+## For AGENTS.md or CLAUDE.md
 
 <each line proposed in step 4, or drop the section>
 
