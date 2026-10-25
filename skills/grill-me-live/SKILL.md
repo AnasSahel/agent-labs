@@ -5,7 +5,7 @@ argument-hint: "What idea should we grill?"
 disable-model-invocation: true
 metadata:
   author: Anas Sahel
-  version: 1.0.0 # x-release-please-version
+  version: 1.1.0 # x-release-please-version
   credits: Interview method from Matt Pocock's grilling (https://github.com/mattpocock/skills), MIT. Tree drawn with D3 (ISC). See THIRD_PARTY_NOTICES.md.
 ---
 

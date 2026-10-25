@@ -7,6 +7,13 @@
 
 * **grill-me-live:** `deck` command and Deck link: the session as offline slides for the people who were not in the room (title, tree, one slide per top-level decision with its sources, dropped decisions, next steps), one page per slide when printed
 
+## [1.1.0](https://github.com/AnasSahel/agent-labs/compare/grill-me-live-v1.0.0...grill-me-live-v1.1.0) (2026-10-25)
+
+
+### Features
+
+* **factory-build:** fresh-context verifier, screenshot loop against the mockup, AGENTS.md or CLAUDE.md ([#28](https://github.com/AnasSahel/agent-labs/issues/28)) ([c9f4196](https://github.com/AnasSahel/agent-labs/commit/c9f4196be5499232cf5984d0a96187f262cb81bd))
+
 ## 1.0.0 (2026-10-23)
 
 

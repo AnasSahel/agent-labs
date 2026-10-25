@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/AnasSahel/agent-labs/compare/factory-plan-v1.1.0...factory-plan-v1.2.0) (2026-10-25)
+
+
+### Features
+
+* **factory-plan, factory-design:** intent and spec through pull requests ([#31](https://github.com/AnasSahel/agent-labs/issues/31)) ([8da76c0](https://github.com/AnasSahel/agent-labs/commit/8da76c0f656afc83be7686ac9ddbc7e72dce0ac6))
+
 ## [1.1.0](https://github.com/AnasSahel/agent-labs/compare/factory-plan-v1.0.0...factory-plan-v1.1.0) (2026-10-23)
 
 
