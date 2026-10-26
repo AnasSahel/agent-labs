@@ -1,21 +1,24 @@
 # Campaign fields (`POST /campaigns/v1`)
 
-Check a field against the API reference when the tenant rejects it: https://developer.sailpoint.com/docs/api/certification-campaigns
+A snapshot of the API, checked against SailPoint's docs on 2026-10-26. The docs win when they differ: the endpoint page (https://developer.sailpoint.com/docs/api/create-campaign-v-1) for the path, scopes and responses, and the OpenAPI spec it's built from (https://github.com/sailpoint-oss/api-specs/tree/main/idn/apis/certification-campaigns, `schemas/campaign-2.yaml` and `schemas/slimcampaign.yaml`) for the body, since the page loads the schema dynamically.
+
+Caller: `ORG_ADMIN` or `CERT_ADMIN`, token scope `idn:campaign:manage`, plus `idn:campaign-filter:read` when the body sets `filter`. Answer `202`: the campaign is accepted, created `PENDING`, then `STAGED`.
 
 ## Every type
 
-| Field | Required | Default when no rule | Notes |
-|---|---|---|---|
-| `name` | yes | `<Type> - <scope> - <YYYY-MM>` | the naming rule wins |
-| `description` | yes | what is reviewed and why (audit, periodic review) | shown to reviewers |
-| `type` | yes | from step 1 | `MANAGER`, `SOURCE_OWNER`, `SEARCH`, `ROLE_COMPOSITION` |
-| `deadline` | no | 14 days from today, ISO 8601 (`2026-11-09T23:59:59Z`) | must be in the future |
-| `emailNotificationEnabled` | no | `true` | |
-| `autoRevokeAllowed` | no | `false` | `true` revokes on its own what the reviewer didn't keep at the deadline |
-| `recommendationsEnabled` | no | `true` | needs AI recommendations licensed |
-| `mandatoryCommentRequirement` | no | `REVOKE_ONLY_DECISIONS` | `ALL_DECISIONS`, `REVOKE_ONLY_DECISIONS`, `NO_DECISIONS` |
-| `filter` | no | none | `{ "type": "CAMPAIGN_FILTER", "id": "<id>" }` or `{ "type": "RULE", "id": "<id>" }` (a certification rule); excludes access from the review |
-| `correlatedStatus` | no | `CORRELATED` | `UNCORRELATED` reviews uncorrelated accounts |
+| Field | Required | API default | Proposed when no rule | Notes |
+|---|---|---|---|---|
+| `name` | yes | | `<Type> - <scope> - <YYYY-MM>` | the naming rule wins |
+| `description` | yes | | what is reviewed and why (audit, periodic review) | shown to reviewers |
+| `type` | yes | | from step 1 | `MANAGER`, `SOURCE_OWNER`, `SEARCH`, `ROLE_COMPOSITION` (`MACHINE_ACCOUNT` exists, out of scope) |
+| `deadline` | no | | 14 days from today, ISO 8601 (`2026-11-09T23:59:59Z`) | must be in the future at activation, else `400` |
+| `emailNotificationEnabled` | no | `false` | `true` | |
+| `autoRevokeAllowed` | no | `false` | `false` | `true` revokes on its own what the reviewer didn't keep at the deadline |
+| `recommendationsEnabled` | no | `false` | `true` | accepted even without AI recommendations licensed |
+| `mandatoryCommentRequirement` | no | no comment required | `REVOKE_ONLY_DECISIONS` | `ALL_DECISIONS`, `REVOKE_ONLY_DECISIONS`, `NO_DECISIONS` |
+| `sunsetCommentsRequired` | no | `true` | `true` | comment required when a reviewer changes a sunset date |
+| `filter` | no | the tenant's default campaign filter | none | `{ "type": "CAMPAIGN_FILTER", "id": "<id>" }`, the only type; excludes access from the review |
+| `correlatedStatus` | no | | `CORRELATED` | `UNCORRELATED` only for `SOURCE_OWNER`: reviews identities with no account on an authoritative source |
 
 ## Per type
 
@@ -32,7 +35,7 @@ Check a field against the API reference when the tenant rejects it: https://deve
 ```json
 "searchCampaignInfo": {
   "type": "IDENTITY",
-  "description": "<what the search selects>",
+  "description": "<the query and how many identities it selects>",
   "reviewer": { "type": "IDENTITY", "id": "<id>" },
   "query": "<search query>",
   "accessConstraints": [
@@ -41,10 +44,10 @@ Check a field against the API reference when the tenant rejects it: https://deve
 }
 ```
 
-- `type`: `IDENTITY` (review the access of the identities the query returns) or `ACCESS` (review who has the access the query returns).
-- `reviewer.type`: `IDENTITY` or `GOVERNANCE_GROUP`.
-- `query` or `identityIds` (a list), not both. Test the query first: `sail api post /search/v1 --body '{"indices":["identities"],"query":{"query":"<query>"}}' --env <env>`, and show the count.
-- `accessConstraints` is optional: `type` `ENTITLEMENT`, `ACCESS_PROFILE` or `ROLE`; `operator` `ALL` or `SELECTED` (with `ids`).
+- `type` is required: `IDENTITY` (review the access of the identities the query returns) or `ACCESS` (review who has the access the query returns).
+- `reviewer` is optional: when set, `IDENTITY` or `GOVERNANCE_GROUP` reviews every certification.
+- `query` or `identityIds` (a list): one of them is required. Test the query first: `sail api post /search/v1 --body '{"indices":["identities"],"query":{"query":"<query>"}}' --env <env>`, and show the count.
+- `accessConstraints` is optional (up to 1000): `type` `ENTITLEMENT`, `ACCESS_PROFILE` or `ROLE` and `operator` `ALL` or `SELECTED` are required, `ids` with `SELECTED`.
 
 **ROLE_COMPOSITION**:
 
@@ -57,8 +60,9 @@ Check a field against the API reference when the tenant rejects it: https://deve
 }
 ```
 
-- `remediatorRef` is required: who applies the revocations.
-- `roleIds` or `query`, not both. Without `reviewer`, each role's owner reviews it.
+- `remediatorRef` is required: the identity that gets a remediation task for each revoke, a Role Admin or an Org Admin.
+- `roleIds` or `query`, not both; neither includes every role.
+- `reviewer` (`IDENTITY` or `GOVERNANCE_GROUP`) is optional; `reviewerId` is deprecated, never set it.
 
 ## Lookups
 
