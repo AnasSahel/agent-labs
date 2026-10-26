@@ -1,6 +1,6 @@
-# Campaign fields (`POST /v3/campaigns`)
+# Campaign fields (`POST /campaigns/v1`)
 
-Check a field against the API reference when the tenant rejects it: https://developer.sailpoint.com/docs/api/v3/create-campaign
+Check a field against the API reference when the tenant rejects it: https://developer.sailpoint.com/docs/api/certification-campaigns
 
 ## Every type
 
@@ -43,7 +43,7 @@ Check a field against the API reference when the tenant rejects it: https://deve
 
 - `type`: `IDENTITY` (review the access of the identities the query returns) or `ACCESS` (review who has the access the query returns).
 - `reviewer.type`: `IDENTITY` or `GOVERNANCE_GROUP`.
-- `query` or `identityIds` (a list), not both. Test the query first: `sail api post /v3/search --body '{"indices":["identities"],"query":{"query":"<query>"}}' --env <env>`, and show the count.
+- `query` or `identityIds` (a list), not both. Test the query first: `sail api post /search/v1 --body '{"indices":["identities"],"query":{"query":"<query>"}}' --env <env>`, and show the count.
 - `accessConstraints` is optional: `type` `ENTITLEMENT`, `ACCESS_PROFILE` or `ROLE`; `operator` `ALL` or `SELECTED` (with `ids`).
 
 **ROLE_COMPOSITION**:
@@ -64,12 +64,12 @@ Check a field against the API reference when the tenant rejects it: https://deve
 
 | Name to resolve | Call |
 |---|---|
-| identity | `sail api get "/v3/public-identities?filters=email eq \"<email>\"" --env <env>` |
-| governance group | `sail api get "/v2025/workgroups?filters=name eq \"<name>\"" --env <env>` |
-| source | `sail api get "/v3/sources?filters=name eq \"<name>\"" --env <env>` |
-| role | `sail api get "/v3/roles?filters=name eq \"<name>\"" --env <env>` |
-| campaign filter | `sail api get /v3/campaign-filters --env <env>`, match on `name` |
+| identity | `sail api get "/public-identities/v1?filters=email eq \"<email>\"" --env <env>` |
+| governance group | `sail api get "/workgroups/v1?filters=name eq \"<name>\"" --env <env>` |
+| source | `sail api get "/sources/v1?filters=name eq \"<name>\"" --env <env>` |
+| role | `sail api get "/roles/v1?filters=name eq \"<name>\"" --env <env>` |
+| campaign filter | `sail api get /campaign-filters/v1 --env <env>`, match on `name` |
 
 ## Recurring review
 
-When the user wants the review to repeat (every quarter, every year), say that a campaign is one-shot and that a template with a schedule repeats it (`/v3/campaign-templates`, then `/v3/campaign-templates/<id>/schedule`); fill the same fields in the template and ask which they want.
+When the user wants the review to repeat (every quarter, every year), say that a campaign is one-shot and that a template with a schedule repeats it (`/campaign-templates/v1`, then `/campaign-templates/v1/<id>/schedule`); fill the same fields in the template and ask which they want.
