@@ -7,7 +7,7 @@ timeout_seconds: 180
 allowed_tools: [Read, Write, Skill]
 ---
 
-/write-meeting-notes:write-meeting-notes clean these up pls
+/write-meeting-notes:write-meeting-notes clean these up pls, no questions, just write them
 
 product sync 2026-10-19, me (Anas), Sara, Tom, Lina
 - onboarding flow: drop-off at step 3 still ~40%. sara thinks the email verif is the culprit

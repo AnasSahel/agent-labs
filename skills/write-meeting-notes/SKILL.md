@@ -7,7 +7,7 @@ metadata:
   version: 1.0.0 # x-release-please-version
 ---
 
-Rewrite draft meeting notes into notes someone who missed the meeting can act on. The notes are **faithful**: every decision, owner, date and number comes from the draft. What the draft doesn't say is a **gap**, marked as one, never filled with a guess.
+Rewrite draft meeting notes into notes someone who missed the meeting can act on. The notes are **faithful**: every decision, owner, date and number comes from the draft. What the draft doesn't say is a **gap**: ask the user about it, and never fill it with a guess.
 
 ## Steps
 
@@ -15,11 +15,20 @@ Rewrite draft meeting notes into notes someone who missed the meeting can act on
 
 2. **Sort.** Put every line of the draft in one bucket: decision, action item, open question, discussion, or noise (chit-chat, repeats). Expand shorthand only when its meaning is certain ("JD" stays "JD" unless the draft spells it out). Done when every line has a bucket and nothing that matters landed in noise.
 
-3. **Mark gaps.** An action item without an owner gets **Owner: ?**; without a due date, **Due: ?**. A missing meeting date or attendee list is `?` too. Turn a relative date ("tomorrow", "by wed") into a calendar date only from the meeting's date, never today's; without one, keep the draft's words. A decision that the draft leaves undecided ("maybe", "to check") is an open question, not a decision. Done when no owner, date or decision is invented.
+3. **Find gaps.** List what the draft doesn't say but the notes need: the meeting date, attendees or purpose; an action item's owner or due date; a fragment you can't read with certainty ("il faut qu'il demande": who?); a "maybe" that may have been settled. Turn a relative date ("tomorrow", "by wed") into a calendar date only from the meeting's date, never today's. Done when every gap is listed.
 
-4. **Write** the notes with the template, in the draft's language: translate every heading and label of the template. Drop a section that would be empty, except Action items: write "None" there. Keep the summary to 3 lines. Done when every action item from step 2 is in the table.
+4. **Ask.** When there are gaps, ask before writing, in one round of up to 6 numbered questions, most important first, in the draft's language. Quote the line each one comes from, and give your reading only when you have a real guess, so "yes" confirms it (no reading line that just repeats the gap):
 
-5. **Deliver.** Reply with the notes. When the draft came from a file, save them beside it as `<name>-notes.md` and say where. End with one line listing the gaps, so the user can fill them in one reply.
+   <question-template>
+   **Q1.** <question> ("<line from the draft>")
+   My reading: <your guess>
+   </question-template>
+
+   End the round with: "Answer what you know, or say go and I'll write with `?` for the rest." Skip this step when there are no gaps, or when the user already said not to ask (go, just write, no questions). Done when the user answered or said go.
+
+5. **Write** the notes with the template, in the draft's language: translate every heading and label of the template. Fill each gap with the user's answer; what is still unknown is `?`, and a "maybe" the user didn't settle stays an open question. Drop a section that would be empty, except Action items: write "None" there. Keep the summary to 3 lines. Done when every action item from step 2 is in the table.
+
+6. **Deliver.** Reply with the notes. When the draft came from a file, save them beside it as `<name>-notes.md` and say where. When some `?` remain, end with one line listing them.
 
 <notes-template>
 # <Meeting title> (<YYYY-MM-DD>)

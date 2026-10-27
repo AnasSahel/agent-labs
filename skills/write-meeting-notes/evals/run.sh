@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Run this skill's eval suite with `claude plugin eval`.
 # agent-labs is a skills repo, not a plugin, so this wraps the skill in a
-# throwaway plugin first. Extra arguments pass through, e.g. --runs 1 --case messy-standup.
+# throwaway plugin first. Extra arguments pass through, e.g. --runs 1 --case asks-first.
 # Needs Claude Code 2.1.269+.
 set -euo pipefail
 SKILL_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"

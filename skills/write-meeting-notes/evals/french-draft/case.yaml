@@ -9,7 +9,7 @@ execution:
   timeout_seconds: 180
   allowed_tools: [Read, Write, Skill]
   prompt: |
-    /write-meeting-notes:write-meeting-notes notes/comite-2026-10-22.md
+    /write-meeting-notes:write-meeting-notes notes/comite-2026-10-22.md (écris directement, pas de questions)
 graders:
   - name: saved-beside-draft
     type: file_exists

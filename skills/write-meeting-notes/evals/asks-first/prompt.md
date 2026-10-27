@@ -1,7 +1,7 @@
 ---
-name: missing-owners
-description: Action items with no owner or date get "?" instead of a guess, and the reply ends by listing the gaps.
-tags: [faithful]
+name: asks-first
+description: A draft with missing owners, no date and no attendees gets one round of questions before any notes are written.
+tags: [questions]
 max_turns: 10
 timeout_seconds: 180
 allowed_tools: [Read, Write, Skill]
