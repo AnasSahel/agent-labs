@@ -1,0 +1,27 @@
+schema_version: "1.1"
+name: french-draft
+description: A draft file in French gives notes in French, headings included, saved beside the draft.
+tags: [language]
+context:
+  scaffold_script: scaffold.sh
+execution:
+  max_turns: 10
+  timeout_seconds: 180
+  allowed_tools: [Read, Write, Skill]
+  prompt: |
+    /write-meeting-notes:write-meeting-notes notes/comite-2026-10-22.md (écris directement, pas de questions)
+graders:
+  - name: saved-beside-draft
+    type: file_exists
+    path: notes/comite-2026-10-22-notes.md
+  - name: french-notes
+    type: llm
+    weight: 2
+    focus: last_message
+    criteria: |
+      The draft is in French. PASS only if all of these hold:
+      - The notes are in French, headings and labels included (any French wording, for example "Résumé", "Décisions", "Actions", "Participants"); no English heading or table header remains.
+      - Moving to Postgres 16 for performance is listed as a decision.
+      - The action items include Julien preparing the test environment, due Monday 26 (or 2026-10-26), and Amine following up the supplier for the licences, due unknown ("?").
+      - Keeping the 5/11 client demo is an open question, not a decision.
+      - The reply gives the path where the notes were saved, in the notes/ folder.
