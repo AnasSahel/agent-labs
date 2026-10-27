@@ -1,6 +1,6 @@
 ---
 name: sail-fill-campaign
-description: Fill the fields of a SailPoint Identity Security Cloud certification campaign (manager, source owner, search, role composition) from what the user wants to certify and the naming and filling rules of the project or tenant, show every field with where its value comes from, then create it with sail or walk through the UI. Use when someone wants to create, prepare or fill an ISC certification campaign or access review, or asks which campaign type fits a review.
+description: Fill the fields of a SailPoint Identity Security Cloud certification campaign (manager, source owner, search, role composition) from what the user wants to certify and the naming and filling rules of the project or tenant, show every field with where its value comes from, then hand over the sail commands to run, or the filled form for the UI. Use when someone wants to create, prepare or fill an ISC certification campaign or access review, or asks which campaign type fits a review.
 metadata:
   author: Anas Sahel
   version: 1.0.0 # x-release-please-version
@@ -54,8 +54,27 @@ Calls go through `sail api` with an explicit `--env`, never the CLI's current on
 
    Each label maps to the API: Email Notifications `emailNotificationEnabled`, Campaign Filters `filter`, Undecided Access `autoRevokeAllowed` (`false` maintains), Require Comments `mandatoryCommentRequirement` (`NO_DECISIONS`, `ALL_DECISIONS`, `REVOKE_ONLY_DECISIONS`), Due Date the template's `deadlineDuration` (`P1W`, `P2W`, `P30D`). When the form on screen differs from this template, the form wins: follow its labels.
 
-5. **Proceed.** Ask how to create it: **sail** or **UI**. The form builds a campaign **template**, so sail follows the Campaign choice:
-   - **sail**: write the body to a temp file, show the command, run it once the user agrees (on a production env, only after an explicit yes in the previous turn). Save: `sail api post /campaign-templates/v1 --body-file <file> --env <env>`, the form's fields under `campaign`, Due Date as `deadlineDuration`. Generate Now: the same, then `sail api post /campaign-templates/v1/<id>/generate --env <env>`, which creates the campaign **staged**; poll `GET /campaigns/v1/<id>` until its status leaves `PENDING`. Schedule: the same, then `PUT /campaign-templates/v1/<id>/schedule`. Report the template's ID, and the campaign's ID and status when there is one.
+5. **Hand over the commands.** Ask how the user will create it: **sail** or **UI**. Either way, the user runs the writes: never run a `post`, `put` or `patch` yourself.
+   - **sail**: generate the **commands** and show them, one per `bash` block, in the order to run, each under one line saying what it does. Each one runs as is, from any folder: an explicit `--env`, the body inline in a quoted heredoc (no temp file to keep), placeholders only for an ID an earlier command returns, named after it (`<template-id>`). The form builds a campaign **template**, so the commands follow the Campaign choice:
+
+     <commands-template>
+     # 1. Create the template (every choice). The form's fields go under "campaign", Due Date as "deadlineDuration".
+     sail api post /campaign-templates/v1 --env <env> --jsonpath '$.id' --body "$(cat <<'JSON'
+     { "name": "...", "description": "...", "deadlineDuration": "P1W", "campaign": { ... } }
+     JSON
+     )"
+
+     # 2a. Generate Now: generate the campaign from the template; it's created staged.
+     sail api post /campaign-templates/v1/<template-id>/generate --env <env>
+
+     # 2b. Schedule: set the template's schedule.
+     sail api put /campaign-templates/v1/<template-id>/schedule --env <env> --body '<schedule>'
+
+     # 3. Check: the campaign's status leaves PENDING for STAGED.
+     sail api get "/campaigns/v1?filters=name eq \"<campaign name>\"" --env <env> --jsonpath '$[0].status'
+     </commands-template>
+
+     Show only the blocks the Campaign choice needs. Activation comes last, in its own block, behind one line warning that it sends emails to every reviewer and can't be undone: `sail api post /campaigns/v1/<campaign-id>/activate --env <env> --body '{"timeZone":"+01:00"}'` (an ISO 8601 offset; UTC when omitted).
    - **UI**: hand over the form above, filled. When the user wants you to fill it in their browser, call the Skill tool with `claude-in-chrome`, read each label on screen before typing, and stop before the last button.
 
-   Activating a **staged** campaign sends emails to every reviewer and can't be undone: do it only when the user asks, with `sail api post /campaigns/v1/<id>/activate --body '{"timeZone":"<offset>"}' --env <env>` (an ISO 8601 offset such as `+01:00`; UTC when omitted). Done when the campaign exists **staged** (or activated on request), or the UI checklist is handed over.
+   Done when the commands, or the filled form, are handed over.
