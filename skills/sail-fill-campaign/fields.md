@@ -68,10 +68,10 @@ Caller: `ORG_ADMIN` or `CERT_ADMIN`, token scope `idn:campaign:manage`, plus `id
 
 | Name to resolve | Call |
 |---|---|
-| identity | `sail api get "/public-identities/v1?filters=email eq \"<email>\"" --env <env>` |
-| governance group | `sail api get "/workgroups/v1?filters=name eq \"<name>\"" --env <env>` |
-| source | `sail api get "/sources/v1?filters=name eq \"<name>\"" --env <env>` |
-| role | `sail api get "/roles/v1?filters=name eq \"<name>\"" --env <env>` |
+| identity | `sail api get /public-identities/v1 -q 'filters=email eq "<email>"' --env <env>` |
+| governance group | `sail api get /workgroups/v1 -q 'filters=name eq "<name>"' --env <env>` |
+| source | `sail api get /sources/v1 -q 'filters=name eq "<name>"' --env <env>` |
+| role | `sail api get /roles/v1 -q 'filters=name eq "<name>"' --env <env>` |
 | campaign filter | `sail api get /campaign-filters/v1 --env <env>`, match on `name` |
 
 ## Recurring review
