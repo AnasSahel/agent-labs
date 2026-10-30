@@ -10,7 +10,7 @@ Turn a worry ("what if our payroll supplier gets ransomware?") into one scored, 
 
 ## Steps
 
-1. **Frame.** Write the risk as one **scenario**: `<risk source> could <feared event: disclosed, altered, lost, unavailable> <asset> through <path>`. Read `grc/risk-register.md`: when the same scenario is there, this run is a **reassessment** of that row. Done when the scenario is one line and you know whether it's new.
+1. **Frame.** Write the risk as one **scenario**: `<risk source> could <feared event: disclosed, altered, lost, unavailable> <asset> through <path>`. Read `grc/risk-register.md`: when the same scenario is there, this run is a **reassessment** of that row. Then show the first **chain** (see Draw, no controls yet) before any question, so the user corrects the path itself. Done when the user has seen the scenario and its chain, and you know whether it's new.
 
 2. **Grill.** Call the Skill tool with `grc-grill`:
    - intensity: `hard`
@@ -32,9 +32,9 @@ Turn a worry ("what if our payroll supplier gets ransomware?") into one scored, 
 
 5. **Draw.** Draw the **path** as a **chain**: 3 to 5 rounded boxes left to right joined by arrows, each a bold title of 2 or 3 words with an arrow when it moves (`Cost ↑`, `Payments ↓`) and one short grey line under it. The first box is the cause, neutral; every box after it is a consequence, tinted red; the last is the feared event with its severity. The control that breaks the chain goes under the box it blocks, as a green box with its ISO 27001 reference. Then show it the best way the harness allows:
    - Can render a page (an Artifact or HTML preview tool): render the chain from `chain.html` in this skill's folder, plus the inherent to residual move on the grid, and give the link.
-   - Terminal only: print the chain as ASCII boxes in the reply.
+   - Otherwise (a terminal, or a chat that shows only text): print the chain from the ASCII template in the reply, never as prose or a bullet list.
 
-   Always put the Mermaid version in the report. Done when the user has seen the chain.
+   Redraw it after the grill with the controls in place. Always put the Mermaid version in the report. Done when the user has seen the final chain.
 
 6. **Write.** Add or update the row in `grc/risk-register.md` (create it from the template when missing; ids `R-001`, `R-002`…). Write the assessment as `grc/risks/<id>-<slug>.md` from the report template, then render each format the user picked:
    - `md`, `html`, `csv`, `json`: write them yourself next to the report; `html` renders the Mermaid with `mermaid@11.4.1` from jsdelivr.
@@ -66,6 +66,16 @@ flowchart LR
   class K control
 ```
 </path-template>
+
+<ascii-template>
+```
+┌────────────────┐   ┌────────────────┐   ┌────────────────┐   ┌────────────────┐
+│ SMS-only MFA   │──▶│ Code phished ↑ │──▶│ Admin hijacked │──▶│ Payments ↓     │
+│ AWS admins     │   │ fake login     │   │ full cloud     │   │ prod down · G4 │
+└────────────────┘   └───────┬────────┘   └───────┬────────┘   └────────────────┘
+                        🛡 FIDO2 · A.8.5     🛡 review · A.8.2
+```
+</ascii-template>
 
 <report-template>
 # <ID> · <scenario>
