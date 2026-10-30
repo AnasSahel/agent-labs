@@ -32,6 +32,8 @@
   .badge { position:absolute; top:-8px; right:-8px; min-width:20px; height:20px; border-radius:10px; background:var(--red); color:#fff;
            font:700 11px/20px system-ui; padding:0 5px; border:2px solid var(--bg); }
   .source .badge { transform:rotate(-45deg); }
+  .start { position:absolute; width:44px; height:44px; margin:-22px 0 0 -22px; border-radius:50%; background:#f1f3f6;
+           border:1.5px solid #b9c2d0; color:var(--slate); font:600 11px/41px system-ui; text-align:center; }
   .label, .type { display:table; margin:0 auto; padding:0 4px; background:var(--bg); }
   .label { font-weight:700; font-size:14px; }
   .type { color:var(--muted); font-size:12px; }
@@ -128,7 +130,8 @@ function draw() {
     const most = Math.max(0, ...d.nodes.slice(r * perRow, r * perRow + perRow).map((_, k) => findingsAt(r * perRow + k).length));
     return 170 + most * 64 + (single ? 90 : 0);
   });
-  const top = rowH.map((_, r) => 40 + rowH.slice(0, r).reduce((a, b) => a + b, 0));
+  const lead = single ? 80 : 0;
+  const top = rowH.map((_, r) => 40 + lead + rowH.slice(0, r).reduce((a, b) => a + b, 0));
   const pos = d.nodes.map((_, i) => {
     const r = Math.floor(i / perRow), c = i % perRow, col = r % 2 ? perRow - 1 - c : c;
     return { x: single ? 90 : gut + colW * col + colW / 2, y: top[r] + 29, r };
@@ -136,6 +139,10 @@ function draw() {
   canvas.style.height = (top[rows - 1] + rowH[rows - 1]) + 'px';
 
   let html = '', wires = '';
+  const s0 = pos[0], sx = single ? s0.x : Math.max(26, gut - 34), sy = single ? s0.y - 100 : s0.y;
+  html += `<div class="start" style="left:${sx}px;top:${sy}px">Start</div>`;
+  wires += single ? `<path d="M${sx} ${sy + 22} L${s0.x} ${s0.y - 40}" stroke="var(--muted)" stroke-width="2" fill="none"/>`
+                  : `<path d="M${sx + 22} ${sy} L${s0.x - 40} ${s0.y}" stroke="var(--muted)" stroke-width="2" fill="none"/>`;
   d.nodes.forEach((nd, i) => {
     const fs = findingsAt(i);
     html += `<div class="node ${esc(nd.role || 'step')}" style="left:${pos[i].x}px;top:${pos[i].y - 29}px">

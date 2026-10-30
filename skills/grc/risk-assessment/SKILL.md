@@ -30,19 +30,23 @@ Turn a worry ("what if our payroll supplier gets ransomware?") into one scored, 
 
 4. **Map.** For each control in the treatment, give its ISO 27001:2022 Annex A control, then the NIS2, DORA and GDPR articles it serves when that framework is in scope. Done when every control has its ISO 27001 reference.
 
-5. **Draw.** Draw the **attack path**: copy `attack-path.html` from this skill's folder to `grc/risks/<id>-attack-path.html` and fill only its JSON, the page draws itself (white background, snakes onto several rows, stacks on a phone). Write every word for a manager, not an engineer: **plain words** ("fake login page", not "AiTM kit"; "full admin rights", not "AdministratorAccess"); product names and jargon stay in the report.
+5. **Draw.** Decide the **attack path**, then draw it. Write every word for a manager, not an engineer: **plain words** ("fake login page", not "AiTM kit"; "full admin rights", not "AdministratorAccess"); product names and jargon stay in the report.
    - **nodes**, in order, 4 to 7: the risk source (`role: source`), each hop the attacker takes (a lure, an identity, a credential, a system), the business asset (`role: asset`), the feared event with its severity (`role: impact`). Each has an `icon` (`attacker user mail phone key web computer server cloud database container vendor payment lock bug alert`), a 1 to 3 word `label` and a `type`.
    - **edges**, one between each pair of nodes: what the attacker does, in 2 to 4 words (`captures password + SMS`), its `severity`, and the `control` that breaks it when there is one (`name`, ISO 27001 `ref`, `status`: `in place` or `planned`).
    - **findings**: each weakness that makes a hop possible, on its node (`kind`: Weak spot, Missing control, Known flaw, Incident; `source`: the doc or audit that shows it).
    - The header: id, title, scenario, inherent and residual score once scored.
 
-   Show it where the user is already looking, with the first of these that works:
-   1. A tool that renders a page or an image inside the conversation itself (an Artifact or visualize tool): render it there.
-   2. A local machine: open the file in the system's default browser (`open` on macOS, `xdg-open` on Linux, `start` on Windows), never only in a side or preview pane the user has to find, and say in one line that it opened in their browser, with the path.
-   3. A remote shell with a headless browser: screenshot it to `grc/risks/<id>-attack-path.png` and link the image.
-   4. Nothing above works: print the ASCII template, and say the visual is in the HTML file.
+   **Look**: white background, a small grey **Start** circle, then the nodes left to right in rows; the risk source and the impact in red, the asset in teal, the hops neutral; each weak spot a dashed red box on its node; each control a green box on the hop it breaks (solid in place, dashed planned), with its ISO 27001 reference.
 
-   Never paste Mermaid or HTML source into the reply: a chat shows it as code, not a picture. Never stop at ASCII when one of 1 to 3 works. Redraw it after the grill with the controls and scores. Put the Mermaid version in the report file only. Done when the user has seen the final attack path.
+   Show it in the conversation first:
+   1. **visualize.** Search your tools, deferred ones included, for `visualize` (or a widget, Artifact or canvas tool). When one exists, load it, read its read-me, and draw the attack path with it inline, in the look above. This is the default whenever such a tool exists.
+   2. No such tool, on a local machine: open the saved copy in the default browser (`open` on macOS, `xdg-open` on Linux, `start` on Windows) and say so in one line with the path.
+   3. No such tool, on a remote shell with a headless browser: screenshot the saved copy to `grc/risks/<id>-attack-path.png` and link it.
+   4. None of these: print the ASCII template and say where the saved copy is.
+
+   Always also save a copy: `attack-path.html` from this skill's folder, filled into `grc/risks/<id>-attack-path.html` (only its JSON; the page draws itself in the same look).
+
+   Never paste Mermaid or HTML source into the reply: a chat shows it as code, not a picture. Never fall back to 2 to 4 when a visualize tool exists. Redraw it after the grill with the controls and scores. Put the Mermaid version in the report file only. Done when the user has seen the final attack path.
 
 6. **Write.** Add or update the row in `grc/risk-register.md` (create it from the template when missing; ids `R-001`, `R-002`…). Write the assessment as `grc/risks/<id>-<slug>.md` from the report template, then render each format the user picked:
    - `md`, `html`, `csv`, `json`: write them yourself next to the report; `html` renders the Mermaid with `mermaid@11.4.1` from jsdelivr.
