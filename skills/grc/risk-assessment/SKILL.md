@@ -26,6 +26,8 @@ Turn a worry ("what if our payroll supplier gets ransomware?") into one scored, 
 3. **Score.** Use the scales in `grc/context.md`, else these:
    - **Severity** G1 minor · G2 significant (recoverable) · G3 serious (hard to recover) · G4 critical (irreversible, or threatens the organisation).
    - **Likelihood** V1 unlikely · V2 possible · V3 likely · V4 near certain.
+
+   **Talk in words, not codes.** G is severity (French *gravité*), V is likelihood (*vraisemblance*), from EBIOS RM; most users don't know that. In questions and replies say the word first, code after: "Critical (G4)", "Likely (V3)", "High risk (G4·V3)". When you ask for severity or likelihood, show the 4 options as a short list with one plain example each for this risk, so the user picks a word, not a code. Codes alone are fine only in tables and the register.
    - **Level** high when G3+ with V3+, or G4 with V2+; low when both are 2 or less; medium otherwise.
 
    Score inherent, then residual with the treatment's controls in place. When residual is above the appetite in `grc/context.md` and the treatment is `accept`, the owner's acceptance must be in the trace as a `user` row, else ask for it. Done when both scores are set and the residual is within appetite or accepted.
