@@ -13,11 +13,11 @@
   body { margin:0; background:var(--bg); color:var(--ink); font:14px/1.4 var(--sans); }
   main { max-width:76rem; margin:0 auto; padding:0 1.25rem; }
   @media (min-width:40rem) { main { padding:0 2rem; } }
-  header { padding:48px 0 32px; }
-  .eyebrow { font:400 11px var(--mono); letter-spacing:.08em; text-transform:uppercase; color:var(--accent); margin-bottom:18px; }
-  h1 { margin:0 0 20px; font-size:clamp(30px,4.6vw,52px); line-height:1.08; font-weight:600; letter-spacing:-.03em; max-width:22em; }
-  h1 .accent { display:block; color:var(--accent); }
-  .scenario { margin:0; color:var(--ink-2); max-width:40rem; font-size:15px; line-height:1.65; }
+  header { padding:28px 0 18px; }
+  .eyebrow { font:400 11px var(--mono); letter-spacing:.08em; text-transform:uppercase; color:var(--accent); margin-bottom:10px; }
+  h1 { margin:0 0 10px; font-size:clamp(24px,3vw,32px); line-height:1.15; font-weight:600; letter-spacing:-.03em; max-width:30em; }
+  h1 .accent { color:var(--accent); margin-left:.3em; }
+  .scenario { margin:0; color:var(--ink-2); max-width:48rem; font-size:14px; line-height:1.55; }
   .section { margin-top:8px; border-top:1px solid var(--ink); }
   .section h2 { margin:0; padding:12px 0; border-bottom:1px solid var(--line); font-size:12px; font-weight:600; }
   #canvas { position:relative; margin:8px 0 16px; }
@@ -41,8 +41,8 @@
   .label, .type { display:table; margin:0 auto; padding:0 4px; background:var(--bg); }
   .label { font-weight:600; font-size:14px; letter-spacing:-.01em; }
   .type { color:var(--muted); font:400 10px var(--mono); letter-spacing:.08em; text-transform:uppercase; margin-top:2px; }
-  .finding { margin:8px auto 0; width:150px; border:1px dashed var(--red); border-radius:2px; background:var(--card); padding:6px 8px; text-align:left; }
-  .finding small { display:block; color:var(--red); font:500 10px/1.2 var(--mono); letter-spacing:.08em; text-transform:uppercase; margin-bottom:3px; }
+  .finding { margin:5px auto 0; width:150px; border:1px dashed var(--red); border-radius:2px; background:var(--card); padding:4px 7px; text-align:left; }
+  .finding small { display:block; color:var(--red); font:500 9px/1.2 var(--mono); letter-spacing:.08em; text-transform:uppercase; margin-bottom:1px; }
   .finding b { font-size:12px; font-weight:500; display:block; }
   .finding span { color:var(--muted); font:400 10px var(--mono); }
   .edge { position:absolute; transform:translate(-50%,-100%); text-align:center; width:max-content; pointer-events:none; }
@@ -56,7 +56,7 @@
              background:var(--green-soft); color:var(--green); border:1px solid var(--green); border-radius:2px; padding:3px 7px; font:500 11px var(--sans); }
   .control.planned { border-style:dashed; background:var(--card); }
   .control svg { width:13px; height:13px; flex:none; stroke:currentColor; }
-  .legend { display:flex; flex-wrap:wrap; gap:16px; padding:14px 0 32px; border-top:1px solid var(--line); color:var(--muted); font:400 11px var(--mono); letter-spacing:.04em; }
+  .legend { display:flex; flex-wrap:wrap; gap:16px; padding:10px 0 16px; border-top:1px solid var(--line); color:var(--muted); font:400 11px var(--mono); letter-spacing:.04em; }
   .legend i { display:inline-block; width:11px; height:11px; border-radius:2px; margin-right:6px; vertical-align:-1px; }
 </style></head><body>
 
@@ -132,8 +132,10 @@ $("scenario").textContent = d.scenario || "";
 function draw() {
   const canvas = document.getElementById('canvas');
   const W = canvas.clientWidth, n = d.nodes.length;
-  const gut = W > 1000 ? 190 : W > 700 ? 140 : 70, inner = W - 2 * gut;
-  const perRow = Math.max(1, Math.min(n, Math.floor(inner / 240) || 1, 4));
+  // One row whenever each step gets 190px or more; else a snake of up to 4 per row; one column on phones.
+  const oneRow = W / n >= 190;
+  const gut = oneRow ? 70 : W > 1000 ? 190 : W > 700 ? 140 : 70, inner = W - 2 * gut;
+  const perRow = oneRow ? n : Math.max(1, Math.min(n, Math.floor(inner / 240) || 1, 4));
   const colW = inner / perRow, rows = Math.ceil(n / perRow), single = perRow === 1;
   const findingsAt = (i) => (d.findings || []).filter((f) => f.node === i);
   const nodeHtml = (nd, i, x, y) => {
@@ -141,13 +143,13 @@ function draw() {
     return `<div class="node ${esc(nd.role || 'step')}" style="left:${x}px;top:${y}px">
       <div class="tile">${svgIcon(nd.icon)}${fs.length ? `<span class="badge">${fs.length}</span>` : ''}</div>
       <div class="label">${esc(nd.label)}</div><div class="type">${esc(nd.type)}</div>
-      ${fs.map((f) => `<div class="finding"><small>${esc(f.kind)}</small><b>${esc(f.title)}</b><span>${esc(f.source)}</span></div>`).join('')}
+      ${fs.map((f) => `<div class="finding" title="${esc(f.source)}"><small>${esc(f.kind)}</small><b>${esc(f.title)}</b></div>`).join('')}
     </div>`;
   };
   // Measure each node with its findings, so a tall stack never runs into the next row.
   canvas.innerHTML = d.nodes.map((nd, i) => nodeHtml(nd, i, -999, 0)).join('');
   const tall = [...canvas.querySelectorAll('.node')].map((el) => el.offsetHeight);
-  const head = single ? 60 : 110; // room above the tiles for edge labels and control chips
+  const head = single ? 60 : 125; // room above the tiles for edge labels and control chips
   const rowH = [...Array(rows)].map((_, r) => head + Math.max(...tall.slice(r * perRow, r * perRow + perRow)) + 50 + (single ? 90 : 0));
   const lead = single ? 80 : 0;
   const top = rowH.map((_, r) => 20 + lead + rowH.slice(0, r).reduce((a, b) => a + b, 0));
