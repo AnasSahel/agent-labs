@@ -95,10 +95,12 @@
   "residual": { "score": "G4·V2", "level": "medium" },
   "source": { "icon": "attacker", "label": "Risk source", "type": "Risk source" },
   "asset":  { "icon": "payment",  "label": "Asset",       "type": "Business asset" },
+  "gives": "business-app",
   "impact": { "icon": "alert",    "label": "Feared event", "type": "Impact · G4", "edge": { "label": "causes", "severity": "high" } },
   "routes": [
     {
       "name": "Most likely route",
+      "needs": "outside",
       "likelihood": { "today": "V3", "after": "V1" },
       "steps": [
         { "icon": "mail", "label": "Lure", "type": "Lure" },
@@ -113,6 +115,7 @@
     },
     {
       "name": "Second route",
+      "needs": "outside",
       "likelihood": { "today": "V2", "after": "V2" },
       "steps": [ { "icon": "phone", "label": "Other way in", "type": "Lure" } ],
       "edges": [ { "label": "tries another way", "severity": "medium" }, { "label": "reaches", "severity": "medium" } ]

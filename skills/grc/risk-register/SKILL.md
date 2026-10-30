@@ -14,7 +14,7 @@ Keep `grc/risk-register.md` the **register**: the one source of truth every GRC 
 
 2. **Act** on what the user asked, one of:
    - **View**: the rows they asked for, filtered and sorted (by level, owner, status, due date, or framework: the register holds ISO 27001 refs only, so read the other frameworks from each row's report in `grc/risks/`; a row without a report counts as `framework unknown`, never as not concerned). Default: open risks, highest residual first.
-   - **Review**: flag each row that needs attention: **overdue** (due date passed, not closed), **stale** (not updated in 90 days), **above appetite** (current level above it and not accepted, even when the residual will be within it; ask for an interim acceptance until the fixes land), **acceptance to renew** (accepted more than a year ago). Then name **shared root causes**: one policy gap or missing control behind several risks, fixed once. Done when every flagged row has its reason.
+   - **Review**: flag each row that needs attention: **overdue** (due date passed, not closed), **stale** (not updated in 90 days), **above appetite** (current level above it and not accepted, even when the residual will be within it; ask for an interim acceptance until the fixes land), **acceptance to renew** (accepted more than a year ago). Then name **shared root causes**: one policy gap or missing control behind several risks, fixed once. Flag each row of the **Chains** table above appetite, and each chain whose linked risk was updated after it (refresh it with `attack-chain`). Done when every flagged row has its reason.
    - **Update**: change only status, owner, due date, a control's status, or the trace link. Then set `Updated` to today.
    - **Import**: read the user's CSV, xlsx or Jira issues, map their columns to the register's (say which you mapped and which you dropped), give each new risk the next id (`R-00n`), and mark unscored ones `to assess`. Never overwrite an existing row without showing the change.
    - **Export**: the formats the user names, else none (the chat view is enough).
@@ -50,3 +50,5 @@ Text-only (md, csv, json, yaml, Jira) stay plain. Visual ones (html, pdf, pptx, 
 </register-template>
 
 Status is one of `to assess`, `open`, `treated`, `accepted`, `closed`. The columns are the ones `risk-assessment` writes: keep them in this order.
+
+The register may end with a **Chains** table (`C-001`…), written by `attack-chain`: show it after the risks when it exists, review it as above, and change only its status, owner or trace link; links and scores go back to `attack-chain`.
