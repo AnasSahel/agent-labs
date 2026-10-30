@@ -56,7 +56,7 @@ Container 76rem max, 1.25rem side padding (2rem from 40rem up), lots of air.
 
 - **html report**: the Newsroom layout above; sections Executive summary, Scenario, Attack path, Score (with the heat map), Treatment, Decisions. Tables: `surface-2` header, 1px `line` rows. Level tags are square (2px), mono, colored text on the soft fill.
 - **Mermaid** (report only): `%%{init: {"theme":"base","themeVariables":{"fontFamily":"Geist, system-ui","primaryColor":"#FAFAFA","primaryBorderColor":"#D9DBDE","lineColor":"#111418"}}}%%` and the classDefs in the path template.
-- **pptx**: 16:9, `bg` background; title slide in the Newsroom opening; every other slide has the eyebrow, a Geist 600 title and a thin rule below. No shadows, no rounded shapes. One idea per slide.
+- **pptx**: exactly the deck in **PowerPoint** below.
 - **xlsx**: exactly the workbook in **Excel** below.
 - **pdf**: render the html report to pdf (A4, same layout), or build it with the same tokens and fonts.
 - **docx**: Geist body, Geist Mono eyebrows, accent eyebrow and headline second line, 1px rules between sections, tables as in xlsx.
@@ -91,3 +91,22 @@ Five sheets, in this order, with these exact names. Nothing else.
    - `# | Control | Status | Owner | Due | ISO 27001 | NIS2 | DORA | GDPR`. Planned first, then in place (numbered E1, E2…). Refs in Geist Mono. Widths: Control 48, others 14.
 5. **Decisions**
    - The grill trace: `# | Field | Question | Recommended (citation) | Answer | Settled by`. `Settled by` as text (`user`, `yes`, `call`, `fact: <source>`), `user` rows bold.
+
+## PowerPoint
+
+The **Split** layout: the point on the left, the evidence on the right. Reference: [examples/deck-split.png](examples/deck-split.png). 16:9 (13.333 × 7.5 in), `bg` background, six slides in this order. Nothing else.
+
+**Grid** (every slide but the title):
+- Left column: x 0.67 in, width 3.9 in. Eyebrow (Geist Mono 10pt, accent, uppercase, `0.08em`), then the **action title** (Geist 600, 30pt, tracking −2%, ink), a full sentence that states the point. Below it, 1 to 3 takeaways in Geist 14pt `ink-2`, each above a 1px `line` rule.
+- Divider: one vertical 1px `line` at x 5.0 in, from y 0.6 to 6.6 in.
+- Right panel: x 5.5 in to 12.67 in (0.5 in clear of the divider), vertically centred. The evidence only.
+- Footer: y 7.0 in, Geist Mono 9pt muted, uppercase: `<organisation> · Risk review` left, `<n> / 6` right.
+- No shadows, no rounded shapes, no clip art, no emoji. Corners square.
+
+**Slides**:
+1. **Title**: left, eyebrow `RISK REVIEW · <ID> · <date>` at the top and `OWNER · DUE · TREATMENT` in Geist Mono at the bottom; a 1px `ink` divider at x 4.6 in; right, the title (Geist 600, 50pt) with the verdict in accent below it.
+2. **Executive summary**: title states the risk in one sentence; one takeaway = the ask. Right: the 4 lines as a two-column table (labels in Geist Mono 10pt muted, text Geist 16pt), 1px `line` rules between rows; risk levels as level tags.
+3. **Attack path**: title `<n> steps from <entry> to <impact>`; takeaways = the key weak spot and how many protections are planned. Right: the screenshot of the filled `<id>-attack-path.html` (icons and ▶ included), as wide as the panel.
+4. **Score**: title `<Likely> today, <unlikely> after fixes`; takeaways = why severity stays or moves, why likelihood moves, appetite. Right: the 4×4 heat map as real table cells (not an image), full-strength soft fills, `● TODAY` and `○ AFTER FIXES` in Geist Mono bold, the axis labels `SEVERITY ↑ · LIKELIHOOD →`.
+5. **Treatment**: title `<n> fixes, <k> by <date>`; takeaways = cost and the main framework refs. Right: table `Protection | Due | ISO 27001 | Status`, header `surface-2` with a 1px `ink` rule, status as level tags (planned amber, in place green).
+6. **Decision**: title = the ask (`Approve the plan today.`); takeaway = the result (`High → medium, within appetite`). Right: the numbered decisions, Geist 22pt.
