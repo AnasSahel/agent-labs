@@ -36,7 +36,7 @@ Turn a worry ("what if our payroll supplier gets ransomware?") into one scored, 
    - **findings**: each weakness that makes a hop possible, on its node (`kind`: Weak spot, Missing control, Known flaw, Incident; `source`: the doc or audit that shows it). At most 3 per node, titles of 6 words or fewer; merge the rest. Context such as an ongoing phishing wave goes in the scenario, not on a node.
    - The header: id, title, scenario, inherent and residual score once scored.
 
-   **Look**: white background, a small grey circle with a play ▶ icon (no text) where the path starts, then the nodes left to right in rows, each joined to the next by an arrow line, the line labelled with what the attacker does; the risk source and the impact in red, the asset in teal, the hops neutral; each weak spot a dashed red box on its node; each control a green box on the hop it breaks (solid in place, dashed planned), with its ISO 27001 reference.
+   **Look** ([theme.md](theme.md)): soft gray background, flat and square, a small circle with a play ▶ icon (no text) where the path starts, then the nodes left to right in rows, each joined to the next by a thin black arrow labelled with what the attacker does; the risk source black, the asset electric blue, the impact and each weak spot dashed red, the hops gray; each control a green box on the hop it breaks (solid in place, dashed planned), with its ISO 27001 reference.
 
    Show it in the conversation first:
    1. **visualize.** Search your tools, deferred ones included, for `visualize` (or a widget, Artifact or canvas tool). When one exists, load it, read its read-me, and draw the attack path with it inline, in the look above. This is the default whenever such a tool exists.
@@ -49,8 +49,8 @@ Turn a worry ("what if our payroll supplier gets ransomware?") into one scored, 
    Never paste Mermaid or HTML source into the reply: a chat shows it as code, not a picture. Never fall back to 2 to 4 when a visualize tool exists. Redraw it after the grill with the controls and scores. Put the Mermaid version in the report file only. Done when the user has seen the final attack path.
 
 6. **Write.** Add or update the row in `grc/risk-register.md` (create it from the template when missing; ids `R-001`, `R-002`…). Write the assessment as `grc/risks/<id>-<slug>.md` from the report template, then render each format the user picked:
-   - `md`, `html`, `csv`, `json`: write them yourself next to the report; `html` renders the Mermaid with `mermaid@11.4.1` from jsdelivr, on a white page with system fonts: no dark mode, no web fonts.
-   - `pdf`, `pptx`, `xlsx`: call the Skill tool with `pdf`, `pptx` or `xlsx`, with the report as the source; the path goes in as an image (`mmdc` when installed, else drawn with the target's own shapes).
+   - `md`, `html`, `csv`, `json`: write them yourself next to the report; `html` renders the Mermaid with `mermaid@11.4.1` from jsdelivr. Every file follows [theme.md](theme.md): one blue accent, grays, Geist, flat, light only.
+   - `pdf`, `pptx`, `xlsx`: call the Skill tool with `pdf`, `pptx` or `xlsx`, with the report and [theme.md](theme.md) as the source; the path goes in as an image (`mmdc` when installed, else drawn with the target's own shapes).
    - Jira: create one issue (title: the scenario, owner, due date, link to the report) through the Jira connector; without one, say so and hand over the CSV row.
 
    Done when the register row exists and every requested file or issue is listed with its path or link.
@@ -73,12 +73,12 @@ flowchart LR
   A -- "<action> · medium" --> F("<b><feared event></b><br/>Impact · G<n>")
   W1["⚠ <weakness> · <source>"] -.- N1
   K1["🛡 <control> · A.x.y"] -.-x N1
-  classDef source fill:#e0245e,stroke:#e0245e,color:#fff
-  classDef hop fill:#fff,stroke:#d7deea,color:#0f1b33
-  classDef asset fill:#0e9fb8,stroke:#0e9fb8,color:#fff
-  classDef impact fill:#fde8ef,stroke:#e0245e,color:#0f1b33
-  classDef weak fill:#fff,stroke:#e0245e,stroke-dasharray:3 3,color:#e0245e
-  classDef control fill:#e6f6ec,stroke:#1f9d55,color:#1f9d55
+  classDef source fill:#111418,stroke:#111418,color:#fff
+  classDef hop fill:#FAFAFA,stroke:#D9DBDE,color:#111418
+  classDef asset fill:#2F5BFF,stroke:#2F5BFF,color:#fff
+  classDef impact fill:#F8E6E9,stroke:#C4314B,color:#111418
+  classDef weak fill:#FAFAFA,stroke:#C4314B,stroke-dasharray:3 3,color:#C4314B
+  classDef control fill:#E4F1E9,stroke:#2E7D4F,color:#2E7D4F
   class S source
   class N1 hop
   class A asset

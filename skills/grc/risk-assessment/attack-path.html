@@ -2,57 +2,60 @@
 <!-- Attack path template. Fill only the JSON in <script id="data">; the page draws itself. -->
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Attack path</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
 <style>
-  :root { --bg:#fff; --card:#fff; --ink:#0f1b33; --muted:#66728a; --line:#d7deea;
-          --red:#e0245e; --red-soft:#fde8ef; --teal:#0e9fb8; --teal-soft:#e2f6f9;
-          --amber:#f29d0b; --green:#1f9d55; --green-soft:#e6f6ec; --slate:#3b4a66; }
+  /* Theme: see theme.md. One blue accent, grays, risk colors only as signals. Flat, square, light only. */
+  :root { --bg:#F1F2F3; --card:#FAFAFA; --ink:#111418; --ink-2:#3D434C; --muted:#6F757E; --line:#D9DBDE;
+          --accent:#2F5BFF; --accent-soft:#E6ECFF;
+          --red:#C4314B; --red-soft:#F8E6E9; --amber:#A86400; --amber-soft:#F7EEDF; --green:#2E7D4F; --green-soft:#E4F1E9;
+          --sans:Geist, system-ui, -apple-system, sans-serif; --mono:"Geist Mono", ui-monospace, Menlo, monospace; }
   * { box-sizing:border-box; }
-  body { margin:0; background:var(--bg); color:var(--ink); font:14px/1.35 Inter, system-ui, -apple-system, sans-serif; }
-  header { display:flex; flex-wrap:wrap; align-items:center; gap:12px 20px; padding:22px 28px 6px; }
-  h1 { margin:0; font-size:22px; letter-spacing:-.01em; }
-  .id { font:600 12px system-ui, sans-serif; color:var(--muted); background:var(--card); border:1px solid var(--line); border-radius:6px; padding:3px 8px; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:14px/1.4 var(--sans); }
+  header { display:flex; flex-wrap:wrap; align-items:flex-end; gap:12px 20px; margin:0 28px; padding:24px 0 14px; border-bottom:1px solid var(--ink); }
+  .eyebrow { font:500 11px var(--mono); letter-spacing:.08em; text-transform:uppercase; color:var(--accent); margin-bottom:6px; }
+  h1 { margin:0; font-size:24px; font-weight:600; letter-spacing:-.02em; }
   .levels { display:flex; gap:8px; margin-left:auto; }
-  .lvl { border-radius:999px; padding:4px 10px; font-weight:600; font-size:12px; border:1px solid; }
-  .lvl.high { color:var(--red); background:var(--red-soft); border-color:#f6b3c7; }
-  .lvl.medium { color:#a15c00; background:#fff4e0; border-color:#f7d69b; }
-  .lvl.low { color:var(--green); background:var(--green-soft); border-color:#a9dfbf; }
-  .scenario { padding:0 28px; color:var(--muted); max-width:900px; }
+  .lvl { border-radius:2px; padding:4px 8px; font:500 11px var(--mono); letter-spacing:.06em; text-transform:uppercase; }
+  .lvl.high { color:var(--red); background:var(--red-soft); }
+  .lvl.medium { color:var(--amber); background:var(--amber-soft); }
+  .lvl.low { color:var(--green); background:var(--green-soft); }
+  .scenario { margin:0 28px; padding:12px 0; color:var(--ink-2); max-width:46rem; line-height:1.6; }
   #canvas { position:relative; margin:8px 16px 16px; }
   svg.wires { position:absolute; inset:0; overflow:visible; pointer-events:none; }
   .node { position:absolute; width:150px; transform:translateX(-50%); text-align:center; }
-  .tile { width:58px; height:58px; margin:0 auto 8px; border-radius:16px; display:grid; place-items:center; background:var(--card);
-          border:1.5px solid var(--line); box-shadow:0 1px 4px rgba(15,27,51,.08); position:relative; }
-  .tile svg { width:28px; height:28px; stroke:var(--slate); }
-  .source .tile { background:var(--red); border-color:var(--red); transform:rotate(45deg); border-radius:14px; }
+  .tile { width:56px; height:56px; margin:0 auto 8px; border-radius:4px; display:grid; place-items:center; background:var(--card);
+          border:1px solid var(--line); position:relative; }
+  .tile svg { width:26px; height:26px; stroke:var(--ink-2); }
+  .source .tile { background:var(--ink); border-color:var(--ink); transform:rotate(45deg); }
   .source .tile svg { stroke:#fff; transform:rotate(-45deg); }
-  .asset .tile { background:var(--teal); border-color:var(--teal); }
+  .asset .tile { background:var(--accent); border-color:var(--accent); }
   .asset .tile svg { stroke:#fff; }
   .impact .tile { background:var(--red-soft); border-color:var(--red); }
   .impact .tile svg { stroke:var(--red); }
-  .badge { position:absolute; top:-8px; right:-8px; min-width:20px; height:20px; border-radius:10px; background:var(--red); color:#fff;
-           font:700 11px/20px system-ui; padding:0 5px; border:2px solid var(--bg); }
+  .badge { position:absolute; top:-8px; right:-8px; min-width:18px; height:18px; border-radius:2px; background:var(--red); color:#fff;
+           font:500 11px/18px var(--mono); padding:0 4px; }
   .source .badge { transform:rotate(-45deg); }
-  .start { position:absolute; width:44px; height:44px; margin:-22px 0 0 -22px; border-radius:50%; background:#f1f3f6;
-           border:1.5px solid #b9c2d0; display:grid; place-items:center; }
-  .start svg { width:24px; height:24px; fill:var(--slate); margin-left:2px; }
+  .start { position:absolute; width:40px; height:40px; margin:-20px 0 0 -20px; border-radius:50%; background:var(--card);
+           border:1px solid var(--ink); display:grid; place-items:center; }
+  .start svg { width:20px; height:20px; fill:var(--ink); margin-left:2px; }
   .label, .type { display:table; margin:0 auto; padding:0 4px; background:var(--bg); }
-  .label { font-weight:700; font-size:14px; }
-  .type { color:var(--muted); font-size:12px; }
-  .finding { margin:8px auto 0; width:150px; border:1.5px dotted var(--red); border-radius:8px; background:var(--card); padding:6px 8px; text-align:left; }
-  .finding small { display:block; color:var(--red); font:700 10px/1.2 system-ui; letter-spacing:.06em; text-transform:uppercase; margin-bottom:2px; }
-  .finding b { font-size:12px; display:block; }
-  .finding span { color:var(--muted); font-size:11px; }
+  .label { font-weight:600; font-size:14px; letter-spacing:-.01em; }
+  .type { color:var(--muted); font:400 10px var(--mono); letter-spacing:.08em; text-transform:uppercase; margin-top:2px; }
+  .finding { margin:8px auto 0; width:150px; border:1px dashed var(--red); border-radius:2px; background:var(--card); padding:6px 8px; text-align:left; }
+  .finding small { display:block; color:var(--red); font:500 10px/1.2 var(--mono); letter-spacing:.08em; text-transform:uppercase; margin-bottom:3px; }
+  .finding b { font-size:12px; font-weight:500; display:block; }
+  .finding span { color:var(--muted); font:400 10px var(--mono); }
   .edge { position:absolute; transform:translate(-50%,-100%); text-align:center; width:max-content; pointer-events:none; }
-  .edge .rel { font-size:12px; color:var(--slate); background:var(--bg); padding:0 4px; }
-  .sev { display:inline-flex; align-items:center; gap:4px; font:600 11px system-ui; color:var(--red); }
-  .sev.medium { color:#a15c00; } .sev.low { color:var(--green); }
-  .sev::before { content:""; width:7px; height:7px; transform:rotate(45deg); background:currentColor; }
+  .edge .rel { font-size:12px; color:var(--ink-2); background:var(--bg); padding:0 4px; }
+  .sev { display:inline-flex; align-items:center; gap:4px; font:500 10px var(--mono); letter-spacing:.08em; text-transform:uppercase; color:var(--red); background:var(--bg); padding:0 4px; }
+  .sev.medium { color:var(--amber); } .sev.low { color:var(--green); }
+  .sev::before { content:""; width:6px; height:6px; background:currentColor; }
   .control { position:absolute; transform:translate(-50%,0); display:flex; align-items:center; gap:5px; width:max-content;
-             background:var(--green-soft); color:var(--green); border:1.5px solid var(--green); border-radius:8px; padding:3px 8px; font:600 11px system-ui; }
-  .control.planned { border-style:dashed; background:#fff; }
+             background:var(--green-soft); color:var(--green); border:1px solid var(--green); border-radius:2px; padding:3px 7px; font:500 11px var(--sans); }
+  .control.planned { border-style:dashed; background:var(--card); }
   .control svg { width:13px; height:13px; flex:none; stroke:currentColor; }
-  .legend { display:flex; flex-wrap:wrap; gap:16px; padding:0 28px 24px; color:var(--muted); font-size:12px; }
-  .legend i { display:inline-block; width:12px; height:12px; border-radius:3px; margin-right:6px; vertical-align:-2px; }
+  .legend { display:flex; flex-wrap:wrap; gap:16px; margin:0 28px; padding:14px 0 24px; border-top:1px solid var(--line); color:var(--muted); font:400 11px var(--mono); letter-spacing:.04em; }
+  .legend i { display:inline-block; width:11px; height:11px; border-radius:2px; margin-right:6px; vertical-align:-1px; }
 </style></head><body>
 
 <script type="application/json" id="data">
@@ -79,15 +82,15 @@
 }
 </script>
 
-<header><h1 id="title"></h1><span class="id" id="rid"></span><div class="levels" id="levels"></div></header>
+<header><div><div class="eyebrow">Attack path · <span id="rid"></span></div><h1 id="title"></h1></div><div class="levels" id="levels"></div></header>
 <p class="scenario" id="scenario"></p>
 <div id="canvas"></div>
 <div class="legend">
-  <span><i style="background:var(--red)"></i>Who attacks</span>
-  <span><i style="background:var(--teal)"></i>What we protect</span>
-  <span><i style="border:1.5px dotted var(--red)"></i>Weak spot</span>
-  <span><i style="background:var(--green-soft);border:1.5px solid var(--green)"></i>Protection in place</span>
-  <span><i style="border:1.5px dashed var(--green)"></i>Protection planned</span>
+  <span><i style="background:var(--ink)"></i>Who attacks</span>
+  <span><i style="background:var(--accent)"></i>What we protect</span>
+  <span><i style="border:1px dashed var(--red)"></i>Weak spot</span>
+  <span><i style="background:var(--green-soft);border:1px solid var(--green)"></i>Protection in place</span>
+  <span><i style="border:1px dashed var(--green)"></i>Protection planned</span>
 </div>
 
 <script>
@@ -118,7 +121,7 @@ document.title = `${d.id} · ${d.title}`;
 const $ = (id) => document.getElementById(id);
 $("title").textContent = d.title; $("rid").textContent = d.id; $("scenario").textContent = d.scenario || "";
 $("levels").innerHTML = [['Today', d.inherent], ['After fixes', d.residual]].filter(([, v]) => v)
-  .map(([k, v]) => `<span class="lvl ${esc(v.level)}" title="${esc(v.score)}">${k}: ${esc(v.level)} risk</span>`).join('');
+  .map(([k, v]) => `<span class="lvl ${esc(v.level)}" title="${esc(v.score)}">${k} · ${esc(v.level)}</span>`).join('');
 
 function draw() {
   const canvas = document.getElementById('canvas');
@@ -151,8 +154,8 @@ function draw() {
   let html = '', wires = '';
   const s0 = pos[0], sx = single ? s0.x : Math.max(26, gut - 34), sy = single ? s0.y - 100 : s0.y;
   html += `<div class="start" title="Start" style="left:${sx}px;top:${sy}px"><svg viewBox="0 0 24 24"><path d="M9 7v10l8-5Z"/></svg></div>`;
-  wires += single ? `<path d="M${sx} ${sy + 22} L${s0.x} ${s0.y - 40}" stroke="var(--muted)" stroke-width="2" fill="none"/>`
-                  : `<path d="M${sx + 22} ${sy} L${s0.x - 40} ${s0.y}" stroke="var(--muted)" stroke-width="2" fill="none"/>`;
+  wires += single ? `<path d="M${sx} ${sy + 22} L${s0.x} ${s0.y - 40}" stroke="var(--ink)" stroke-width="1.5" fill="none"/>`
+                  : `<path d="M${sx + 22} ${sy} L${s0.x - 40} ${s0.y}" stroke="var(--ink)" stroke-width="1.5" fill="none"/>`;
   d.nodes.forEach((nd, i) => { html += nodeHtml(nd, i, pos[i].x, pos[i].y - 29); });
   (d.edges || []).slice(0, n - 1).forEach((e, i) => {
     const a = pos[i], b = pos[i + 1];
@@ -168,8 +171,7 @@ function draw() {
       mx = ex + side * 12; my = (a.y + b.y) / 2; turn = side; room = (side > 0 ? W - mx : mx) - 12;
     }
     const sev = e.severity || 'high';
-    const col = sev === 'low' ? 'var(--green)' : sev === 'medium' ? 'var(--amber)' : 'var(--red)';
-    wires += `<path d="${path}" fill="none" stroke="${col}" stroke-width="2.5" stroke-linecap="round"/>`;
+    wires += `<path d="${path}" fill="none" stroke="var(--ink)" stroke-width="1.5" marker-end="url(#arrow)"/>`;
     const side = turn === 2 ? 'transform:none;text-align:left' : turn > 0 ? 'transform:translate(0,-50%);text-align:left'
                : turn < 0 ? 'transform:translate(-100%,-50%);text-align:right' : '';
     // Same-row edges: label just above the wire, control chip above the label. Turns: label then chip beside the curve.
@@ -180,7 +182,7 @@ function draw() {
       html += `<div class="control ${e.control.status === 'planned' ? 'planned' : ''}" style="left:${mx}px;top:${ctop}px;max-width:${room}px;${cpos}">${svgIcon('shield')}<span>${esc(e.control.name)} · ${esc(e.control.ref)}</span></div>`;
     }
   });
-  canvas.innerHTML = `<svg class="wires" width="${W}" height="${canvas.style.height}">${wires}</svg>` + html;
+  canvas.innerHTML = `<svg class="wires" width="${W}" height="${canvas.style.height}"><defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10Z" fill="var(--ink)"/></marker></defs>${wires}</svg>` + html;
 }
 draw(); addEventListener('resize', draw);
 </script>
