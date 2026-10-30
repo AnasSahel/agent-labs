@@ -10,7 +10,7 @@ Turn a worry ("what if our payroll supplier gets ransomware?") into one scored, 
 
 ## Steps
 
-1. **Frame.** Write the risk as one **scenario**: `<risk source> could <feared event: disclosed, altered, lost, unavailable> <asset> through <path>`. Read `grc/risk-register.md`: when the same scenario is there, this run is a **reassessment** of that row. Then show the first **attack path** (see Draw: nodes, edges and the weaknesses the docs show, no controls yet) before any question, so the user corrects the path itself. Done when the user has seen the scenario and its attack path, and you know whether it's new.
+1. **Frame.** Write the risk as one **scenario**: `<risk source> could <feared event: disclosed, altered, lost, unavailable> <asset> through <path>`. Read `grc/risk-register.md`: when the same scenario is there, this run is a **reassessment** of that row. Then show a **draft attack path** (see Draw: nodes, edges and the weaknesses the docs show, no controls yet), titled `Draft`, before any question, so the user corrects the path itself. Done when the user has seen the scenario and its attack path, and you know whether it's new.
 
 2. **Grill.** Call the Skill tool with `grc-grill`:
    - intensity: `hard`
@@ -18,6 +18,8 @@ Turn a worry ("what if our payroll supplier gets ransomware?") into one scored, 
    - docs: `grc/context.md`, `grc/risk-register.md`, `grc/policies/`, the latest audit in `grc/evidence/`
    - framework: the frameworks in scope; scoring by ISO 27005 and EBIOS RM
    - output default: `html`
+
+   **The path follows the answers.** After each answer that changes the path (a new or removed step, a different entry point, an existing control, a weakness confirmed or ruled out, a new likelihood or severity), redraw it before the next question, in the same place, with one line saying what changed (`Added: SIM swap as a second route`). Answers that don't touch the path don't trigger a redraw. Never carry on with a path the user has corrected.
 
    Done when it hands back every field and the formats.
 
@@ -46,7 +48,7 @@ Turn a worry ("what if our payroll supplier gets ransomware?") into one scored, 
 
    Always also save a copy: `attack-path.html` from this skill's folder, filled into `grc/risks/<id>-attack-path.html` (only its JSON; the page draws itself in the same look).
 
-   Never paste Mermaid or HTML source into the reply: a chat shows it as code, not a picture. Never fall back to 2 to 4 when a visualize tool exists. Redraw it after the grill with the controls and scores. Put the Mermaid version in the report file only. Done when the user has seen the final attack path.
+   Never paste Mermaid or HTML source into the reply: a chat shows it as code, not a picture. Never fall back to 2 to 4 when a visualize tool exists. Redraw it after the grill with the controls and scores, without the `Draft` title; it must match every answer. Put the Mermaid version in the report file only. Done when the user has seen the final attack path.
 
 6. **Write.** Add or update the row in `grc/risk-register.md` (create it from the template when missing; ids `R-001`, `R-002`…). Write the assessment as `grc/risks/<id>-<slug>.md` from the report template, then render each format the user picked:
    - `md`, `html`, `csv`, `json`: write them yourself next to the report; `html` renders the Mermaid with `mermaid@11.4.1` from jsdelivr. Every visual asset (html, pdf, pptx, xlsx, docx, images, the inline drawing) follows [theme.md](theme.md): one blue accent, grays, Geist, flat, light only. Text-only files (md, json, csv, yaml, Jira) stay plain.
