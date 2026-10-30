@@ -11,16 +11,16 @@
           --sans:Geist, system-ui, -apple-system, sans-serif; --mono:"Geist Mono", ui-monospace, Menlo, monospace; }
   * { box-sizing:border-box; }
   body { margin:0; background:var(--bg); color:var(--ink); font:14px/1.4 var(--sans); }
-  header { display:flex; flex-wrap:wrap; align-items:flex-end; gap:12px 20px; margin:0 28px; padding:24px 0 14px; border-bottom:1px solid var(--ink); }
-  .eyebrow { font:500 11px var(--mono); letter-spacing:.08em; text-transform:uppercase; color:var(--accent); margin-bottom:6px; }
-  h1 { margin:0; font-size:24px; font-weight:600; letter-spacing:-.02em; }
-  .levels { display:flex; gap:8px; margin-left:auto; }
-  .lvl { border-radius:2px; padding:4px 8px; font:500 11px var(--mono); letter-spacing:.06em; text-transform:uppercase; }
-  .lvl.high { color:var(--red); background:var(--red-soft); }
-  .lvl.medium { color:var(--amber); background:var(--amber-soft); }
-  .lvl.low { color:var(--green); background:var(--green-soft); }
-  .scenario { margin:0 28px; padding:12px 0; color:var(--ink-2); max-width:46rem; line-height:1.6; }
-  #canvas { position:relative; margin:8px 16px 16px; }
+  main { max-width:76rem; margin:0 auto; padding:0 1.25rem; }
+  @media (min-width:40rem) { main { padding:0 2rem; } }
+  header { padding:48px 0 32px; }
+  .eyebrow { font:400 11px var(--mono); letter-spacing:.08em; text-transform:uppercase; color:var(--accent); margin-bottom:18px; }
+  h1 { margin:0 0 20px; font-size:clamp(30px,4.6vw,52px); line-height:1.08; font-weight:600; letter-spacing:-.03em; max-width:22em; }
+  h1 .accent { display:block; color:var(--accent); }
+  .scenario { margin:0; color:var(--ink-2); max-width:40rem; font-size:15px; line-height:1.65; }
+  .section { margin-top:8px; border-top:1px solid var(--ink); }
+  .section h2 { margin:0; padding:12px 0; border-bottom:1px solid var(--line); font-size:12px; font-weight:600; }
+  #canvas { position:relative; margin:8px 0 16px; }
   svg.wires { position:absolute; inset:0; overflow:visible; pointer-events:none; }
   .node { position:absolute; width:150px; transform:translateX(-50%); text-align:center; }
   .tile { width:56px; height:56px; margin:0 auto 8px; border-radius:4px; display:grid; place-items:center; background:var(--card);
@@ -46,15 +46,17 @@
   .finding b { font-size:12px; font-weight:500; display:block; }
   .finding span { color:var(--muted); font:400 10px var(--mono); }
   .edge { position:absolute; transform:translate(-50%,-100%); text-align:center; width:max-content; pointer-events:none; }
+  .edge.side .control { margin:10px 0 0; }
+  .edge.side[style*="text-align:right"] .control { margin-left:auto; }
   .edge .rel { font-size:12px; color:var(--ink-2); background:var(--bg); padding:0 4px; }
   .sev { display:inline-flex; align-items:center; gap:4px; font:500 10px var(--mono); letter-spacing:.08em; text-transform:uppercase; color:var(--red); background:var(--bg); padding:0 4px; }
   .sev.medium { color:var(--amber); } .sev.low { color:var(--green); }
   .sev::before { content:""; width:6px; height:6px; background:currentColor; }
-  .control { position:absolute; transform:translate(-50%,0); display:flex; align-items:center; gap:5px; width:max-content;
+  .control { display:flex; margin:6px auto; max-width:100%; text-align:left; align-items:center; gap:5px; width:max-content;
              background:var(--green-soft); color:var(--green); border:1px solid var(--green); border-radius:2px; padding:3px 7px; font:500 11px var(--sans); }
   .control.planned { border-style:dashed; background:var(--card); }
   .control svg { width:13px; height:13px; flex:none; stroke:currentColor; }
-  .legend { display:flex; flex-wrap:wrap; gap:16px; margin:0 28px; padding:14px 0 24px; border-top:1px solid var(--line); color:var(--muted); font:400 11px var(--mono); letter-spacing:.04em; }
+  .legend { display:flex; flex-wrap:wrap; gap:16px; padding:14px 0 32px; border-top:1px solid var(--line); color:var(--muted); font:400 11px var(--mono); letter-spacing:.04em; }
   .legend i { display:inline-block; width:11px; height:11px; border-radius:2px; margin-right:6px; vertical-align:-1px; }
 </style></head><body>
 
@@ -82,8 +84,9 @@
 }
 </script>
 
-<header><div><div class="eyebrow">Attack path · <span id="rid"></span></div><h1 id="title"></h1></div><div class="levels" id="levels"></div></header>
-<p class="scenario" id="scenario"></p>
+<main>
+<header><div class="eyebrow" id="eyebrow"></div><h1 id="title"></h1><p class="scenario" id="scenario"></p></header>
+<section class="section"><h2>— Attack path</h2>
 <div id="canvas"></div>
 <div class="legend">
   <span><i style="background:var(--ink)"></i>Who attacks</span>
@@ -92,6 +95,8 @@
   <span><i style="background:var(--green-soft);border:1px solid var(--green)"></i>Protection in place</span>
   <span><i style="border:1px dashed var(--green)"></i>Protection planned</span>
 </div>
+</section>
+</main>
 
 <script>
 const ICONS = {
@@ -119,9 +124,10 @@ const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({'&':'&amp;','<':'
 const d = JSON.parse(document.getElementById('data').textContent);
 document.title = `${d.id} · ${d.title}`;
 const $ = (id) => document.getElementById(id);
-$("title").textContent = d.title; $("rid").textContent = d.id; $("scenario").textContent = d.scenario || "";
-$("levels").innerHTML = [['Today', d.inherent], ['After fixes', d.residual]].filter(([, v]) => v)
-  .map(([k, v]) => `<span class="lvl ${esc(v.level)}" title="${esc(v.score)}">${k} · ${esc(v.level)}</span>`).join('');
+const lv = (v) => v ? v.level.charAt(0).toUpperCase() + v.level.slice(1) : '';
+$("eyebrow").textContent = ['Risk', d.id, 'Attack path'].join(' · ');
+$("title").innerHTML = esc(d.title) + (d.inherent ? `<span class="accent">${esc(lv(d.inherent))} today${d.residual ? `, ${esc(d.residual.level)} after fixes` : ''}.</span>` : '');
+$("scenario").textContent = d.scenario || "";
 
 function draw() {
   const canvas = document.getElementById('canvas');
@@ -174,13 +180,10 @@ function draw() {
     wires += `<path d="${path}" fill="none" stroke="var(--ink)" stroke-width="1.5" marker-end="url(#arrow)"/>`;
     const side = turn === 2 ? 'transform:none;text-align:left' : turn > 0 ? 'transform:translate(0,-50%);text-align:left'
                : turn < 0 ? 'transform:translate(-100%,-50%);text-align:right' : '';
-    // Same-row edges: label just above the wire, control chip above the label. Turns: label then chip beside the curve.
-    html += `<div class="edge" style="left:${mx}px;top:${my - 6}px;max-width:${room}px;${side}"><div class="rel">${esc(e.label)}</div><div class="sev ${esc(sev)}">${esc(sev)}</div></div>`;
-    if (e.control) {
-      const ctop = turn === 2 ? my + 40 : turn ? my + 30 : my - 50;
-      const cpos = turn === 2 || turn > 0 ? 'transform:none' : turn < 0 ? 'transform:translate(-100%,0)' : 'transform:translate(-50%,-100%)';
-      html += `<div class="control ${e.control.status === 'planned' ? 'planned' : ''}" style="left:${mx}px;top:${ctop}px;max-width:${room}px;${cpos}">${svgIcon('shield')}<span>${esc(e.control.name)} · ${esc(e.control.ref)}</span></div>`;
-    }
+    const chip = e.control ? `<div class="control ${e.control.status === 'planned' ? 'planned' : ''}">${svgIcon('shield')}<span>${esc(e.control.name)} · ${esc(e.control.ref)}</span></div>` : '';
+    // Same-row edges stack chip, label and severity above the wire; turns put them beside the curve, chip last.
+    const body = `<div class="rel">${esc(e.label)}</div><div class="sev ${esc(sev)}">${esc(sev)}</div>`;
+    html += `<div class="edge${turn ? ' side' : ''}" style="left:${mx}px;top:${my - 6}px;max-width:${room}px;${side}">${turn ? body + chip : chip + body}</div>`;
   });
   canvas.innerHTML = `<svg class="wires" width="${W}" height="${canvas.style.height}"><defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10Z" fill="var(--ink)"/></marker></defs>${wires}</svg>` + html;
 }
