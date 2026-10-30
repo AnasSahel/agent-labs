@@ -47,7 +47,7 @@ Every page and the first slide open the same way, like anassahel.com:
 
 1. **Eyebrow**: mono, accent, words joined by ` · ` (`RISK · R-002 · ATTACK PATH`).
 2. **Two-line headline**: the claim in ink, then the verdict in accent (`Admin login phished despite SMS codes` / `High today, medium after fixes.`).
-3. **Intro**: one paragraph in `ink-2`, 40rem wide.
+3. **Executive summary**: right after the headline, the four lines from the report template in `ink-2`, 40rem wide, each led by its label in Geist Mono.
 4. **Sections**: a strong rule (1px `ink`), a small bold label with a dash (`— Attack path`), a light rule, then the content.
 
 Container 76rem max, 1.25rem side padding (2rem from 40rem up), lots of air.
@@ -61,5 +61,6 @@ Container 76rem max, 1.25rem side padding (2rem from 40rem up), lots of air.
 - **pdf**: render the html report to pdf (A4, same layout), or build it with the same tokens and fonts.
 - **docx**: Geist body, Geist Mono eyebrows, accent eyebrow and headline second line, 1px rules between sections, tables as in xlsx.
 - **images** (png, svg): screenshot of the themed html, or drawn with the same tokens.
+- **Icons**: every node tile in every format shows its icon (the SVG set in `attack-path.html`, stroke 1.8, ink on gray tiles, white on the black source and blue asset). An empty tile is a bug.
 - **Inline drawing** (visualize and the like): same colors, shapes and fonts as `attack-path.html`; the tool's own default palette never wins.
 - **attack path**: `attack-path.html` already uses this theme.
