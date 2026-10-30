@@ -11,6 +11,8 @@
     "skills/factory-design": { "component": "factory-design", "extra-files": ["SKILL.md"] },
     "skills/factory-build": { "component": "factory-build", "extra-files": ["SKILL.md"] },
     "skills/grill-me-live": { "component": "grill-me-live", "extra-files": ["SKILL.md"] },
-    "skills/sail-fill-campaign": { "component": "sail-fill-campaign", "extra-files": ["SKILL.md"] }
+    "skills/sail-fill-campaign": { "component": "sail-fill-campaign", "extra-files": ["SKILL.md"] },
+    "skills/grc/grc-grill": { "component": "grc-grill", "extra-files": ["SKILL.md"] },
+    "skills/grc/risk-assessment": { "component": "risk-assessment", "extra-files": ["SKILL.md"] }
   }
 }
