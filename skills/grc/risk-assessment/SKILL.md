@@ -10,7 +10,7 @@ Turn a worry ("what if our payroll supplier gets ransomware?") into one scored, 
 
 ## Steps
 
-1. **Frame.** Write the risk as one **scenario**: `<risk source> could <feared event: disclosed, altered, lost, unavailable> <asset> through <path>`. Read `grc/risk-register.md`: when the same scenario is there, this run is a **reassessment** of that row. Then show the first **chain** (see Draw, no controls yet) before any question, so the user corrects the path itself. Done when the user has seen the scenario and its chain, and you know whether it's new.
+1. **Frame.** Write the risk as one **scenario**: `<risk source> could <feared event: disclosed, altered, lost, unavailable> <asset> through <path>`. Read `grc/risk-register.md`: when the same scenario is there, this run is a **reassessment** of that row. Then show the first **attack path** (see Draw: nodes, edges and the weaknesses the docs show, no controls yet) before any question, so the user corrects the path itself. Done when the user has seen the scenario and its attack path, and you know whether it's new.
 
 2. **Grill.** Call the Skill tool with `grc-grill`:
    - intensity: `hard`
@@ -30,16 +30,19 @@ Turn a worry ("what if our payroll supplier gets ransomware?") into one scored, 
 
 4. **Map.** For each control in the treatment, give its ISO 27001:2022 Annex A control, then the NIS2, DORA and GDPR articles it serves when that framework is in scope. Done when every control has its ISO 27001 reference.
 
-5. **Draw.** Draw the **path** as a **chain**: 3 to 5 rounded boxes left to right joined by arrows, each a bold title of 2 or 3 words with an arrow when it moves (`Cost ↑`, `Payments ↓`) and one short grey line under it. The first box is the cause, neutral; every box after it is a consequence, tinted red; the last is the feared event with its severity. The control that breaks the chain goes under the box it blocks, as a green box with its ISO 27001 reference. Then show it the best way the harness allows:
-   Always fill `chain.html` from this skill's folder (plus the inherent to residual move on the grid once scored) into `grc/risks/<id>-chain.html`, then show it with the first of these that works:
+5. **Draw.** Draw the **attack path**: copy `attack-path.html` from this skill's folder to `grc/risks/<id>-attack-path.html` and fill only its JSON, the page draws itself (light theme, snakes onto several rows, stacks on a phone):
+   - **nodes**, in order, 4 to 7: the risk source (`role: source`), each hop the attacker takes (a lure, an identity, a credential, a system), the business asset (`role: asset`), the feared event with its severity (`role: impact`). Each has an `icon` (`attacker user mail phone key web computer server cloud database container vendor payment lock bug alert`), a 1 to 3 word `label` and a `type`.
+   - **edges**, one between each pair of nodes: what the attacker does, in 2 to 4 words (`captures password + SMS`), its `severity`, and the `control` that breaks it when there is one (`name`, ISO 27001 `ref`, `status`: `in place` or `planned`).
+   - **findings**: each weakness that makes a hop possible, on its node (`kind`: Weakness, Insecure config, Vulnerability, Event; `source`: the doc or audit that shows it).
+   - The header: id, title, scenario, inherent and residual score once scored.
+
+   Show it with the first of these that works:
    1. A tool that renders a page or an image in the conversation (an Artifact, visualize or preview tool): render it there.
    2. A local machine: open the file in the browser (`open` on macOS, `xdg-open` on Linux, `start` on Windows) and link its path.
-   3. A remote shell with a headless browser: screenshot it to `grc/risks/<id>-chain.png` and link the image.
+   3. A remote shell with a headless browser: screenshot it to `grc/risks/<id>-attack-path.png` and link the image.
    4. Nothing above works: print the ASCII template, and say the visual is in the HTML file.
 
-   Never stop at ASCII when one of 1 to 3 works.
-
-   Redraw it after the grill with the controls in place. Always put the Mermaid version in the report. Done when the user has seen the final chain.
+   Never stop at ASCII when one of 1 to 3 works. Redraw it after the grill with the controls and scores. Always put the Mermaid version in the report. Done when the user has seen the final attack path.
 
 6. **Write.** Add or update the row in `grc/risk-register.md` (create it from the template when missing; ids `R-001`, `R-002`…). Write the assessment as `grc/risks/<id>-<slug>.md` from the report template, then render each format the user picked:
    - `md`, `html`, `csv`, `json`: write them yourself next to the report; `html` renders the Mermaid with `mermaid@11.4.1` from jsdelivr.
@@ -61,14 +64,23 @@ Turn a worry ("what if our payroll supplier gets ransomware?") into one scored, 
 <path-template>
 ```mermaid
 flowchart LR
-  C("<b><cause></b><br/><what happens>") --> S1("<b><step ↑></b><br/><why>") --> S2("<b><step ↓></b><br/><why>") --> F("<b><feared event ↓></b><br/><impact> · G<n>")
-  K("<b>🛡 <control></b><br/>ISO 27001 A.x.y") -.-x S1
-  classDef cause fill:#f1efe9,stroke:#8a877f,color:#3d3b36
-  classDef effect fill:#fbebe7,stroke:#c0563f,color:#8a2a12
-  classDef control fill:#e8f5e9,stroke:#2e7d32,color:#1b5e20
-  class C cause
-  class S1,S2,F effect
-  class K control
+  S{{"<b><risk source></b><br/>Risk source"}} -- "<action> · high" --> N1("<b><hop></b><br/><type>")
+  N1 -- "<action> · high" --> A[("<b><asset></b><br/>Business asset")]
+  A -- "<action> · medium" --> F("<b><feared event></b><br/>Impact · G<n>")
+  W1["⚠ <weakness> · <source>"] -.- N1
+  K1["🛡 <control> · A.x.y"] -.-x N1
+  classDef source fill:#e0245e,stroke:#e0245e,color:#fff
+  classDef hop fill:#fff,stroke:#d7deea,color:#0f1b33
+  classDef asset fill:#0e9fb8,stroke:#0e9fb8,color:#fff
+  classDef impact fill:#fde8ef,stroke:#e0245e,color:#0f1b33
+  classDef weak fill:#fff,stroke:#e0245e,stroke-dasharray:3 3,color:#e0245e
+  classDef control fill:#e6f6ec,stroke:#1f9d55,color:#1f9d55
+  class S source
+  class N1 hop
+  class A asset
+  class F impact
+  class W1 weak
+  class K1 control
 ```
 </path-template>
 
@@ -90,7 +102,9 @@ flowchart LR
 ## Scenario
 Risk source, feared event, asset and business value.
 
-## Path
+## Attack path
+Visual: `<id>-attack-path.html`
+
 <path-template>
 
 ## Score
