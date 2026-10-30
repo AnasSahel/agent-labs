@@ -15,6 +15,7 @@ Skills and agents for Claude Code.
 - [risk-assessment](skills/grc/risk-assessment/SKILL.md): assess a security risk as an EBIOS RM scenario, score it before and after treatment (ISO 27005), map its controls to ISO 27001, NIS2, DORA and GDPR, and record it in `grc/risk-register.md`, with the report in md, html, pdf, pptx, xlsx, csv, json or a Jira issue.
 - [risk-register](skills/grc/risk-register/SKILL.md): keep `grc/risk-register.md` as the one list of your risks: view and filter it, flag what is overdue, stale or above your risk appetite, update status, owner, due dates and controls, import from a spreadsheet or Jira, and export it with a portfolio heat map. No grilling; new scores go back to risk-assessment.
 - [committee-report](skills/grc/committee-report/SKILL.md): turn the risk register into a report for a committee or board: posture in one sentence, a heat map of what moved since last time, risks above appetite, fix progress and numbered decisions, as a 7-slide deck by default. After the meeting, records what was decided and updates the register.
+- [gap-analysis](skills/grc/gap-analysis/SKILL.md): check where you stand against ISO 27001, NIS2, DORA or GDPR, line by line from the fixed files in `frameworks/` so no requirement is skipped: each one met, partial, missing, n/a or unknown with its evidence from `grc/`, then a ranked plan where one fix closes every clause it maps to (legal deadlines first). Shows coverage bars and an Annex A map; xlsx by default, usable as a statement of applicability.
 
 ## Agents
 
