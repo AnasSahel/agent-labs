@@ -1,6 +1,6 @@
 ---
 name: risk-assessment
-description: Assess a security risk as an EBIOS RM scenario, draw its attack path, score it by severity and likelihood before and after treatment (ISO 27005), propose controls mapped to ISO 27001, NIS2, DORA and GDPR, and record it in the risk register, after grilling the user on the decisions. Use when the user wants to assess, score or rate a risk, threat or scenario, decide how to treat one, or reassess a risk already in the register.
+description: Assess a security risk as an EBIOS RM scenario, draw its risk path, score it by severity and likelihood before and after treatment (ISO 27005), propose controls mapped to ISO 27001, NIS2, DORA and GDPR, and record it in the risk register, after grilling the user on the decisions. Use when the user wants to assess, score or rate a risk, threat or scenario, decide how to treat one, or reassess a risk already in the register.
 metadata:
   author: Anas Sahel
   version: 1.0.0 # x-release-please-version
@@ -30,11 +30,11 @@ Turn a worry ("what if our payroll supplier gets ransomware?") into one scored, 
 
 4. **Map.** For each control in the treatment, give its ISO 27001:2022 Annex A control, then the NIS2, DORA and GDPR articles it serves when that framework is in scope. Done when every control has its ISO 27001 reference.
 
-5. **Draw.** Draw the **path** as a Mermaid flowchart from the path template: risk source, entry point, each step, asset, feared event, with every control as a barrier on the step it blocks (solid when in place, dashed when planned). Draw the inherent to residual move on the severity × likelihood grid. Then show it the best way the harness allows:
-   - Can render a page (an Artifact or HTML preview tool): render the flowchart and the grid there and give the link.
-   - Terminal only: print the path as an ASCII chain in the reply, e.g. `phishing crew ─▶ SMS code phished ─╳ A.8.5 ─▶ AWS console ─▶ payments down (G4)`.
+5. **Draw.** Draw the **path** as a **chain**: 3 to 5 rounded boxes left to right joined by arrows, each a bold title of 2 or 3 words with an arrow when it moves (`Cost ↑`, `Payments ↓`) and one short grey line under it. The first box is the cause, neutral; every box after it is a consequence, tinted red; the last is the feared event with its severity. The control that breaks the chain goes under the box it blocks, as a green box with its ISO 27001 reference. Then show it the best way the harness allows:
+   - Can render a page (an Artifact or HTML preview tool): render the chain from `chain.html` in this skill's folder, plus the inherent to residual move on the grid, and give the link.
+   - Terminal only: print the chain as ASCII boxes in the reply.
 
-   Done when the Mermaid source is in the report and the user has seen the path.
+   Always put the Mermaid version in the report. Done when the user has seen the chain.
 
 6. **Write.** Add or update the row in `grc/risk-register.md` (create it from the template when missing; ids `R-001`, `R-002`…). Write the assessment as `grc/risks/<id>-<slug>.md` from the report template, then render each format the user picked:
    - `md`, `html`, `csv`, `json`: write them yourself next to the report; `html` renders the Mermaid with `mermaid@11.4.1` from jsdelivr.
@@ -56,11 +56,14 @@ Turn a worry ("what if our payroll supplier gets ransomware?") into one scored, 
 <path-template>
 ```mermaid
 flowchart LR
-  S["👤 <risk source>"] --> E["<entry point>"] --> P1["<step>"] --> A["🎯 <asset>"] --> F["💥 <feared event> (G<n>)"]
-  C1{{"🛡 <control> · A.x.y"}} --- E
-  C2{{"🛡 <planned control> · A.x.y"}} -.- P1
-  classDef barrier fill:#e8f5e9,stroke:#2e7d32
-  class C1,C2 barrier
+  C("<b><cause></b><br/><what happens>") --> S1("<b><step ↑></b><br/><why>") --> S2("<b><step ↓></b><br/><why>") --> F("<b><feared event ↓></b><br/><impact> · G<n>")
+  K("<b>🛡 <control></b><br/>ISO 27001 A.x.y") -.-x S1
+  classDef cause fill:#f1efe9,stroke:#8a877f,color:#3d3b36
+  classDef effect fill:#fbebe7,stroke:#c0563f,color:#8a2a12
+  classDef control fill:#e8f5e9,stroke:#2e7d32,color:#1b5e20
+  class C cause
+  class S1,S2,F effect
+  class K control
 ```
 </path-template>
 
