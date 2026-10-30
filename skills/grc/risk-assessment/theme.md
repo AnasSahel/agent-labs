@@ -54,13 +54,40 @@ Container 76rem max, 1.25rem side padding (2rem from 40rem up), lots of air.
 
 ## Per format
 
-- **html report**: the Newsroom layout above; sections Scenario, Attack path, Score, Treatment, Decisions. Tables: `surface-2` header, 1px `line` rows. Level tags are square (2px), mono, colored text on the soft fill.
+- **html report**: the Newsroom layout above; sections Executive summary, Scenario, Attack path, Score (with the heat map), Treatment, Decisions. Tables: `surface-2` header, 1px `line` rows. Level tags are square (2px), mono, colored text on the soft fill.
 - **Mermaid** (report only): `%%{init: {"theme":"base","themeVariables":{"fontFamily":"Geist, system-ui","primaryColor":"#FAFAFA","primaryBorderColor":"#D9DBDE","lineColor":"#111418"}}}%%` and the classDefs in the path template.
 - **pptx**: 16:9, `bg` background; title slide in the Newsroom opening; every other slide has the eyebrow, a Geist 600 title and a thin rule below. No shadows, no rounded shapes. One idea per slide.
-- **xlsx**: Geist 10pt, header row `surface-2` with a 1px `ink` bottom border, accent for the sheet title, risk level cells filled with the soft color and colored text. Freeze the header row.
+- **xlsx**: exactly the workbook in **Excel** below.
 - **pdf**: render the html report to pdf (A4, same layout), or build it with the same tokens and fonts.
 - **docx**: Geist body, Geist Mono eyebrows, accent eyebrow and headline second line, 1px rules between sections, tables as in xlsx.
 - **images** (png, svg): screenshot of the themed html, or drawn with the same tokens.
 - **Icons**: every node tile in every format shows its icon (the SVG set in `attack-path.html`, stroke 1.8, ink on gray tiles, white on the black source and blue asset). An empty tile is a bug.
 - **Inline drawing** (visualize and the like): same colors, shapes and fonts as `attack-path.html`; the tool's own default palette never wins.
 - **attack path**: `attack-path.html` already uses this theme.
+
+**The heat map is never dropped.** Every visual format (html, pdf, pptx, docx, xlsx) shows it: the 4×4 grid, severity G4 to G1 top to bottom, likelihood V1 to V4 left to right, each cell in its level color, `●` today and `○` after fixes.
+
+## Excel
+
+Five sheets, in this order, with these exact names. Nothing else.
+
+**Everywhere**: Geist 10pt (Geist Mono for IDs, refs, scores, dates), text `ink`. Gridlines off. Header rows: fill `surface-2`, Geist 500, 1px `ink` bottom border, frozen. Body rows: 1px `line` bottom border, wrapped text, top-aligned. No other fills except level cells and the heat map. Level cells: soft fill, colored text, Geist Mono uppercase (`HIGH`). Landscape, fit to one page wide. The Summary tab colored accent, the others none.
+
+1. **Summary**
+   - A1: eyebrow `RISK · <ID> · <date>`, Geist Mono 9pt, accent. A2: the title, Geist 600 18pt. A3: the verdict (`High today, medium after fixes.`), Geist 600 14pt, accent.
+   - Rows 5 to 8: the executive summary. A = label (`What could happen`, `Why now`, `Where we stand`, `What we need`) in Geist Mono 9pt muted; B:F merged = the line.
+   - From row 10, a two-column table `Field | Value`: ID, Scenario, Risk source, Feared event, Asset, Owner, Status, Due, Inherent (score + level cell), Residual (score + level cell), Appetite, Treatment, Updated, Trace.
+   - Widths: A 22, B to F 18.
+2. **Heat map**
+   - A1 eyebrow, A2 title `Heat map`.
+   - The grid from B4: row labels G4, G3, G2, G1 in A5:A8; column labels V1 to V4 in B4:E4 (Geist Mono, muted). Cells B5:E8 are squares (width 14, height 60pt), filled by the level rule (high, medium, low soft colors), 1px `bg`-colored border so they read as tiles.
+   - The inherent cell shows `● TODAY`, the residual cell `○ AFTER FIXES`, Geist Mono bold in the level color. When both land on one cell: `● ○ TODAY = AFTER`.
+   - A9 `Severity ↑ · Likelihood →`. A11 the rule: `High when G3+ with V3+, or G4 with V2+. Low when both ≤ 2. Medium otherwise.` A12 the one-line reading (`Severity stays G4; the controls cut the likelihood.`).
+   - Real cells with fills, never a picture or a chart, so it prints and filters.
+3. **Attack path**
+   - The screenshot of the filled `<id>-attack-path.html` anchored at A1, scaled to about 900px wide.
+   - Below it, the table: `Step | Node | Type | Attacker action | Severity | Weak spots | Control | ISO 27001 | Status`. One row per hop, weak spots one per line in the cell, severity and status as level cells (`planned` amber soft, `in place` green soft).
+4. **Controls**
+   - `# | Control | Status | Owner | Due | ISO 27001 | NIS2 | DORA | GDPR`. Planned first, then in place (numbered E1, E2…). Refs in Geist Mono. Widths: Control 48, others 14.
+5. **Decisions**
+   - The grill trace: `# | Field | Question | Recommended (citation) | Answer | Settled by`. `Settled by` as text (`user`, `yes`, `call`, `fact: <source>`), `user` rows bold.

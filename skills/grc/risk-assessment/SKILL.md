@@ -53,7 +53,7 @@ Turn a worry ("what if our payroll supplier gets ransomware?") into one scored, 
    - `pdf`, `pptx`, `xlsx`: call the Skill tool with `pdf`, `pptx` or `xlsx`, with the report and [theme.md](theme.md) as the source; the attack path goes in as an image: a screenshot of the filled `grc/risks/<id>-attack-path.html` (headless browser, 2× scale), so it keeps its icons and play button. Without a browser, draw it with the target's shapes and put each node's icon in its tile, using the SVG paths from `attack-path.html`.
    - Jira: create one issue (title: the scenario, owner, due date, link to the report) through the Jira connector; without one, say so and hand over the CSV row.
 
-   Every format opens with the **executive summary** (report template): the first section of the html, pdf and docx, the slide after the title in pptx, the top of the first sheet in xlsx.
+   Every format opens with the **executive summary** (report template): the first section of the html, pdf and docx, the slide after the title in pptx, the top of the first sheet in xlsx. The xlsx follows the workbook in [theme.md](theme.md) sheet by sheet, heat map included.
 
    Done when the register row exists and every requested file or issue is listed with its path or link.
 
