@@ -1,6 +1,9 @@
 # Theme
 
-The one look of every file this skill writes: html, attack path, pptx, xlsx, pdf. Sober, print-like and calm. Light only.
+The one look of every **visual** asset this skill makes. Sober, print-like and calm. Light only.
+
+- **Themed**: html, pdf, pptx, xlsx, docx, images (png, svg), the attack path, and the drawing shown inline in the chat (visualize tool, widget, Artifact or canvas).
+- **Not themed**: text-only files (md, json, csv, yaml, Jira issues). Keep them plain: no colors, no styling hints.
 
 ## Rules
 
@@ -55,4 +58,8 @@ Container 76rem max, 1.25rem side padding (2rem from 40rem up), lots of air.
 - **Mermaid** (report only): `%%{init: {"theme":"base","themeVariables":{"fontFamily":"Geist, system-ui","primaryColor":"#FAFAFA","primaryBorderColor":"#D9DBDE","lineColor":"#111418"}}}%%` and the classDefs in the path template.
 - **pptx**: 16:9, `bg` background; title slide in the Newsroom opening; every other slide has the eyebrow, a Geist 600 title and a thin rule below. No shadows, no rounded shapes. One idea per slide.
 - **xlsx**: Geist 10pt, header row `surface-2` with a 1px `ink` bottom border, accent for the sheet title, risk level cells filled with the soft color and colored text. Freeze the header row.
+- **pdf**: render the html report to pdf (A4, same layout), or build it with the same tokens and fonts.
+- **docx**: Geist body, Geist Mono eyebrows, accent eyebrow and headline second line, 1px rules between sections, tables as in xlsx.
+- **images** (png, svg): screenshot of the themed html, or drawn with the same tokens.
+- **Inline drawing** (visualize and the like): same colors, shapes and fonts as `attack-path.html`; the tool's own default palette never wins.
 - **attack path**: `attack-path.html` already uses this theme.
