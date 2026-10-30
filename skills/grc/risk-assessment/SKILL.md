@@ -36,7 +36,7 @@ Turn a worry ("what if our payroll supplier gets ransomware?") into one scored, 
    - **findings**: each weakness that makes a hop possible, on its node (`kind`: Weak spot, Missing control, Known flaw, Incident; `source`: the doc or audit that shows it).
    - The header: id, title, scenario, inherent and residual score once scored.
 
-   **Look**: white background, a small grey **Start** circle, then the nodes left to right in rows; the risk source and the impact in red, the asset in teal, the hops neutral; each weak spot a dashed red box on its node; each control a green box on the hop it breaks (solid in place, dashed planned), with its ISO 27001 reference.
+   **Look**: white background, a small grey circle with a play ▶ icon (no text) where the path starts, then the nodes left to right in rows, each joined to the next by an arrow line, the line labelled with what the attacker does; the risk source and the impact in red, the asset in teal, the hops neutral; each weak spot a dashed red box on its node; each control a green box on the hop it breaks (solid in place, dashed planned), with its ISO 27001 reference.
 
    Show it in the conversation first:
    1. **visualize.** Search your tools, deferred ones included, for `visualize` (or a widget, Artifact or canvas tool). When one exists, load it, read its read-me, and draw the attack path with it inline, in the look above. This is the default whenever such a tool exists.

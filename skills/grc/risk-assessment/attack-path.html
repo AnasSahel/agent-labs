@@ -33,7 +33,8 @@
            font:700 11px/20px system-ui; padding:0 5px; border:2px solid var(--bg); }
   .source .badge { transform:rotate(-45deg); }
   .start { position:absolute; width:44px; height:44px; margin:-22px 0 0 -22px; border-radius:50%; background:#f1f3f6;
-           border:1.5px solid #b9c2d0; color:var(--slate); font:600 11px/41px system-ui; text-align:center; }
+           border:1.5px solid #b9c2d0; display:grid; place-items:center; }
+  .start svg { width:24px; height:24px; fill:var(--slate); margin-left:2px; }
   .label, .type { display:table; margin:0 auto; padding:0 4px; background:var(--bg); }
   .label { font-weight:700; font-size:14px; }
   .type { color:var(--muted); font-size:12px; }
@@ -140,7 +141,7 @@ function draw() {
 
   let html = '', wires = '';
   const s0 = pos[0], sx = single ? s0.x : Math.max(26, gut - 34), sy = single ? s0.y - 100 : s0.y;
-  html += `<div class="start" style="left:${sx}px;top:${sy}px">Start</div>`;
+  html += `<div class="start" title="Start" style="left:${sx}px;top:${sy}px"><svg viewBox="0 0 24 24"><path d="M9 7v10l8-5Z"/></svg></div>`;
   wires += single ? `<path d="M${sx} ${sy + 22} L${s0.x} ${s0.y - 40}" stroke="var(--muted)" stroke-width="2" fill="none"/>`
                   : `<path d="M${sx + 22} ${sy} L${s0.x - 40} ${s0.y}" stroke="var(--muted)" stroke-width="2" fill="none"/>`;
   d.nodes.forEach((nd, i) => {
