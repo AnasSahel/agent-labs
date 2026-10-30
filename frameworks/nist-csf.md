@@ -8,7 +8,9 @@ status: draft, to review by a GRC practitioner
 
 # NIST CSF 2.0
 
-Six functions, 22 categories. Cited at category level (`PR.AA`); subcategories (`PR.AA-01`) only after checking the text, else "clause to confirm". Voluntary: no deadlines, so few extras.
+Six functions, 22 categories. Cited at category level (`PR.AA`). The 106 subcategories (`PR.AA-01`) are in Appendix A of NIST CSWP 29: cite one only from there.
+
+Checked against NIST CSWP 29 (February 2024) on 2026-10-30: the 6 functions and 22 categories, ids and names, match. Voluntary: no deadlines, so few extras.
 
 ## Mapping
 
@@ -45,5 +47,5 @@ Duties the pivot does not carry. **gap-analysis** checks them on their own; a ri
 
 | Clause | Duty | Why ISO 27001 misses it |
 |---|---|---|
-| GV.RM | State risk appetite and tolerance as explicit statements, used across enterprise risk management | ISO asks for risk criteria, not an enterprise-wide appetite statement |
+| GV.RM | State risk appetite and tolerance as explicit statements (GV.RM-02), and fold cybersecurity into enterprise risk management (GV.RM-03) | ISO asks for risk criteria, not an enterprise-wide appetite statement |
 | Profiles, Tiers | Current and target profiles, and the tier of rigour, if the organization uses them | A CSF way of describing maturity, not a requirement |

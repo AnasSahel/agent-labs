@@ -10,6 +10,8 @@ status: draft, to review by a GRC practitioner
 
 Personal data protection. ISO 27001 carries its security side only; for a privacy programme, also cite `iso27701`, which carries the privacy side. Most of the GDPR is in Extras on purpose.
 
+Checked line by line against the EUR-Lex text on 2026-10-30.
+
 ## Mapping
 
 One row per clause. **Fit** `full`: the ISO 27001 refs meet the clause. `partial`: they help, and the rest is in Extras.
@@ -43,12 +45,13 @@ Duties the pivot does not carry. **gap-analysis** checks them on their own; a ri
 | Art. 5 | The other principles: lawfulness, purpose limitation, data minimisation, accuracy, a retention period per purpose | Privacy principles, not security |
 | Art. 24, Art. 25 | The measures and defaults cover every data protection principle (minimisation, purpose), not only security | ISO 27001 secures data; it doesn't limit what is collected |
 | Art. 6, Art. 9 | A lawful basis for each processing, stricter for special categories | Legal basis, not security |
-| Art. 12 to 22 | Data subject rights (information, access, erasure, portability, objection), answered within one month | Not a security topic |
+| Art. 12 to 22 | Data subject rights (information, access, rectification, erasure, restriction, portability, objection, automated decisions), answered within one month, extendable by two months (Art. 12(3)) | Not a security topic |
 | Art. 28(3) | Processor contract must contain the clauses listed in Art. 28(3) | ISO asks for security clauses, not this list |
 | Art. 30 | Records in the content Art. 30 sets, given to the authority on request | A.5.9 is an asset inventory, not a processing record |
-| Art. 33(1) | Notify the authority within 72 hours of becoming aware of the breach | ISO sets no deadline |
+| Art. 33(1) | Notify the authority without undue delay and where feasible within 72 hours of becoming aware of the breach, unless it is unlikely to result in a risk; give reasons for any delay | ISO sets no deadline |
+| Art. 33(2) | A processor tells the controller without undue delay after becoming aware of a breach | ISO sets no deadline |
 | Art. 33(5) | Document every breach, even unnotified ones | Partly A.5.27; the register is mandatory here |
 | Art. 34 | Tell data subjects without undue delay when the risk to them is high | ISO sets no duty to inform individuals |
 | Art. 35 | DPIA content and prior consultation with the authority (Art. 36) when the risk stays high | A risk assessment, but on people's rights, with a set content |
 | Art. 37 to 39 | Appoint a DPO when required, with its independence | A role the law defines |
-| Art. 44 to 49 | Transfer mechanism (adequacy, SCCs, BCRs) and transfer impact assessment | Legal mechanism, not a control |
+| Art. 44 to 49 | Transfer mechanism: adequacy decision (Art. 45), appropriate safeguards such as SCCs or BCRs (Art. 46, 47), or a derogation (Art. 49). The transfer impact assessment comes from the CJEU Schrems II ruling (C-311/18) and EDPB Recommendations 01/2020, not from the GDPR text | Legal mechanism, not a control |
