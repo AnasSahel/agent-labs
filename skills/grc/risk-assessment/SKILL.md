@@ -52,7 +52,7 @@ Turn a worry ("what if our payroll supplier gets ransomware?") into one scored, 
    3. No such tool, on a remote shell with a headless browser: screenshot the saved copy to `grc/risks/<id>-attack-path.png` and link it.
    4. None of these: print the ASCII template and say where the saved copy is.
 
-   Always also save a copy: `attack-path.html` from this skill's folder, filled into `grc/risks/<id>-attack-path.html` (only its JSON; the page draws itself in the same look).
+   Always also save a copy: `attack-path.html` from this skill's folder, filled into `grc/risks/<id>-attack-path.html` (only its JSON; the page draws itself in the same look). **Copy the template fresh from this skill's folder on every draw and redraw**, then write the JSON: never edit the JSON inside an older `grc/risks/` file, which keeps an outdated layout. When you show it as an Artifact or page, publish that fresh file, not a hand-written one.
 
    Never paste Mermaid or HTML source into the reply: a chat shows it as code, not a picture. Never fall back to 2 to 4 when a visualize tool exists. Redraw it after the grill with the controls and scores, without the `Draft` title; it must match every answer. Put the Mermaid version in the report file only. Done when the user has seen the final attack path.
 
