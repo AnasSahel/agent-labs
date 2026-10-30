@@ -22,6 +22,10 @@ Skills and agents for Claude Code.
 - CI (`agents.yml`) fails when a copy is missing, stale or no longer listed.
 - The files also work as Claude Code agents: copy them to `~/.claude/agents/`.
 
+## Frameworks
+
+[frameworks/](frameworks) holds the fixed mappings the GRC skills cite, so a clause is looked up, never recalled: ISO 27001:2022 (the pivot, all 93 Annex A controls) and NIS2, DORA and GDPR mapped to it, each with the duties ISO doesn't cover (deadlines, registers). Same copy rule as agents: a skill lists them in `metadata.frameworks`, `scripts/sync-agents` copies them, and CI also runs `scripts/check-frameworks`, which fails on an ISO ref that doesn't exist. How to add one: [frameworks/README.md](frameworks/README.md).
+
 ## Versioning
 
 Each skill has its own version, changelog and tags (`<skill>-v<version>`), managed by [release-please](https://github.com/googleapis/release-please). Never edit a `version` by hand.
