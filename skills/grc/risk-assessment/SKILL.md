@@ -36,13 +36,13 @@ Turn a worry ("what if our payroll supplier gets ransomware?") into one scored, 
    - **findings**: each weakness that makes a hop possible, on its node (`kind`: Weakness, Insecure config, Vulnerability, Event; `source`: the doc or audit that shows it).
    - The header: id, title, scenario, inherent and residual score once scored.
 
-   Show it with the first of these that works:
-   1. A tool that renders a page or an image in the conversation (an Artifact, visualize or preview tool): render it there.
-   2. A local machine: open the file in the browser (`open` on macOS, `xdg-open` on Linux, `start` on Windows) and link its path.
+   Show it where the user is already looking, with the first of these that works:
+   1. A tool that renders a page or an image inside the conversation itself (an Artifact or visualize tool): render it there.
+   2. A local machine: open the file in the system's default browser (`open` on macOS, `xdg-open` on Linux, `start` on Windows), never only in a side or preview pane the user has to find, and say in one line that it opened in their browser, with the path.
    3. A remote shell with a headless browser: screenshot it to `grc/risks/<id>-attack-path.png` and link the image.
    4. Nothing above works: print the ASCII template, and say the visual is in the HTML file.
 
-   Never stop at ASCII when one of 1 to 3 works. Redraw it after the grill with the controls and scores. Always put the Mermaid version in the report. Done when the user has seen the final attack path.
+   Never paste Mermaid or HTML source into the reply: a chat shows it as code, not a picture. Never stop at ASCII when one of 1 to 3 works. Redraw it after the grill with the controls and scores. Put the Mermaid version in the report file only. Done when the user has seen the final attack path.
 
 6. **Write.** Add or update the row in `grc/risk-register.md` (create it from the template when missing; ids `R-001`, `R-002`…). Write the assessment as `grc/risks/<id>-<slug>.md` from the report template, then render each format the user picked:
    - `md`, `html`, `csv`, `json`: write them yourself next to the report; `html` renders the Mermaid with `mermaid@11.4.1` from jsdelivr.
