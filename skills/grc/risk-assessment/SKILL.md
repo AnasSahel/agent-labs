@@ -1,9 +1,10 @@
 ---
 name: risk-assessment
-description: Assess a security risk as an EBIOS RM scenario, draw its risk path, score it by severity and likelihood before and after treatment (ISO 27005), propose controls mapped to ISO 27001, NIS2, DORA and GDPR, and record it in the risk register, after grilling the user on the decisions. Use when the user wants to assess, score or rate a risk, threat or scenario, decide how to treat one, or reassess a risk already in the register.
+description: Assess a security risk as an EBIOS RM scenario, draw its risk path, score it by severity and likelihood before and after treatment (ISO 27005), propose controls mapped to ISO 27001 and to the frameworks in scope from fixed mapping files (NIS2, DORA, GDPR), and record it in the risk register, after grilling the user on the decisions. Use when the user wants to assess, score or rate a risk, threat or scenario, decide how to treat one, or reassess a risk already in the register.
 metadata:
   author: Anas Sahel
   version: 1.0.0 # x-release-please-version
+  frameworks: [iso27001, nis2, dora, gdpr]
 ---
 
 Turn a worry ("what if our payroll supplier gets ransomware?") into one scored, owned, treated risk in `grc/risk-register.md`. The risk is a **scenario** with a drawn **path**, scored twice: **inherent** (today's controls) and **residual** (after treatment). The user decides through `grc-grill`; you look up the rest.
@@ -36,7 +37,7 @@ Turn a worry ("what if our payroll supplier gets ransomware?") into one scored, 
 
    Score inherent, then residual with the treatment's controls in place. When residual is above the appetite in `grc/context.md` and the treatment is `accept`, the owner's acceptance must be in the trace as a `user` row, else ask for it. Done when both scores are set and the residual is within appetite or accepted.
 
-4. **Map.** For each control in the treatment, give its ISO 27001:2022 Annex A control, then the NIS2, DORA and GDPR articles it serves when that framework is in scope. Done when every control has its ISO 27001 reference.
+4. **Map.** Look clauses up in [frameworks/](frameworks/), never from memory. For each control in the treatment, give its ISO 27001 ref from `iso27001.md`, then for each framework in scope in `grc/context.md` (ISO 27001 alone when none), the clauses of `<id>.md` whose ISO 27001 column holds that ref. A framework in scope with no file: its clause from memory, marked "clause to confirm". Then list the **extras** of those files the feared event would trigger (a breach to notify within 72 hours, a contract clause), as their own lines under the treatment. Done when every control has its ISO 27001 ref, every in-scope framework a column, and every triggered extra a line.
 
 5. **Draw.** Decide the **attack path**, then draw it. Write every word for a manager, not an engineer: **plain words** ("fake login page", not "AiTM kit"; "admin's work account", not "Entra ID identity"); product names and jargon stay in the report.
    - **nodes**, in order, 4 to 7: the risk source (`role: source`), each hop the attacker takes (a lure, an identity, a credential, a system), the business asset (`role: asset`), the feared event with its severity (`role: impact`). Each has an `icon` (`attacker user mail phone key web computer server cloud database container vendor payment lock bug alert`), a 1 to 3 word `label` and a `type`.
@@ -139,8 +140,10 @@ Visual: `<id>-attack-path.html`
 ## Treatment
 <reduce | accept | transfer | avoid>, and why.
 
-| Control | ISO 27001 | NIS2 | DORA | GDPR |
-|---|---|---|---|---|
+| Control | ISO 27001 | <one column per framework in scope> |
+|---|---|---|
+
+Extras triggered: <clause: duty>, one per line, or none.
 
 ## Decisions
 Link to the trace, and the calls made without the user.
