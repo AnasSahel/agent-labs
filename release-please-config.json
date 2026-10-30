@@ -15,6 +15,7 @@
     "skills/grc/grc-grill": { "component": "grc-grill", "extra-files": ["SKILL.md"] },
     "skills/grc/risk-assessment": { "component": "risk-assessment", "extra-files": ["SKILL.md"] },
     "skills/grc/risk-register": { "component": "risk-register", "extra-files": ["SKILL.md"] },
-    "skills/grc/committee-report": { "component": "committee-report", "extra-files": ["SKILL.md"] }
+    "skills/grc/committee-report": { "component": "committee-report", "extra-files": ["SKILL.md"] },
+    "skills/grc/vendor-risk": { "component": "vendor-risk", "extra-files": ["SKILL.md"] }
   }
 }
