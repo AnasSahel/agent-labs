@@ -1,12 +1,12 @@
 ---
 name: risk-assessment
-description: Assess a security risk as an EBIOS RM scenario, score it by severity and likelihood before and after treatment (ISO 27005), propose controls mapped to ISO 27001, NIS2, DORA and GDPR, and record it in the risk register, after grilling the user on the decisions. Use when the user wants to assess, score or rate a risk, threat or scenario, decide how to treat one, or reassess a risk already in the register.
+description: Assess a security risk as an EBIOS RM scenario, draw its attack path, score it by severity and likelihood before and after treatment (ISO 27005), propose controls mapped to ISO 27001, NIS2, DORA and GDPR, and record it in the risk register, after grilling the user on the decisions. Use when the user wants to assess, score or rate a risk, threat or scenario, decide how to treat one, or reassess a risk already in the register.
 metadata:
   author: Anas Sahel
   version: 1.0.0 # x-release-please-version
 ---
 
-Turn a worry ("what if our payroll supplier gets ransomware?") into one scored, owned, treated risk in `grc/risk-register.md`. The risk is a **scenario**, scored twice: **inherent** (today's controls) and **residual** (after treatment). The user decides through `grc-grill`; you look up the rest.
+Turn a worry ("what if our payroll supplier gets ransomware?") into one scored, owned, treated risk in `grc/risk-register.md`. The risk is a **scenario** with a drawn **path**, scored twice: **inherent** (today's controls) and **residual** (after treatment). The user decides through `grc-grill`; you look up the rest.
 
 ## Steps
 
@@ -14,7 +14,7 @@ Turn a worry ("what if our payroll supplier gets ransomware?") into one scored, 
 
 2. **Grill.** Call the Skill tool with `grc-grill`:
    - intensity: `hard`
-   - destination: scenario, asset and its business value, existing controls, likelihood, severity, treatment (reduce, accept, transfer, avoid), risk owner, due date
+   - destination: scenario, its path (entry point and steps), asset and its business value, existing controls, likelihood, severity, treatment (reduce, accept, transfer, avoid), risk owner, due date
    - docs: `grc/context.md`, `grc/risk-register.md`, `grc/policies/`, the latest audit in `grc/evidence/`
    - framework: the frameworks in scope; scoring by ISO 27005 and EBIOS RM
    - output default: `html`
@@ -30,9 +30,15 @@ Turn a worry ("what if our payroll supplier gets ransomware?") into one scored, 
 
 4. **Map.** For each control in the treatment, give its ISO 27001:2022 Annex A control, then the NIS2, DORA and GDPR articles it serves when that framework is in scope. Done when every control has its ISO 27001 reference.
 
-5. **Write.** Add or update the row in `grc/risk-register.md` (create it from the template when missing; ids `R-001`, `R-002`…). Write the assessment as `grc/risks/<id>-<slug>.md` from the report template, then render each format the user picked:
-   - `md`, `html`, `csv`, `json`: write them yourself next to the report.
-   - `pdf`, `pptx`, `xlsx`: call the Skill tool with `pdf`, `pptx` or `xlsx`, with the report as the source.
+5. **Draw.** Draw the **path** as a Mermaid flowchart from the path template: risk source, entry point, each step, asset, feared event, with every control as a barrier on the step it blocks (solid when in place, dashed when planned). Draw the inherent to residual move on the severity × likelihood grid. Then show it the best way the harness allows:
+   - Can render a page (an Artifact or HTML preview tool): render the flowchart and the grid there and give the link.
+   - Terminal only: print the path as an ASCII chain in the reply, e.g. `phishing crew ─▶ SMS code phished ─╳ A.8.5 ─▶ AWS console ─▶ payments down (G4)`.
+
+   Done when the Mermaid source is in the report and the user has seen the path.
+
+6. **Write.** Add or update the row in `grc/risk-register.md` (create it from the template when missing; ids `R-001`, `R-002`…). Write the assessment as `grc/risks/<id>-<slug>.md` from the report template, then render each format the user picked:
+   - `md`, `html`, `csv`, `json`: write them yourself next to the report; `html` renders the Mermaid with `mermaid@11.4.1` from jsdelivr.
+   - `pdf`, `pptx`, `xlsx`: call the Skill tool with `pdf`, `pptx` or `xlsx`, with the report as the source; the path goes in as an image (`mmdc` when installed, else drawn with the target's own shapes).
    - Jira: create one issue (title: the scenario, owner, due date, link to the report) through the Jira connector; without one, say so and hand over the CSV row.
 
    Done when the register row exists and every requested file or issue is listed with its path or link.
@@ -47,19 +53,35 @@ Turn a worry ("what if our payroll supplier gets ransomware?") into one scored, 
 | R-001 | <scenario> | <asset> | <owner> | G3·V3 high | reduce | A.5.19, A.8.13 | G3·V1 medium | open | <date> | <date> | traces/<file> |
 </register-template>
 
+<path-template>
+```mermaid
+flowchart LR
+  S["👤 <risk source>"] --> E["<entry point>"] --> P1["<step>"] --> A["🎯 <asset>"] --> F["💥 <feared event> (G<n>)"]
+  C1{{"🛡 <control> · A.x.y"}} --- E
+  C2{{"🛡 <planned control> · A.x.y"}} -.- P1
+  classDef barrier fill:#e8f5e9,stroke:#2e7d32
+  class C1,C2 barrier
+```
+</path-template>
+
 <report-template>
 # <ID> · <scenario>
 
 **Owner** <owner> · **Status** <open | treated | accepted | closed> · **Due** <date>
 
 ## Scenario
-Risk source, feared event, asset and business value, path.
+Risk source, feared event, asset and business value.
+
+## Path
+<path-template>
 
 ## Score
 | | Severity | Likelihood | Level |
 |---|---|---|---|
 | Inherent | | | |
 | Residual | | | |
+
+<grid: G4 to G1 rows × V1 to V4 columns, `●` inherent, `○` residual, `→` the move>
 
 ## Treatment
 <reduce | accept | transfer | avoid>, and why.
