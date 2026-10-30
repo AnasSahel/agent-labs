@@ -10,11 +10,11 @@ Keep `grc/risk-register.md` the **register**: the one source of truth every GRC 
 
 ## Steps
 
-1. **Read.** Load `grc/risk-register.md` (create it from the template when missing) and the appetite in `grc/context.md`. Done when you know every row and the appetite.
+1. **Read.** Load `grc/risk-register.md` (create it from the template when missing), the appetite in `grc/context.md`, and each row's report in `grc/risks/` for its controls' status. Work out each risk's **current level**: the residual once every treatment control is `in place`, else the inherent. Done when you know every row, its current level and the appetite.
 
 2. **Act** on what the user asked, one of:
    - **View**: the rows they asked for, filtered and sorted (by level, owner, status, framework, due date). Default: open risks, highest residual first.
-   - **Review**: flag each row that needs attention: **overdue** (due date passed, not closed), **stale** (not updated in 90 days), **above appetite** (residual above it and not accepted), **acceptance to renew** (accepted more than a year ago). Done when every flagged row has its reason.
+   - **Review**: flag each row that needs attention: **overdue** (due date passed, not closed), **stale** (not updated in 90 days), **above appetite** (current level above it and not accepted, even when the residual will be within it; ask for an interim acceptance until the fixes land), **acceptance to renew** (accepted more than a year ago). Then name **shared root causes**: one policy gap or missing control behind several risks, fixed once. Done when every flagged row has its reason.
    - **Update**: change only status, owner, due date, a control's status, or the trace link. Then set `Updated` to today.
    - **Import**: read the user's CSV, xlsx or Jira issues, map their columns to the register's (say which you mapped and which you dropped), give each new risk the next id (`R-00n`), and mark unscored ones `to assess`. Never overwrite an existing row without showing the change.
    - **Export**: the formats the user names, else none (the chat view is enough).
@@ -28,7 +28,7 @@ Keep `grc/risk-register.md` the **register**: the one source of truth every GRC 
 
 4. **Log** every change in `grc/traces/<YYYY-MM-DD>-register.md` (append): `| Time | ID | Field | Before | After | Settled by |`, with **Settled by** one of `user` (quote the words), `fact: <source>` (an import, a Jira status) or `call`. Done when each changed cell has its row.
 
-5. **Show** the result in the chat: the affected rows as a table, levels in words first ("High (G4·V3)"), then the **portfolio heat map** whenever more than one risk is shown: the 4×4 grid (severity G4 to G1 down, likelihood V1 to V4 across), each risk's id in the cell of its residual score, a cell's color by its level. Draw it with the visualize tool when one exists, else as a markdown table. Done when the user sees the rows and the map.
+5. **Show** the result in the chat: the affected rows as a table, levels in words first ("High (G4·V3)"), then the **portfolio heat map** whenever more than one risk is shown: the 4×4 grid (severity G4 to G1 down, likelihood V1 to V4 across), each risk's id in the cell of its current level, with `→` to its residual cell while fixes are planned, a cell's color by its level. Dates always with the year. Draw it with the visualize tool when one exists, else as a markdown table. Done when the user sees the rows and the map.
 
 ## Formats
 
