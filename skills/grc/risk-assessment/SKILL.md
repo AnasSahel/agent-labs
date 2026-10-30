@@ -30,10 +30,10 @@ Turn a worry ("what if our payroll supplier gets ransomware?") into one scored, 
 
 4. **Map.** For each control in the treatment, give its ISO 27001:2022 Annex A control, then the NIS2, DORA and GDPR articles it serves when that framework is in scope. Done when every control has its ISO 27001 reference.
 
-5. **Draw.** Draw the **attack path**: copy `attack-path.html` from this skill's folder to `grc/risks/<id>-attack-path.html` and fill only its JSON, the page draws itself (light theme, snakes onto several rows, stacks on a phone):
+5. **Draw.** Draw the **attack path**: copy `attack-path.html` from this skill's folder to `grc/risks/<id>-attack-path.html` and fill only its JSON, the page draws itself (white background, snakes onto several rows, stacks on a phone). Write every word for a manager, not an engineer: **plain words** ("fake login page", not "AiTM kit"; "full admin rights", not "AdministratorAccess"); product names and jargon stay in the report.
    - **nodes**, in order, 4 to 7: the risk source (`role: source`), each hop the attacker takes (a lure, an identity, a credential, a system), the business asset (`role: asset`), the feared event with its severity (`role: impact`). Each has an `icon` (`attacker user mail phone key web computer server cloud database container vendor payment lock bug alert`), a 1 to 3 word `label` and a `type`.
    - **edges**, one between each pair of nodes: what the attacker does, in 2 to 4 words (`captures password + SMS`), its `severity`, and the `control` that breaks it when there is one (`name`, ISO 27001 `ref`, `status`: `in place` or `planned`).
-   - **findings**: each weakness that makes a hop possible, on its node (`kind`: Weakness, Insecure config, Vulnerability, Event; `source`: the doc or audit that shows it).
+   - **findings**: each weakness that makes a hop possible, on its node (`kind`: Weak spot, Missing control, Known flaw, Incident; `source`: the doc or audit that shows it).
    - The header: id, title, scenario, inherent and residual score once scored.
 
    Show it where the user is already looking, with the first of these that works:

@@ -3,14 +3,14 @@
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Attack path</title>
 <style>
-  :root { --bg:#f6f8fb; --card:#fff; --ink:#0f1b33; --muted:#66728a; --line:#d7deea;
+  :root { --bg:#fff; --card:#fff; --ink:#0f1b33; --muted:#66728a; --line:#d7deea;
           --red:#e0245e; --red-soft:#fde8ef; --teal:#0e9fb8; --teal-soft:#e2f6f9;
           --amber:#f29d0b; --green:#1f9d55; --green-soft:#e6f6ec; --slate:#3b4a66; }
   * { box-sizing:border-box; }
   body { margin:0; background:var(--bg); color:var(--ink); font:14px/1.35 Inter, system-ui, -apple-system, sans-serif; }
   header { display:flex; flex-wrap:wrap; align-items:center; gap:12px 20px; padding:22px 28px 6px; }
   h1 { margin:0; font-size:22px; letter-spacing:-.01em; }
-  .id { font:600 12px ui-monospace, monospace; color:var(--muted); background:var(--card); border:1px solid var(--line); border-radius:6px; padding:3px 8px; }
+  .id { font:600 12px system-ui, sans-serif; color:var(--muted); background:var(--card); border:1px solid var(--line); border-radius:6px; padding:3px 8px; }
   .levels { display:flex; gap:8px; margin-left:auto; }
   .lvl { border-radius:999px; padding:4px 10px; font-weight:600; font-size:12px; border:1px solid; }
   .lvl.high { color:var(--red); background:var(--red-soft); border-color:#f6b3c7; }
@@ -21,7 +21,7 @@
   svg.wires { position:absolute; inset:0; overflow:visible; pointer-events:none; }
   .node { position:absolute; width:150px; transform:translateX(-50%); text-align:center; }
   .tile { width:58px; height:58px; margin:0 auto 8px; border-radius:16px; display:grid; place-items:center; background:var(--card);
-          border:1.5px solid var(--line); box-shadow:0 2px 6px rgba(15,27,51,.06); position:relative; }
+          border:1.5px solid var(--line); box-shadow:0 1px 4px rgba(15,27,51,.08); position:relative; }
   .tile svg { width:28px; height:28px; stroke:var(--slate); }
   .source .tile { background:var(--red); border-color:var(--red); transform:rotate(45deg); border-radius:14px; }
   .source .tile svg { stroke:#fff; transform:rotate(-45deg); }
@@ -80,11 +80,11 @@
 <p class="scenario" id="scenario"></p>
 <div id="canvas"></div>
 <div class="legend">
-  <span><i style="background:var(--red)"></i>Risk source</span>
-  <span><i style="background:var(--teal)"></i>Business asset</span>
-  <span><i style="border:1.5px dotted var(--red)"></i>Weakness found</span>
-  <span><i style="background:var(--green-soft);border:1.5px solid var(--green)"></i>Control in place</span>
-  <span><i style="border:1.5px dashed var(--green)"></i>Control planned</span>
+  <span><i style="background:var(--red)"></i>Who attacks</span>
+  <span><i style="background:var(--teal)"></i>What we protect</span>
+  <span><i style="border:1.5px dotted var(--red)"></i>Weak spot</span>
+  <span><i style="background:var(--green-soft);border:1.5px solid var(--green)"></i>Protection in place</span>
+  <span><i style="border:1.5px dashed var(--green)"></i>Protection planned</span>
 </div>
 
 <script>
@@ -114,8 +114,8 @@ const d = JSON.parse(document.getElementById('data').textContent);
 document.title = `${d.id} · ${d.title}`;
 const $ = (id) => document.getElementById(id);
 $("title").textContent = d.title; $("rid").textContent = d.id; $("scenario").textContent = d.scenario || "";
-$("levels").innerHTML = [['Inherent', d.inherent], ['Residual', d.residual]].filter(([, v]) => v)
-  .map(([k, v]) => `<span class="lvl ${esc(v.level)}">${k} ${esc(v.score)} · ${esc(v.level)}</span>`).join('');
+$("levels").innerHTML = [['Today', d.inherent], ['After fixes', d.residual]].filter(([, v]) => v)
+  .map(([k, v]) => `<span class="lvl ${esc(v.level)}" title="${esc(v.score)}">${k}: ${esc(v.level)} risk</span>`).join('');
 
 function draw() {
   const canvas = document.getElementById('canvas');
