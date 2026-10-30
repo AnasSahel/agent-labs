@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copy each agent a skill lists (metadata.agents in its SKILL.md) from agents/ into skills/<skill>/agents/.
+# Copy each agent a skill lists (metadata.agents in its SKILL.md) from agents/ into skills/[<group>/]<skill>/agents/.
 # agents/ is the source: edit there, never in a skill's copy.
 # Usage: scripts/sync-agents          copy, and delete copies no longer listed
 #        scripts/sync-agents --check  change nothing; fail when a copy is missing, stale or extra
@@ -7,8 +7,9 @@ set -eu
 cd "$(dirname "$0")/.."
 check=false; [ "${1:-}" = --check ] && check=true
 bad=0
-for skill in skills/*/; do
-  skill=${skill%/}
+for md in skills/*/SKILL.md skills/*/*/SKILL.md; do
+  [ -f "$md" ] || continue
+  skill=${md%/SKILL.md}
   list=$(sed -n 's/^  agents: *\[\(.*\)\] *$/\1/p' "$skill/SKILL.md" | tr ',' ' ')
   for a in $list; do
     src="agents/$a.md"; dst="$skill/agents/$a.md"
