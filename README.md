@@ -24,7 +24,7 @@ Skills and agents for Claude Code.
 
 ## Frameworks
 
-[frameworks/](frameworks) holds the fixed mappings the GRC skills cite, so a clause is looked up, never recalled: ISO 27001:2022 (the pivot, all 93 Annex A controls) and NIS2, DORA and GDPR mapped to it, each with the duties ISO doesn't cover (deadlines, registers). Same copy rule as agents: a skill lists them in `metadata.frameworks`, `scripts/sync-agents` copies them, and CI also runs `scripts/check-frameworks`, which fails on an ISO ref that doesn't exist. How to add one: [frameworks/README.md](frameworks/README.md).
+[frameworks/](frameworks) holds the fixed mappings the GRC skills cite, so a clause is looked up, never recalled: ISO 27001:2022 (the pivot, all 93 Annex A controls) and 14 frameworks mapped to it (NIS2, DORA, GDPR, AI Act, CRA, ISO 27701, ISO 22301, ISO 42001, SOC 2, PCI DSS, HDS, NIST CSF 2.0, CIS v8.1, ANSSI hygiene guide), each with the duties ISO doesn't cover (deadlines, registers). Same copy rule as agents: a skill lists them in `metadata.frameworks`, `scripts/sync-agents` copies them, and CI also runs `scripts/check-frameworks`, which fails on an ISO ref that doesn't exist. How to add one: [frameworks/README.md](frameworks/README.md).
 
 ## Versioning
 
