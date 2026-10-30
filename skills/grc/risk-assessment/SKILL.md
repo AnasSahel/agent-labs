@@ -6,24 +6,26 @@ metadata:
   version: 1.0.0 # x-release-please-version
 ---
 
-Turn a worry ("what if our payroll supplier gets ransomware?") into one scored, owned, treated risk in `grc/risk-register.md`. The risk is a **scenario** with a drawn **path**, scored twice: **inherent** (today's controls) and **residual** (after treatment). The user decides through `grc-grill`; you look up the rest.
+Turn a worry ("what if our payroll supplier gets ransomware?") into one scored, owned, treated risk in `grc/risk-register.md`. The risk is a **scenario** with up to 3 drawn **routes** (ways in, EBIOS RM operational scenarios), scored twice: **inherent** (today's controls) and **residual** (after treatment). The user decides through `grc-grill`; you look up the rest.
 
 ## Steps
 
-1. **Frame.** Write the risk as one **scenario**: `<risk source> could <feared event: disclosed, altered, lost, unavailable> <asset> through <path>`. Then look for the same risk, **by meaning, not wording**: same asset and same risk source or entry point count as the same risk, however it is phrased ("ex-dev still has GitHub write access" = "former developer can change payment code").
+1. **Frame.** Write the risk as one **scenario**: `<risk source> could <feared event: disclosed, altered, lost, unavailable> <asset>`. The ways in are its **routes**. Then look for the same risk, **by meaning, not wording**: same asset and same risk source or entry point count as the same risk, however it is phrased ("ex-dev still has GitHub write access" = "former developer can change payment code").
    - An `in progress` trace in `grc/traces/` for it: this run **resumes** it. Say so in one line (`Resuming R-004: 3 of 10 answers kept`) and hand the trace to grc-grill.
    - A row in `grc/risk-register.md` for it: this run is a **reassessment** of that row, same id.
    - When you are not sure it is the same risk, ask once, as the first question: resume or reassess `<id>`, or start a new risk.
-   - Else it is new. Then show a **draft attack path** (see Draw: nodes, edges and the weaknesses the docs show, no controls yet), titled `Draft`, before any question, so the user corrects the path itself. Done when the user has seen the scenario and its attack path, and you know whether it's new.
+   - Else it is new. Then show a **draft attack path** (see Draw: the most likely route, plus up to 2 other ways in the docs point to, with the weaknesses they show, no controls yet), titled `Draft`, before any question, so the user corrects the routes themselves. Done when the user has seen the scenario and its attack path, and you know whether it's new.
 
 2. **Grill.** Call the Skill tool with `grc-grill`:
    - intensity: `hard`
-   - destination: scenario, its path (entry point and steps), asset and its business value, existing controls, likelihood, severity, treatment (reduce, accept, transfer, avoid), risk owner, due date
+   - destination: scenario, its routes (1 to 3, each with its entry point, steps and likelihood), asset and its business value, existing controls, severity, treatment (reduce, accept, transfer, avoid), risk owner, due date
    - docs: `grc/context.md`, `grc/risk-register.md`, `grc/policies/`, the latest audit in `grc/evidence/`
    - framework: the frameworks in scope; scoring by ISO 27005 and EBIOS RM
    - output default: `html`
 
-   **The path follows the answers.** After each answer that changes the path (a new or removed step, a different entry point, an existing control, a weakness confirmed or ruled out, a new likelihood or severity), redraw it before the next question, in the same place, with one line saying what changed (`Added: SIM swap as a second route`). Answers that don't touch the path don't trigger a redraw. Never carry on with a path the user has corrected.
+   **Ask for other ways in once**, right after the first route is settled: "Any other way in?", with up to 2 routes you suggest from the docs (a phone call to the helpdesk, a supplier's access, a former employee's account) for the user to tick, plus `none`. One route is fine when the user says so; never invent one to fill the drawing.
+
+   **The path follows the answers.** After each answer that changes the path (a new, removed or merged route, a new or removed step, a different entry point, an existing control, a weakness confirmed or ruled out, a new likelihood or severity), redraw it before the next question, in the same place, with one line saying what changed (`Added: SIM swap as a second route`). Answers that don't touch the path don't trigger a redraw. Never carry on with a path the user has corrected.
 
    Done when it hands back every field and the formats.
 
@@ -34,23 +36,26 @@ Turn a worry ("what if our payroll supplier gets ransomware?") into one scored, 
    **Talk in words, not codes.** G is severity (French *gravité*), V is likelihood (*vraisemblance*), from EBIOS RM; most users don't know that. In questions and replies say the word first, code after: "Critical (G4)", "Likely (V3)", "High risk (G4·V3)". When you ask for severity or likelihood, show the 4 options as a short list with one plain example each for this risk, so the user picks a word, not a code. Codes alone are fine only in tables and the register.
    - **Level** high when G3+ with V3+, or G4 with V2+; low when both are 2 or less; medium otherwise.
 
+   **One severity, a likelihood per route.** Severity belongs to the feared event, so every route shares it. Each route gets its own likelihood, today and after the fixes. The risk is as likely as its **easiest route** (the EBIOS RM rule for a strategic scenario and its operational scenarios): inherent likelihood = the highest route today, residual = the highest route after the fixes. Say it in plain words when the fixes leave another route open ("The login fix closes route 1, but the helpdesk call stays Possible, so the risk only drops to medium"), and name the **next best fix**: the one control that would lower the route that now sets the residual.
+
    Score inherent, then residual with the treatment's controls in place. When residual is above the appetite in `grc/context.md` and the treatment is `accept`, the owner's acceptance must be in the trace as a `user` row, else ask for it. Done when both scores are set and the residual is within appetite or accepted.
 
 4. **Map.** For each control in the treatment, give its ISO 27001:2022 Annex A control, then the NIS2, DORA and GDPR articles it serves when that framework is in scope. Done when every control has its ISO 27001 reference.
 
 5. **Draw.** Decide the **attack path**, then draw it. Write every word for a manager, not an engineer: **plain words** ("fake login page", not "AiTM kit"; "admin's work account", not "Entra ID identity"); product names and jargon stay in the report.
-   - **nodes**, in order, 4 to 7: the risk source (`role: source`), each hop the attacker takes (a lure, an identity, a credential, a system), the business asset (`role: asset`), the feared event with its severity (`role: impact`). Each has an `icon` (`attacker user mail phone key web computer server cloud database container vendor payment lock bug alert`), a 1 to 3 word `label` and a `type`.
-   - **edges**, one between each pair of nodes: what the attacker does, in 2 to 4 words (`captures password + SMS`), its `severity`, and the `control` that breaks it when there is one (`name`, ISO 27001 `ref`, `status`: `in place` or `planned`). A control goes on the one hop it actually stops: separate admin accounts do not stop a click on a link. A control that stops no hop stays in the treatment table only.
-   - **findings**: each weakness that makes a hop possible, on its node (`kind`: Weak spot, Missing control, Known flaw, Incident; `source`: the doc or audit that shows it). At most 3 per node, titles of 6 words or fewer; merge the rest. Context such as an ongoing phishing wave goes in the scenario, not on a node.
-   - The header: id, title, scenario, inherent and residual score once scored.
+   - **source**, **asset**, **impact**: shared by every route. The risk source, the business asset, the feared event with its severity (`type: Impact · G4`), and on `impact` the `edge` from asset to impact. Each node has an `icon` (`attacker user mail phone key web computer server cloud database container vendor payment lock bug alert`), a 1 to 3 word `label` and a `type`.
+   - **routes**, 1 to 3, most likely first (a tie: fewer steps first): a `name` of 2 to 4 plain words (`Fake login page`), its `likelihood` (`today`, `after`, as V1 to V4), its **steps**, 1 to 3 hops the attacker takes (a lure, an identity, a credential, a system; keep each route to 2 when you can, as the side-by-side drawing fits 2 per route and falls back to tabs beyond), and its **edges**, one more than the steps: source to first step, step to step, last step to asset. More than 3 ways in: draw the 3 most likely and list the rest in the report.
+   - **edges**: what the attacker does, in 2 to 4 words (`captures password + SMS`), its `severity`, and the `control` that breaks it when there is one (`name`, ISO 27001 `ref`, `status`: `in place` or `planned`). A control goes on the one hop it actually stops: separate admin accounts do not stop a click on a link. A control that stops no hop stays in the treatment table only.
+   - **findings**: each weakness that makes a hop possible, in the `findings` of its step (`kind`: Weak spot, Missing control, Known flaw, Incident; `source`: the doc or audit that shows it). At most 3 per step, titles of 6 words or fewer; merge the rest. Context such as an ongoing phishing wave goes in the scenario, not on a node.
+   - The header: id, title, scenario, inherent and residual score once scored, and `nextFix` (one plain sentence) when more than one route.
 
-   **Look** ([theme.md](theme.md)): soft gray background, flat and square, a small circle with a play ▶ icon (no text) where the path starts, then the nodes left to right in rows, each tile carrying its icon (never an empty box), each joined to the next by a thin black arrow labelled with what the attacker does; the risk source black, the asset electric blue, the impact and each weak spot dashed red, the hops gray; each control a green box on the hop it breaks (solid in place, dashed planned), with its ISO 27001 reference.
+   **Look** ([theme.md](theme.md)): soft gray background, flat and square, a small circle with a play ▶ icon (no text) where the path starts, then the nodes left to right in rows, each tile carrying its icon (never an empty box), each joined to the next by a thin black arrow labelled with what the attacker does; the risk source black, the asset electric blue, the impact and each weak spot dashed red, the hops gray; each control a green box on the hop it breaks (solid in place, dashed planned), with its ISO 27001 reference. **Several routes** fan out from the risk source into one lane each and meet again at the asset: route 1 on top in full, the others lighter (gray wires, smaller tiles), each tagged with its rank and likelihood word (`1 · LIKELY`). Under the drawing, one bar per route (today → after fixes), the risk's bar (the easiest route), and the next best fix. Too narrow for the fan: one route at a time behind tabs.
 
    Show it in the conversation first:
    1. **visualize.** Search your tools, deferred ones included, for `visualize` (or a widget, Artifact or canvas tool). When one exists, load it, read its read-me, and draw the attack path with it inline, in the look above and [theme.md](theme.md), not the tool's default palette. This is the default whenever such a tool exists.
    2. No such tool, on a local machine: open the saved copy in the default browser (`open` on macOS, `xdg-open` on Linux, `start` on Windows) and say so in one line with the path.
    3. No such tool, on a remote shell with a headless browser: screenshot the saved copy to `grc/risks/<id>-attack-path.png` and link it.
-   4. None of these: print the ASCII template and say where the saved copy is.
+   4. None of these: print the ASCII template (route 1; the others as one line each below it) and say where the saved copy is.
 
    Always also save a copy: `attack-path.html` from this skill's folder, filled into `grc/risks/<id>-attack-path.html` (only its JSON; the page draws itself in the same look). **Copy the template fresh from this skill's folder on every draw and redraw**, then write the JSON: never edit the JSON inside an older `grc/risks/` file, which keeps an outdated layout. When you show it as an Artifact or page, publish that fresh file, not a hand-written one.
 
@@ -78,8 +83,11 @@ Turn a worry ("what if our payroll supplier gets ransomware?") into one scored, 
 <path-template>
 ```mermaid
 flowchart LR
-  S{{"<b><risk source></b><br/>Risk source"}} -- "<action> · high" --> N1("<b><hop></b><br/><type>")
+  %% route 1 solid, the other routes dotted
+  S{{"<b><risk source></b><br/>Risk source"}} -- "1 · <action> · high" --> N1("<b><hop></b><br/><type>")
   N1 -- "<action> · high" --> A[("<b><asset></b><br/>Business asset")]
+  S -. "2 · <action> · medium" .-> N2("<b><hop></b><br/><type>")
+  N2 -. "<action>" .-> A
   A -- "<action> · medium" --> F("<b><feared event></b><br/>Impact · G<n>")
   W1["⚠ <weakness> · <source>"] -.- N1
   K1["🛡 <control> · A.x.y"] -.-x N1
@@ -90,7 +98,7 @@ flowchart LR
   classDef weak fill:#FAFAFA,stroke:#C4314B,stroke-dasharray:3 3,color:#C4314B
   classDef control fill:#E4F1E9,stroke:#2E7D4F,color:#2E7D4F
   class S source
-  class N1 hop
+  class N1,N2 hop
   class A asset
   class F impact
   class W1 weak
@@ -127,6 +135,12 @@ Risk source, feared event, asset and business value.
 Visual: `<id>-attack-path.html`
 
 <path-template>
+
+| # | Route | Steps | Likelihood today | After fixes |
+|---|---|---|---|---|
+| 1 | <name> | <step> → <step> | Likely (V3) | Unlikely (V1) |
+
+The risk is as likely as its easiest route: <route>, <word (Vn)> today, <route>, <word (Vn)> after the fixes. Next best fix: <control>. Other ways in, not drawn: <route>, or none.
 
 ## Score
 | | Severity | Likelihood | Level |
