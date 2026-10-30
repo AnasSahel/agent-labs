@@ -10,7 +10,11 @@ Turn a worry ("what if our payroll supplier gets ransomware?") into one scored, 
 
 ## Steps
 
-1. **Frame.** Write the risk as one **scenario**: `<risk source> could <feared event: disclosed, altered, lost, unavailable> <asset> through <path>`. Read `grc/risk-register.md`: when the same scenario is there, this run is a **reassessment** of that row. Then show a **draft attack path** (see Draw: nodes, edges and the weaknesses the docs show, no controls yet), titled `Draft`, before any question, so the user corrects the path itself. Done when the user has seen the scenario and its attack path, and you know whether it's new.
+1. **Frame.** Write the risk as one **scenario**: `<risk source> could <feared event: disclosed, altered, lost, unavailable> <asset> through <path>`. Then look for the same risk, **by meaning, not wording**: same asset and same risk source or entry point count as the same risk, however it is phrased ("ex-dev still has GitHub write access" = "former developer can change payment code").
+   - An `in progress` trace in `grc/traces/` for it: this run **resumes** it. Say so in one line (`Resuming R-004: 3 of 10 answers kept`) and hand the trace to grc-grill.
+   - A row in `grc/risk-register.md` for it: this run is a **reassessment** of that row, same id.
+   - When you are not sure it is the same risk, ask once, as the first question: resume or reassess `<id>`, or start a new risk.
+   - Else it is new. Then show a **draft attack path** (see Draw: nodes, edges and the weaknesses the docs show, no controls yet), titled `Draft`, before any question, so the user corrects the path itself. Done when the user has seen the scenario and its attack path, and you know whether it's new.
 
 2. **Grill.** Call the Skill tool with `grc-grill`:
    - intensity: `hard`

@@ -40,12 +40,18 @@ A calling skill sets these. Standalone, infer them from the request and say in o
 
 Write the trace to the caller's path, else `grc/traces/<YYYY-MM-DD>-<slug>.md`. It is audit evidence of who decided what: quote the user's words verbatim on `user` rows. **Settled by** is exactly one of `user`, `yes` (accepted the recommendation), `call` (you decided), `fact: <source>`.
 
+**Write it as you go**, not at the end: create it before the first question with `status: in progress`, add each row the moment the answer is settled, and set `status: done` when you hand back. A session that stops at Q4 leaves Q1 to Q3 on disk.
+
+**Resume** when the caller passes an `in progress` trace: keep its settled rows, never ask them again, and continue at the first unsettled field, numbering on (`Q4/10`). Say in one line what was already settled.
+
 <trace-template>
 ---
 topic: <title>
 date: <YYYY-MM-DD>
 caller: <skill or "standalone">
 intensity: <hard | light | none>
+status: <in progress | done>
+subject: <what this is about, in plain words, for matching a later run>
 framework: <cited frameworks>
 ---
 
