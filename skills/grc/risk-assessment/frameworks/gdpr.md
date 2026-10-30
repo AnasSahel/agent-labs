@@ -8,7 +8,7 @@ status: draft, to review by a GRC practitioner
 
 # GDPR
 
-Personal data protection. ISO 27001 carries its security side only; for a privacy programme, ISO/IEC 27701 is the better pivot (not mapped yet). Most of the GDPR is in Extras on purpose.
+Personal data protection. ISO 27001 carries its security side only; for a privacy programme, also cite `iso27701`, which carries the privacy side. Most of the GDPR is in Extras on purpose.
 
 ## Mapping
 

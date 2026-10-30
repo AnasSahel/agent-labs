@@ -4,7 +4,7 @@ description: Assess a security risk as an EBIOS RM scenario, draw its risk path,
 metadata:
   author: Anas Sahel
   version: 1.0.0 # x-release-please-version
-  frameworks: [iso27001, nis2, dora, gdpr]
+  frameworks: [iso27001, nis2, dora, gdpr, nist-csf, cis, soc2, pci-dss, hds, anssi-hygiene, iso27701, iso22301, iso42001, ai-act, cra]
 ---
 
 Turn a worry ("what if our payroll supplier gets ransomware?") into one scored, owned, treated risk in `grc/risk-register.md`. The risk is a **scenario** with a drawn **path**, scored twice: **inherent** (today's controls) and **residual** (after treatment). The user decides through `grc-grill`; you look up the rest.
