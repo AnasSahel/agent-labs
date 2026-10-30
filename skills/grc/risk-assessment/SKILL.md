@@ -48,6 +48,7 @@ Turn a worry ("what if our payroll supplier gets ransomware?") into one scored, 
    - **edges**: what the attacker does, in 2 to 4 words (`captures password + SMS`), its `severity`, and the `control` that breaks it when there is one (`name`, ISO 27001 `ref`, `status`: `in place` or `planned`). A control goes on the one hop it actually stops: separate admin accounts do not stop a click on a link. A control that stops no hop stays in the treatment table only.
    - **findings**: each weakness that makes a hop possible, in the `findings` of its step (`kind`: Weak spot, Missing control, Known flaw, Incident; `source`: the doc or audit that shows it). At most 3 per step, titles of 6 words or fewer; merge the rest. Context such as an ongoing phishing wave goes in the scenario, not on a node.
    - The header: id, title, scenario, inherent and residual score once scored, and `nextFix` (one plain sentence) when more than one route.
+   - **Footholds**, so risks can chain: each route's `needs` (what the attacker must already hold to start it: `outside` for most) and the risk's `gives` (what the attacker holds once the asset is reached, or none when the feared event leaves nothing to use). Ids from `footholds.md` in the `attack-chain` skill's folder only; read it there.
 
    **Look** ([theme.md](theme.md)): soft gray background, flat and square, a small circle with a play ▶ icon (no text) where the path starts, then the nodes left to right in rows, each tile carrying its icon (never an empty box), each joined to the next by a thin black arrow labelled with what the attacker does; the risk source black, the asset electric blue, the impact and each weak spot dashed red, the hops gray; each control a green box on the hop it breaks (solid in place, dashed planned), with its ISO 27001 reference. **Several routes** fan out from the risk source into one lane each and meet again at the asset: route 1 on top in full, the others lighter (gray wires, smaller tiles), each tagged with its rank and likelihood word (`1 · LIKELY`). Under the drawing, one bar per route (today → after fixes), the risk's bar (the easiest route), and the next best fix. Too narrow for the fan: one route at a time behind tabs.
 
@@ -69,6 +70,8 @@ Turn a worry ("what if our payroll supplier gets ransomware?") into one scored, 
    Every format opens with the **executive summary** (report template): the first section of the html, pdf and docx, the slide after the title in pptx, the top of the first sheet in xlsx. The xlsx follows the workbook in [theme.md](theme.md) sheet by sheet, heat map included.
 
    Done when the register row exists and every requested file or issue is listed with its path or link.
+
+7. **Hunt chains.** Always, after every new risk or reassessment: match this risk's `needs` and `gives` against the other risks' in `grc/risks/`, and look for a chain of 2 to 4 risks through it that ends at a Serious (G3) or worse impact, or for a chain in `grc/chains/` it extends or changes. When one exists, say it in one line with its level, and offer to run it (`R-009 completes a chain to payroll: high (G4·V3), above each risk alone. Build it with attack-chain?`); yes calls the Skill tool with `attack-chain`. A changed risk that sits in a saved chain: say that chain needs a refresh. Done when you have said which chains this risk joins, or that it joins none.
 
 ## Templates
 
@@ -133,6 +136,8 @@ Risk source, feared event, asset and business value.
 
 ## Attack path
 Visual: `<id>-attack-path.html`
+
+Needs: <foothold per route> · Gives: <foothold, or none>
 
 <path-template>
 
