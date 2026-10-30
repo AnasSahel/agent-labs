@@ -17,6 +17,7 @@ Send each GRC request to the one skill that **owns** it, in the right order when
 | Report to a committee, board or management; record its decisions | `committee-report` | Governance |
 | Assess, score or treat one risk, threat or scenario; reassess one | `risk-assessment` | Risk |
 | See, filter, update, import or export the list of risks | `risk-register` | Risk |
+| Combine or chain risks, how an attacker gets from X to Y, the worst case across risks | `attack-chain` | Risk |
 | Assess a supplier, vendor, cloud or ICT third party | `vendor-risk` | Risk |
 | Map controls between frameworks, show which clauses a control covers | `framework-mapper` | Compliance |
 | Measure where we stand against a framework, find what is missing | `gap-analysis` | Compliance |
@@ -48,7 +49,7 @@ The default order when a request spans several skills, and the source of the nex
 
 `framework-mapper` → `gap-analysis` → `risk-assessment` (one per gap or risk) → `risk-register` → `committee-report` → `policy-writer` and `raci-builder` (for the decisions taken)
 
-Off the main line: `vendor-risk` feeds `risk-register` with supplier risks; `audit-evidence` collects proof for the controls the others marked `in place`.
+Off the main line: `vendor-risk` feeds `risk-register` with supplier risks; `attack-chain` links risks already in `risk-register` and writes its chains back there; `audit-evidence` collects proof for the controls the others marked `in place`.
 
 ## Where do I start
 
