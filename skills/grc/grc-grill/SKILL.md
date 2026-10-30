@@ -4,7 +4,7 @@ description: Grill the user on a governance, risk or compliance decision one que
 metadata:
   author: Anas Sahel
   version: 1.0.0 # x-release-please-version
-  frameworks: [iso27001, nis2, dora, gdpr]
+  frameworks: [iso27001, nis2, dora, gdpr, nist-csf, cis, soc2, pci-dss, hds, anssi-hygiene, iso27701, iso22301, iso42001, ai-act, cra]
   credits: One question at a time with a recommended answer, from Matt Pocock's grilling (https://github.com/mattpocock/skills), MIT.
 ---
 
