@@ -31,8 +31,13 @@ Turn a worry ("what if our payroll supplier gets ransomware?") into one scored, 
 4. **Map.** For each control in the treatment, give its ISO 27001:2022 Annex A control, then the NIS2, DORA and GDPR articles it serves when that framework is in scope. Done when every control has its ISO 27001 reference.
 
 5. **Draw.** Draw the **path** as a **chain**: 3 to 5 rounded boxes left to right joined by arrows, each a bold title of 2 or 3 words with an arrow when it moves (`Cost ↑`, `Payments ↓`) and one short grey line under it. The first box is the cause, neutral; every box after it is a consequence, tinted red; the last is the feared event with its severity. The control that breaks the chain goes under the box it blocks, as a green box with its ISO 27001 reference. Then show it the best way the harness allows:
-   - Can render a page (an Artifact or HTML preview tool): render the chain from `chain.html` in this skill's folder, plus the inherent to residual move on the grid, and give the link.
-   - Otherwise (a terminal, or a chat that shows only text): print the chain from the ASCII template in the reply, never as prose or a bullet list.
+   Always fill `chain.html` from this skill's folder (plus the inherent to residual move on the grid once scored) into `grc/risks/<id>-chain.html`, then show it with the first of these that works:
+   1. A tool that renders a page or an image in the conversation (an Artifact, visualize or preview tool): render it there.
+   2. A local machine: open the file in the browser (`open` on macOS, `xdg-open` on Linux, `start` on Windows) and link its path.
+   3. A remote shell with a headless browser: screenshot it to `grc/risks/<id>-chain.png` and link the image.
+   4. Nothing above works: print the ASCII template, and say the visual is in the HTML file.
+
+   Never stop at ASCII when one of 1 to 3 works.
 
    Redraw it after the grill with the controls in place. Always put the Mermaid version in the report. Done when the user has seen the final chain.
 
