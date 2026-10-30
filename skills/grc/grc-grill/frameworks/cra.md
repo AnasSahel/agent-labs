@@ -8,7 +8,9 @@ status: draft, to review by a GRC practitioner
 
 # Cyber Resilience Act
 
-Cybersecurity of products with digital elements (hardware and software sold in the EU), for manufacturers mainly. Reporting duties apply from 11 September 2026, the rest from 11 December 2027. It regulates the product, not the organization, so ISO 27001 covers the secure development process and the product requirements land in Extras.
+Cybersecurity of products with digital elements (hardware and software sold in the EU), for manufacturers mainly. Reporting duties (Art. 14) apply from 11 September 2026, conformity assessment bodies (Chapter IV) from 11 June 2026, the rest from 11 December 2027 (Art. 71). It regulates the product, not the organization, so ISO 27001 covers the secure development process and the product requirements land in Extras.
+
+Checked line by line against the EUR-Lex text on 2026-10-30.
 
 ## Mapping
 
@@ -47,12 +49,15 @@ Duties the pivot does not carry. **gap-analysis** checks them on their own; a ri
 
 | Clause | Duty | Why ISO 27001 misses it |
 |---|---|---|
-| Art. 13 | Support period of at least 5 years (unless the product's use is shorter), stated at purchase | A product commitment |
-| Art. 13 | Exercise due diligence on third-party components, including open source | ISO looks at suppliers, not components |
-| Art. 14 | Early warning within 24 hours, notification within 72 hours, final report within 14 days of a fix (vulnerabilities) or one month (incidents) | ISO sets no deadline |
-| Art. 14 | Inform affected users of the incident or vulnerability and of mitigations | A duty to customers |
+| Art. 13(8), Art. 13(19) | Support period of at least 5 years (shorter only if the product's expected use is shorter); its end date, at least month and year, stated at purchase | A product commitment |
+| Art. 13(9) | Each security update stays available for at least 10 years after release, or the rest of the support period if longer | A product commitment |
+| Art. 13(3), Art. 13(4) | Cybersecurity risk assessment documented, updated during the support period, and put in the technical documentation | A product file |
+| Art. 13(5), Art. 13(6) | Due diligence on third-party components, including open source; report a vulnerability found in a component to whoever maintains it | ISO looks at suppliers, not components |
+| Art. 13(17) | Single point of contact for users, including for vulnerability reports | A product commitment |
+| Art. 14(2), Art. 14(4) | Actively exploited vulnerability or severe incident, to the coordinator CSIRT and ENISA at once: early warning within 24 hours, notification within 72 hours, final report within 14 days of a fix being available (vulnerabilities) or one month after the notification (incidents) | ISO sets no deadline |
+| Art. 14(8) | Inform impacted users, and where fit all users, of the vulnerability or incident and of mitigations | A duty to customers |
 | Art. 28, Art. 30, Art. 32 | EU declaration of conformity, CE marking, conformity assessment (third party for important and critical products) | Product compliance |
-| Annex I Part I (1) | Cybersecurity risk assessment of the product, in the technical documentation | A product file |
+| Annex I Part I (1) | Level of cybersecurity set by the product's risk assessment (Art. 13(2)), which decides which Part I (2) points apply | A product file |
 | Annex I Part I (2)(c) | Users can opt out of automatic updates and are told of available updates | A product feature |
 | Annex I Part I (2)(g) | Minimise the data the product processes | Product design |
 | Annex I Part II (1) | SBOM in a common machine-readable format, covering at least top-level dependencies | ISO has no SBOM |
