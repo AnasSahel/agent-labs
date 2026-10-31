@@ -1,6 +1,7 @@
 #!/bin/sh
-# Copy each agent a skill lists (metadata.agents in its SKILL.md) from agents/ into skills/[<group>/]<skill>/agents/.
-# agents/ is the source: edit there, never in a skill's copy.
+# Copy each agent and framework a skill lists (metadata.agents, metadata.frameworks in its SKILL.md)
+# from agents/ and frameworks/ into skills/[<group>/]<skill>/agents/ and .../frameworks/.
+# agents/ and frameworks/ are the source: edit there, never in a skill's copy.
 # Usage: scripts/sync-agents          copy, and delete copies no longer listed
 #        scripts/sync-agents --check  change nothing; fail when a copy is missing, stale or extra
 set -eu
@@ -10,23 +11,25 @@ bad=0
 for md in skills/*/SKILL.md skills/*/*/SKILL.md; do
   [ -f "$md" ] || continue
   skill=${md%/SKILL.md}
-  list=$(sed -n 's/^  agents: *\[\(.*\)\] *$/\1/p' "$skill/SKILL.md" | tr ',' ' ')
-  for a in $list; do
-    src="agents/$a.md"; dst="$skill/agents/$a.md"
-    [ -f "$src" ] || { echo "$skill lists $a, but $src doesn't exist"; bad=1; continue; }
-    if ! cmp -s "$src" "$dst"; then
-      if $check; then echo "$dst is missing or differs from $src"; bad=1
-      else mkdir -p "$skill/agents"; cp "$src" "$dst"; echo "copied $src → $dst"; fi
-    fi
-  done
-  [ -d "$skill/agents" ] || continue
-  for f in "$skill"/agents/*.md; do
-    [ -e "$f" ] || continue
-    name=$(basename "$f" .md)
-    case " $list " in *" $name "*) ;; *)
-      if $check; then echo "$f isn't listed in $skill/SKILL.md"; bad=1
-      else rm "$f"; echo "removed $f"; fi;;
-    esac
+  for kind in agents frameworks; do
+    list=$(sed -n "s/^  $kind: *\[\(.*\)\] *\$/\1/p" "$skill/SKILL.md" | tr ',' ' ')
+    for a in $list; do
+      src="$kind/$a.md"; dst="$skill/$kind/$a.md"
+      [ -f "$src" ] || { echo "$skill lists $a, but $src doesn't exist"; bad=1; continue; }
+      if ! cmp -s "$src" "$dst"; then
+        if $check; then echo "$dst is missing or differs from $src"; bad=1
+        else mkdir -p "$skill/$kind"; cp "$src" "$dst"; echo "copied $src → $dst"; fi
+      fi
+    done
+    [ -d "$skill/$kind" ] || continue
+    for f in "$skill"/$kind/*.md; do
+      [ -e "$f" ] || continue
+      name=$(basename "$f" .md)
+      case " $list " in *" $name "*) ;; *)
+        if $check; then echo "$f isn't listed in $skill/SKILL.md"; bad=1
+        else rm "$f"; echo "removed $f"; fi;;
+      esac
+    done
   done
 done
 [ $bad = 0 ] || { echo "Run scripts/sync-agents and commit the result."; exit 1; }

@@ -88,7 +88,7 @@ Five sheets, in this order, with these exact names. Nothing else.
    - The screenshot of the filled `<id>-attack-path.html` anchored at A1, scaled to about 900px wide.
    - Below it, the table: `Route | Step | Node | Type | Attacker action | Severity | Weak spots | Control | ISO 27001 | Status`. One row per hop, route 1 first, weak spots one per line in the cell, severity and status as level cells (`planned` amber soft, `in place` green soft).
 4. **Controls**
-   - `# | Control | Status | Owner | Due | ISO 27001 | NIS2 | DORA | GDPR`. Planned first, then in place (numbered E1, E2…). Refs in Geist Mono. Widths: Control 48, others 14.
+   - `# | Control | Status | Owner | Due | ISO 27001 | <one column per framework in scope>`, then the triggered extras below. Planned first, then in place (numbered E1, E2…). Refs in Geist Mono. Widths: Control 48, others 14.
 5. **Decisions**
    - The grill trace: `# | Field | Question | Recommended (citation) | Answer | Settled by`. `Settled by` as text (`user`, `yes`, `call`, `fact: <source>`), `user` rows bold.
 
