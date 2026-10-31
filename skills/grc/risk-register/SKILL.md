@@ -28,14 +28,14 @@ Keep `grc/risk-register.md` the **register**: the one source of truth every GRC 
 
 4. **Log** every change in `grc/traces/<YYYY-MM-DD>-register.md` (append): `| Time | ID | Field | Before | After | Settled by |`, with **Settled by** one of `user` (quote the words), `fact: <source>` (an import, a Jira status) or `call`. Done when each changed cell has its row.
 
-5. **Show** the result in the chat: the affected rows as a table, levels in words first ("High (G4·V3)"), then the **portfolio heat map** whenever more than one risk is shown: the 4×4 grid (severity G4 to G1 down, likelihood V1 to V4 across), each risk's id in the cell of its current level, with `→` to its residual cell while fixes are planned, a cell's color by its level. Dates always with the year. Draw it with the visualize tool when one exists, else as a markdown table. Done when the user sees the rows and the map.
+5. **Show** in the chat, in every action (view, review, update, import): the affected rows as a table, levels in words first with the codes ("High (G4·V3)", never "🔴 high" alone), then the **portfolio heat map** whenever more than one risk is shown, the same in every action: the 4×4 grid, severity **down** (rows G4, G3, G2, G1 from the top) and likelihood **across** (columns V1, V2, V3, V4 from the left), all 4 rows and 4 columns drawn even when empty, each risk's id in the cell of its current level, with `R-001 →` pointing to its residual cell while fixes are planned. Each cell is colored by the level rule of `risk-assessment` (G×V to high, medium or low), so exactly 3 colors from `theme.md`, never a fourth such as "low-medium"; print the color key under the map (high · medium · low). Dates always with the year. Draw it with the visualize tool when one exists, else as a markdown table. Done when the user sees the rows and the map.
 
 ## Formats
 
 Text-only (md, csv, json, yaml, Jira) stay plain. Visual ones (html, pdf, pptx, xlsx, docx) follow `theme.md` of the `risk-assessment` skill: read it from that skill's folder; when it is not installed, use its rules in short: electric blue `#2F5BFF` the only accent, white background, grays, Geist, flat, square corners; html follows the system light/dark setting, files (pdf, pptx, xlsx, docx) stay light, the heat map as real colored cells.
 
 - **html / pdf**: eyebrow `RISK REGISTER · <date>`, headline `<n> open risks` with `<k> above appetite.` in accent, the review flags as a short list, the portfolio heat map, then the table.
-- **xlsx**: sheets `Register` (every column, frozen header, level cells colored, filters on), `Heat map` (ids in the grid cells), `Review` (flagged rows and their reason).
+- **xlsx**: sheets `Register` (every column, frozen header, level cells colored, filters on), `Heat map` (ids in the grid cells), `Review` (flagged rows and their reason). Empty cells are `None`, never `""`: openpyxl saves `""` as an empty inline string and Excel then calls the whole file corrupt.
 - **pptx**: the Split deck of `theme.md`, four slides: title, heat map, what needs attention, the top five risks.
 - **Jira**: one issue per open risk without one, or update the status of linked ones; without a connector, say so and hand over the CSV.
 
@@ -49,6 +49,6 @@ Text-only (md, csv, json, yaml, Jira) stay plain. Visual ones (html, pdf, pptx, 
 | R-001 | <scenario> | <asset> | <owner> | G3·V3 high | reduce | A.5.19, A.8.13 | G3·V1 medium | open | <date> | <date> | traces/<file> |
 </register-template>
 
-Status is one of `to assess`, `open`, `treated`, `accepted`, `closed`. The columns are the ones `risk-assessment` writes: keep them in this order.
+Status is one of `to assess`, `open`, `treated`, `accepted`, `closed`, and nothing else: an acceptance waiting for a committee is `open`, with `acceptance pending <body>` in the trace. The columns are the ones `risk-assessment` writes: keep them in this order.
 
 The register may end with a **Chains** table (`C-001`…), written by `attack-chain`: show it after the risks when it exists, review it as above, and change only its status, owner or trace link; links and scores go back to `attack-chain`.
