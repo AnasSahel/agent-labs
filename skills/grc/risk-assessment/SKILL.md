@@ -64,7 +64,7 @@ Turn a worry ("what if our payroll supplier gets ransomware?") into one scored, 
    Never paste Mermaid or HTML source into the reply: a chat shows it as code, not a picture. Never fall back to 2 to 4 when a visualize tool exists. Redraw it after the grill with the controls and scores, without the `Draft` title; it must match every answer. Put the Mermaid version in the report file only. Done when the user has seen the final attack path.
 
 6. **Write.** Add or update the row in `grc/risk-register.md` (create it from the template when missing; ids `R-001`, `R-002`…). Write the assessment as `grc/risks/<id>-<slug>.md` from the report template, then render each format the user picked:
-   - `md`, `html`, `csv`, `json`: write them yourself next to the report; `html` renders the Mermaid with `mermaid@11.4.1` from jsdelivr. Every visual asset (html, pdf, pptx, xlsx, docx, images, the inline drawing) follows [theme.md](theme.md): one blue accent, grays, Geist, flat, light only. Text-only files (md, json, csv, yaml, Jira) stay plain.
+   - `md`, `html`, `csv`, `json`: write them yourself next to the report; `html` renders the Mermaid with `mermaid@11.4.1` from jsdelivr. Every visual asset (html, pdf, pptx, xlsx, docx, images, the inline drawing) follows [theme.md](theme.md): one blue accent, white background, grays, Geist, flat, square corners; html follows the system light/dark setting, files (pdf, pptx, xlsx, docx) stay light. Text-only files (md, json, csv, yaml, Jira) stay plain.
    - `pdf`, `pptx`, `xlsx`: call the Skill tool with `pdf`, `pptx` or `xlsx`, with the report and [theme.md](theme.md) as the source; the attack path goes in as an image: a screenshot of the filled `grc/risks/<id>-attack-path.html` (headless browser, 2× scale), so it keeps its icons and play button. Without a browser, draw it with the target's shapes and put each node's icon in its tile, using the SVG paths from `attack-path.html`.
    - Jira: create one issue (title: the scenario, owner, due date, link to the report) through the Jira connector; without one, say so and hand over the CSV row.
 
@@ -96,10 +96,10 @@ flowchart LR
   W1["⚠ <weakness> · <source>"] -.- N1
   K1["🛡 <control> · A.x.y"] -.-x N1
   classDef source fill:#111418,stroke:#111418,color:#fff
-  classDef hop fill:#FAFAFA,stroke:#D9DBDE,color:#111418
+  classDef hop fill:#F4F5F7,stroke:#E3E5E8,color:#111418
   classDef asset fill:#2F5BFF,stroke:#2F5BFF,color:#fff
   classDef impact fill:#F8E6E9,stroke:#C4314B,color:#111418
-  classDef weak fill:#FAFAFA,stroke:#C4314B,stroke-dasharray:3 3,color:#C4314B
+  classDef weak fill:#F4F5F7,stroke:#C4314B,stroke-dasharray:3 3,color:#C4314B
   classDef control fill:#E4F1E9,stroke:#2E7D4F,color:#2E7D4F
   class S source
   class N1,N2 hop

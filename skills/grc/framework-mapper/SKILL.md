@@ -45,7 +45,7 @@ Answer "what does this control cover?" and "what meets this clause?" from the **
    - `xlsx`: call the Skill tool with `xlsx`. Sheets: `Matrix` (or `Coverage`: frozen header, filters on, `partial` and `untouched` cells tinted), `Extras`, `Sources` (each file, its `checked` date and `status`).
    - `html`, `pdf`: an eyebrow `FRAMEWORK MAP · <date>`, a headline with the one-line answer, then the tables.
 
-   Visual formats (xlsx, html, pdf) follow `theme.md` of the `risk-assessment` skill: read it from that skill's folder; when it is not installed, electric blue `#2F5BFF` the only accent, grays, Geist, flat, light only. Text formats stay plain. Done when every file is listed with its path.
+   Visual formats (xlsx, html, pdf) follow `theme.md` of the `risk-assessment` skill: read it from that skill's folder; when it is not installed, electric blue `#2F5BFF` the only accent, white background, grays, Geist, flat, square corners; html follows the system light/dark setting, files (pdf, pptx, xlsx, docx) stay light. Text formats stay plain. Done when every file is listed with its path.
 
 ## Route
 

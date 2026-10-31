@@ -49,7 +49,7 @@ The letters, in plain words (say them this way to the user):
 4. **Write.** Save `grc/raci/<slug>.md` from the template and add new roles and people to `grc/roles.md` (create it from the template). Then render each format picked:
    - `md`, `csv`, `json`: write them yourself next to the matrix, plain.
    - `html`: copy [raci.html](raci.html) fresh from this skill's folder to `grc/raci/<slug>.html` and fill only its JSON; the page draws itself.
-   - `pdf`, `pptx`, `xlsx`, `docx`: call the Skill tool with `pdf`, `pptx`, `xlsx` or `docx`, with the matrix and `theme.md` of the `risk-assessment` skill as source (read it from that skill's folder; without it: electric blue `#2F5BFF` the only accent, grays, Geist, flat, light only). Layouts in **Formats**.
+   - `pdf`, `pptx`, `xlsx`, `docx`: call the Skill tool with `pdf`, `pptx`, `xlsx` or `docx`, with the matrix and `theme.md` of the `risk-assessment` skill as source (read it from that skill's folder; without it: electric blue `#2F5BFF` the only accent, white background, grays, Geist, flat, square corners; html follows the system light/dark setting, files (pdf, pptx, xlsx, docx) stay light). Layouts in **Formats**.
    - Jira: one issue per finding still open and per empty seat, owner = the A; without a connector, say so and hand over the CSV.
 
    Every format opens with the **executive summary**. Done when the matrix file exists and every requested file is listed with its path.
