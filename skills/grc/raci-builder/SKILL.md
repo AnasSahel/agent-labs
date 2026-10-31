@@ -21,7 +21,7 @@ The letters, in plain words (say them this way to the user):
    - A matrix in `grc/raci/` for the same scope: this run **updates** it (same file, `version` + 1). An `in progress` trace for it: **resume** it, say so in one line, hand the trace to grc-grill.
    - Else draft it: take the scope's activities from [duties.md](duties.md), keep those whose framework is in scope, add the ones the policies or the audit name, drop the rest. Cite each row's duties from [frameworks/](frameworks/), never from memory: its ISO 27001 ref from `iso27001.md`, then, for each framework in scope, the rows of its `<id>.md` (Mapping and Extras) that hold that ref or name the activity; a framework in scope with no file: cite it and write "clause to confirm". Roles from `grc/roles.md`, else the policies, else the defaults in [duties.md](duties.md). Fill each cell with your proposal.
 
-   Show the **draft matrix** (see Show), titled `Draft`, before any question, so the user fixes rows and columns first. Done when the user has seen the draft and you know whether it is new.
+   Show the **draft matrix** (see Show), titled `Draft`, before any question, so the user fixes rows and columns first. Done when the user has seen the draft and you know whether it is new; go on to step 2 in the same message, Q1 under the draft, never stop at the draft.
 
 2. **Grill.** Call the Skill tool with `grc-grill`:
    - intensity: `hard`
