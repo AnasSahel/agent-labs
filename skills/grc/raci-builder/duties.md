@@ -1,6 +1,6 @@
 # Duties
 
-The starting activities for each scope, each tied to the duty it serves. Read only the scopes you need. Drop a framework's refs when it is not in scope; keep a row when any of its frameworks is. Where you are not sure a clause fits the user's case, write "clause to confirm" rather than guess another.
+The starting activities for each scope, each tied to the duty it serves. Read only the scopes you need. Drop a framework's refs when it is not in scope; keep a row when any of its frameworks is. These refs are a starting point: check each against its file in `frameworks/`, and add the rows of the other in-scope frameworks from their files.
 
 ## Default roles
 

@@ -10,7 +10,7 @@ Turn `grc/risk-register.md` into one report a committee reads in five minutes an
 
 ## Steps
 
-1. **Read.** Load `grc/context.md` (appetite, frameworks in scope, committee names when listed), `grc/risk-register.md`, each row's report in `grc/risks/`, and the **last report** in `grc/reports/` (its snapshot). Work out per risk its **current level** (residual once every treatment control is `in place`, else inherent) and the same review flags as `risk-register`: overdue, stale (90 days), above appetite and not accepted, acceptance to renew (1 year). Then the **moves** since the last snapshot: new, closed, level up, level down, newly overdue. No last report: say this is the baseline and show no moves. Done when every row has its current level, flags and move.
+1. **Read.** Load `grc/context.md` (appetite, frameworks in scope, committee names when listed), `grc/risk-register.md`, each row's report in `grc/risks/`, and the **last report** in `grc/reports/` (its snapshot). Work out per risk its **current level** (residual once every treatment control is `in place`, else inherent) and the same review flags as `risk-register`: overdue, stale (90 days), above appetite and not accepted, acceptance to renew (1 year). Then the **moves** since the last snapshot: new, closed, level up, level down, newly overdue. No last report: say this is the baseline and show no moves. Also read the **Chains** table and `grc/chains/`: a chain above appetite, or one higher than each of its risks alone, is featured like a risk (often the scarier story), with its break-here fix as the ask. Done when every row has its current level, flags and move.
 
    Back from the meeting with its outcome ("the committee accepted R-004", minutes, notes)? Go to **Record** instead.
 

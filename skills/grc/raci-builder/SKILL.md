@@ -4,6 +4,7 @@ description: Build a RACI matrix for a security process or the whole security pr
 metadata:
   author: Anas Sahel
   version: 1.0.0 # x-release-please-version
+  frameworks: [iso27001, nis2, dora, gdpr, nist-csf, cis, soc2, pci-dss, hds, anssi-hygiene, iso27701, iso22301, iso42001, ai-act, cra]
 ---
 
 Turn "who does what in security?" into one **matrix** in `grc/raci/<slug>.md` that an auditor accepts and a manager reads in a minute. Sample: [examples/raci-sample.png](examples/raci-sample.png). Each row is an **activity** tied to a framework **duty**; each column is a **role** held by a named person. Then the **checks** find what breaks it. Who answers for what is the user's call through `grc-grill`; you draft the rest.
@@ -18,7 +19,7 @@ The letters, in plain words (say them this way to the user):
 
 1. **Frame.** Pin the **scope**: one process (incident response, access, vulnerabilities, suppliers, continuity, personal data) or the whole programme (governance). Then read `grc/context.md` (sector, frameworks in scope, org chart when listed), `grc/roles.md`, `grc/raci/`, the owners in `grc/risk-register.md`, `grc/policies/` and the latest audit in `grc/evidence/`.
    - A matrix in `grc/raci/` for the same scope: this run **updates** it (same file, `version` + 1). An `in progress` trace for it: **resume** it, say so in one line, hand the trace to grc-grill.
-   - Else draft it: take the scope's activities from [duties.md](duties.md), keep those whose framework is in scope, add the ones the policies or the audit name, drop the rest. Roles from `grc/roles.md`, else the policies, else the defaults in [duties.md](duties.md). Fill each cell with your proposal.
+   - Else draft it: take the scope's activities from [duties.md](duties.md), keep those whose framework is in scope, add the ones the policies or the audit name, drop the rest. Cite each row's duties from [frameworks/](frameworks/), never from memory: its ISO 27001 ref from `iso27001.md`, then, for each framework in scope, the rows of its `<id>.md` (Mapping and Extras) that hold that ref or name the activity; a framework in scope with no file: cite it and write "clause to confirm". Roles from `grc/roles.md`, else the policies, else the defaults in [duties.md](duties.md). Fill each cell with your proposal.
 
    Show the **draft matrix** (see Show), titled `Draft`, before any question, so the user fixes rows and columns first. Done when the user has seen the draft and you know whether it is new.
 
@@ -36,7 +37,7 @@ The letters, in plain words (say them this way to the user):
 3. **Check.** Run every check on the settled matrix; each finding names the row, the role, and the clause:
    - **one-A**: no A, or more than one A. Always fix, never accept.
    - **no R**: nobody does the work.
-   - **conflict**: one role does and checks the same thing: R on an activity and A or R on its review or audit (ISO 27001 9.2 and A.5.3, DORA Art. 6); grants and approves access (A.5.15, A.5.18); makes and approves a change (A.8.32); the DPO accountable for a processing decision (GDPR Art. 38(6)); or one person holding two such roles.
+   - **conflict**: one role does and checks the same thing: R on an activity and A or R on its review or audit (ISO 27001 9.2 and A.5.3); the ICT risk function and internal audit held by one person (DORA Art. 6(4)); grants and approves access (A.5.15, A.5.18); makes and approves a change (A.8.32); the DPO accountable for a processing decision (GDPR Art. 38(6)); or one person holding two such roles.
    - **outsourced A**: a supplier or vendor as A. A supplier can be R; the A stays inside (DORA Art. 28(1), GDPR Art. 28, NIS2 Art. 21(2)(d)).
    - **board missing**: the management body is not A on approving the security policy and risk treatment (NIS2 Art. 20(1), DORA Art. 5(2)), when that framework is in scope.
    - **empty seat**: a role with no named person; **no deputy**: a time-bound activity (24h early warning, NIS2 Art. 23; 72h notification, GDPR Art. 33) whose R or A has no deputy.
