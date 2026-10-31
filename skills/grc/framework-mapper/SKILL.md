@@ -38,11 +38,11 @@ Answer "what does this control cover?" and "what meets this clause?" from the **
    - For a register run: per framework, `<n> of <m> clauses touched`, then the untouched ones, then the open extras. Untouched means no risk control meets it, not that the organisation fails it: say proving it is `gap-analysis`'s job.
    - A last line from the files' front matter when any is `status: draft`: `Mappings are drafts (checked <date>), to review by a practitioner.`
 
-   Done when the user has the answer, every row, every triggered extra and the draft line.
+   Every clause and every number in the answer comes from the rows the script printed: count the list you show, and a clause it did not print (a recital, a scope article, another law) is `not mapped`, even when the answer is a no. Done when the user has the answer, every row, every triggered extra and the draft line.
 
 5. **Write** only when the user asks for a file, or for a `matrix` or `register` run (more than 30 rows): then ask the format once, recommending `xlsx`, and save to `grc/mappings/<YYYY-MM-DD>-<query>.<ext>`.
    - `md`, `csv`, `json`: the script's `--format` output, as is.
-   - `xlsx`: call the Skill tool with `xlsx`. Sheets: `Matrix` (or `Coverage`: frozen header, filters on, `partial` and `untouched` cells tinted), `Extras`, `Sources` (each file, its `checked` date and `status`).
+   - `xlsx`: call the Skill tool with `xlsx`. Sheets: `Matrix` (or `Coverage`: frozen header, filters on, `partial` and `untouched` cells tinted), `Extras`, `Sources` (each file, its `checked` date and `status`). Empty cells are `None`, never `""`: openpyxl saves `""` as an empty inline string and Excel then calls the whole file corrupt.
    - `html`, `pdf`: an eyebrow `FRAMEWORK MAP · <date>`, a headline with the one-line answer, then the tables.
 
    Visual formats (xlsx, html, pdf) follow `theme.md` of the `risk-assessment` skill: read it from that skill's folder; when it is not installed, electric blue `#2F5BFF` the only accent, white background, grays, Geist, flat, square corners; html follows the system light/dark setting, files (pdf, pptx, xlsx, docx) stay light. Text formats stay plain. Done when every file is listed with its path.
