@@ -1,6 +1,6 @@
 ---
 name: vendor-risk
-description: Assess a supplier, SaaS or service provider before signing or at renewal: tier it by how much the business depends on it, check its security evidence (certificates, questionnaire, contract, DPA) against what its tier requires, score it as one risk, and give a verdict (approve, approve with conditions, reject) after a short grill; keep the vendor list in `grc/vendors/`. Use when the user onboards, renews or reviews a vendor, supplier, processor or ICT third party, sends or reads a security questionnaire, a SOC 2 or ISO certificate, asks whether a vendor is safe to use, or needs the vendor inventory or DORA register of information.
+description: "Assess a supplier, SaaS or service provider before signing or at renewal: tier it by how much the business depends on it, check its security evidence (certificates, questionnaire, contract, DPA) against what its tier requires, score it as one risk, and give a verdict (approve, approve with conditions, reject) after a short grill; keep the vendor list in `grc/vendors/`. Use when the user onboards, renews or reviews a vendor, supplier, processor or ICT third party, sends or reads a security questionnaire, a SOC 2 or ISO certificate, asks whether a vendor is safe to use, or needs the vendor inventory or DORA register of information."
 metadata:
   author: Anas Sahel
   version: 1.0.0 # x-release-please-version

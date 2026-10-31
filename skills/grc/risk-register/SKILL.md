@@ -1,6 +1,6 @@
 ---
 name: risk-register
-description: Keep the risk register, `grc/risk-register.md`, as the one source of truth for every risk: list, filter and review it, update a row's status, owner, due date or control progress, import risks from a spreadsheet or Jira, and export it with a portfolio heat map, without grilling. Use when the user wants to see, sort or filter their risks, find overdue or stale ones, change a risk's status, owner, due date or control status, close a risk, import or export the register, or show it to management.
+description: "Keep the risk register, `grc/risk-register.md`, as the one source of truth for every risk: list, filter and review it, update a row's status, owner, due date or control progress, import risks from a spreadsheet or Jira, and export it with a portfolio heat map, without grilling. Use when the user wants to see, sort or filter their risks, find overdue or stale ones, change a risk's status, owner, due date or control status, close a risk, import or export the register, or show it to management."
 metadata:
   author: Anas Sahel
   version: 1.0.0 # x-release-please-version
