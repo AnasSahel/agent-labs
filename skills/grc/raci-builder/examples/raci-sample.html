@@ -1,0 +1,349 @@
+<!doctype html>
+<!-- Sample: RACI for a fictional fintech, filled from raci.html. -->
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RACI matrix</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+  /* Theme: theme.md of the risk-assessment skill. One blue accent, grays, red only for findings. Flat, square, light only. */
+  :root { --bg:#F1F2F3; --card:#FAFAFA; --card-2:#E7E8EA; --ink:#111418; --ink-2:#3D434C; --muted:#6F757E; --line:#D9DBDE;
+          --accent:#2F5BFF; --accent-soft:#E6ECFF; --red:#C4314B; --red-soft:#F8E6E9; --amber:#A86400; --amber-soft:#F7EEDF;
+          --green:#2E7D4F; --green-soft:#E4F1E9;
+          --sans:Geist, system-ui, -apple-system, sans-serif; --mono:"Geist Mono", ui-monospace, Menlo, monospace; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:14px/1.6 var(--sans); }
+  main { max-width:76rem; margin:0 auto; padding:0 1.25rem 3rem; }
+  @media (min-width:40rem) { main { padding:0 2rem 3rem; } }
+  header { padding:32px 0 20px; }
+  .eyebrow { font:400 11px var(--mono); letter-spacing:.08em; text-transform:uppercase; color:var(--accent); margin-bottom:10px; }
+  h1 { margin:0 0 18px; font-size:clamp(26px,3.4vw,36px); line-height:1.15; font-weight:600; letter-spacing:-.02em; }
+  h1 span { display:block; color:var(--accent); }
+  .summary { display:grid; grid-template-columns:10rem 1fr; gap:6px 16px; max-width:44rem; margin:0; color:var(--ink-2); }
+  .summary dt { font:400 11px/1.9 var(--mono); letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
+  .summary dd { margin:0; }
+  .section { margin-top:28px; border-top:1px solid var(--ink); }
+  .section h2 { margin:0; padding:12px 0; border-bottom:1px solid var(--line); font-size:12px; font-weight:600; }
+  .scroll { overflow-x:auto; }
+  table { border-collapse:collapse; width:100%; }
+  th, td { border-bottom:1px solid var(--line); padding:7px 8px; text-align:left; vertical-align:middle; }
+  thead th { background:var(--card-2); border-bottom:1px solid var(--ink); font-weight:500; font-size:12px; }
+  thead th.role { text-align:center; min-width:76px; line-height:1.25; }
+  thead th.role small { display:block; color:var(--muted); font:400 10px var(--mono); margin-top:2px; }
+  .id, .duty, .mono { font:400 11px var(--mono); color:var(--muted); }
+  .duty { max-width:15rem; }
+  tr.group td { background:transparent; padding-top:16px; font:500 10px var(--mono); letter-spacing:.08em; text-transform:uppercase; color:var(--accent); }
+  td.cell { text-align:center; padding:4px; }
+  .l { display:inline-grid; place-items:center; width:30px; height:26px; border-radius:2px; font:500 13px var(--mono); }
+  .l.A { background:var(--accent); color:#fff; }
+  .l.R { background:var(--card); color:var(--ink); border:1px solid var(--ink); font-weight:600; }
+  .l.C { color:var(--ink-2); border:1px solid var(--line); background:var(--card); }
+  .l.I { color:var(--muted); }
+  .l.AR { background:var(--accent); color:#fff; width:38px; }
+  td.cell.bad { box-shadow:inset 0 0 0 2px var(--red); background:var(--red-soft); }
+  .flag { display:inline-block; margin:1px 4px 1px 0; padding:0 5px; border-radius:2px; background:var(--red-soft); color:var(--red); font:500 10px/18px var(--mono); letter-spacing:.06em; text-transform:uppercase; white-space:nowrap; }
+  .flag.ok { background:var(--green-soft); color:var(--green); }
+  .flag.exc { background:var(--amber-soft); color:var(--amber); }
+  .legend { display:flex; flex-wrap:wrap; gap:18px; padding:12px 0; color:var(--muted); font:400 11px var(--mono); }
+  .legend .l { width:24px; height:20px; font-size:11px; margin-right:6px; }
+  .tag { font:500 10px var(--mono); letter-spacing:.06em; text-transform:uppercase; }
+  .tag.open { color:var(--red); } .tag.exception { color:var(--amber); } .tag.fixed { color:var(--green); }
+  td.load { font:400 12px var(--mono); }
+  td.load.over { color:var(--red); font-weight:500; }
+</style></head><body>
+
+<script type="application/json" id="data">
+{
+ "scope": "Incident response",
+ "version": 1,
+ "date": "2026-10-30",
+ "draft": false,
+ "verdict": "2 names to give, then ready to sign.",
+ "summary": {
+  "What this covers": "How Northwind Pay detects, handles, reports and learns from security incidents. ISO 27001, DORA and GDPR. Fraud cases are out.",
+  "Who answers for it": "Sara Klein (CISO) for handling and the DORA report, Tom Weber (DPO) for the 72h GDPR notice, the CEO for telling clients.",
+  "What is broken": "The DPO has no deputy for the 72h notice, and nobody is named for communications yet.",
+  "What we need": "Name a DPO deputy and a comms lead by 2026-11-15, then the CEO signs the matrix."
+ },
+ "roles": [
+  {
+   "id": "board",
+   "name": "CEO",
+   "person": "Lena Hart",
+   "deputy": "Marc Dubois"
+  },
+  {
+   "id": "ciso",
+   "name": "CISO",
+   "person": "Sara Klein",
+   "deputy": "Yusuf Okafor"
+  },
+  {
+   "id": "it",
+   "name": "IT Ops lead",
+   "person": "Yusuf Okafor",
+   "deputy": "Ana Ruiz"
+  },
+  {
+   "id": "soc",
+   "name": "SOC (supplier)",
+   "person": "Sentinel MSSP",
+   "deputy": "24/7 desk"
+  },
+  {
+   "id": "dpo",
+   "name": "DPO",
+   "person": "Tom Weber",
+   "deputy": ""
+  },
+  {
+   "id": "legal",
+   "name": "Legal",
+   "person": "Ines Moreau",
+   "deputy": "Outside counsel"
+  },
+  {
+   "id": "comms",
+   "name": "Comms",
+   "person": "",
+   "deputy": ""
+  }
+ ],
+ "groups": [
+  {
+   "name": "Detect and triage",
+   "rows": [
+    {
+     "id": "I1",
+     "activity": "Detect and log security events",
+     "duty": "ISO 27001 A.8.15, A.8.16 · DORA Art. 10",
+     "cells": {
+      "ciso": "A",
+      "it": "C",
+      "soc": "R"
+     },
+     "flags": []
+    },
+    {
+     "id": "I2",
+     "activity": "Report a suspected incident",
+     "duty": "ISO 27001 A.6.8",
+     "cells": {
+      "ciso": "A",
+      "it": "R",
+      "soc": "R",
+      "dpo": "I"
+     },
+     "flags": []
+    },
+    {
+     "id": "I3",
+     "activity": "Triage and classify the incident",
+     "duty": "ISO 27001 A.5.25 · DORA Art. 18",
+     "cells": {
+      "ciso": "A",
+      "it": "C",
+      "soc": "R",
+      "dpo": "C"
+     },
+     "flags": [
+      "outsourced A · fixed"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Respond",
+   "rows": [
+    {
+     "id": "I4",
+     "activity": "Contain and recover",
+     "duty": "ISO 27001 A.5.26 · DORA Art. 11",
+     "cells": {
+      "board": "I",
+      "ciso": "A",
+      "it": "R",
+      "soc": "R",
+      "comms": "I"
+     },
+     "flags": []
+    },
+    {
+     "id": "I5",
+     "activity": "Collect and keep evidence",
+     "duty": "ISO 27001 A.5.28",
+     "cells": {
+      "ciso": "A",
+      "it": "R",
+      "soc": "R",
+      "legal": "C"
+     },
+     "flags": []
+    }
+   ]
+  },
+  {
+   "name": "Notify",
+   "rows": [
+    {
+     "id": "I7",
+     "activity": "Notify a major ICT incident to the authority",
+     "duty": "DORA Art. 19",
+     "cells": {
+      "board": "I",
+      "ciso": "A/R",
+      "dpo": "I",
+      "legal": "C"
+     },
+     "flags": []
+    },
+    {
+     "id": "I8",
+     "activity": "Notify a personal data breach within 72h",
+     "duty": "GDPR Art. 33",
+     "cells": {
+      "board": "I",
+      "ciso": "C",
+      "dpo": "A/R",
+      "legal": "C"
+     },
+     "flags": [
+      "no deputy"
+     ]
+    },
+    {
+     "id": "I9",
+     "activity": "Tell affected clients",
+     "duty": "GDPR Art. 34 · DORA Art. 19(3)",
+     "cells": {
+      "board": "A",
+      "ciso": "C",
+      "dpo": "C",
+      "legal": "C",
+      "comms": "R"
+     },
+     "flags": [
+      "one-A · fixed",
+      "empty seat"
+     ]
+    }
+   ]
+  },
+  {
+   "name": "Learn",
+   "rows": [
+    {
+     "id": "I10",
+     "activity": "Run the post-incident review",
+     "duty": "ISO 27001 A.5.27 · DORA Art. 13",
+     "cells": {
+      "board": "I",
+      "ciso": "A",
+      "it": "R",
+      "soc": "R"
+     },
+     "flags": []
+    }
+   ]
+  }
+ ],
+ "findings": [
+  {
+   "id": "F1",
+   "check": "outsourced A",
+   "row": "I3",
+   "role": "soc",
+   "clause": "DORA Art. 28(1)",
+   "fix": "Draft had the SOC as A. Moved A to the CISO; the SOC stays R.",
+   "status": "fixed",
+   "ends": ""
+  },
+  {
+   "id": "F2",
+   "check": "one-A",
+   "row": "I9",
+   "role": "legal",
+   "clause": "ISO 27001 5.3",
+   "fix": "Legal and Comms were both A. The CEO is A; Comms does it, Legal is consulted.",
+   "status": "fixed",
+   "ends": ""
+  },
+  {
+   "id": "F3",
+   "check": "no deputy",
+   "row": "I8",
+   "role": "dpo",
+   "clause": "GDPR Art. 33",
+   "fix": "Name a deputy who can file the 72h notice when the DPO is away.",
+   "status": "open",
+   "ends": "2026-11-15"
+  },
+  {
+   "id": "F4",
+   "check": "empty seat",
+   "row": "I9",
+   "role": "comms",
+   "clause": "ISO 27001 A.5.2",
+   "fix": "Name the comms lead who writes to clients.",
+   "status": "open",
+   "ends": "2026-11-15"
+  },
+  {
+   "id": "F5",
+   "check": "overload",
+   "row": "all",
+   "role": "ciso",
+   "clause": "ISO 27001 A.5.2",
+   "fix": "CISO is A on 7 of 9 rows. Kept for a 120-person firm (Lena Hart: \"fine until we hire a security manager\").",
+   "status": "exception",
+   "ends": "2027-06-30"
+  }
+ ]
+}
+</script>
+
+<main id="app"></main>
+
+<script>
+const d = JSON.parse(document.getElementById('data').textContent);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const rows = d.groups.flatMap(g => g.rows);
+const bad = new Set(d.findings.filter(f => f.status !== 'fixed').map(f => f.row + '|' + f.role));
+const letter = v => !v ? '' : `<span class="l ${v.replace('/', '')}">${esc(v)}</span>`;
+
+const head = `<header>
+  <div class="eyebrow">RACI · ${esc(d.scope)} · v${esc(d.version)} · ${esc(d.date)}${d.draft ? ' · Draft' : ''}</div>
+  <h1>${rows.length} activities, ${d.roles.length} roles<span>${esc(d.verdict)}</span></h1>
+  <dl class="summary">${Object.entries(d.summary).map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('')}</dl>
+</header>`;
+
+const matrix = `<section class="section"><h2>— Matrix</h2>
+  <div class="legend"><span><span class="l A">A</span>Accountable · signs off</span><span><span class="l R">R</span>Responsible · does it</span>
+  <span><span class="l C">C</span>Consulted · asked before</span><span><span class="l I">I</span>Informed · told after</span>
+  <span><span class="flag">!</span>Finding</span></div>
+  <div class="scroll"><table><thead><tr><th>ID</th><th>Activity</th><th>Duty</th>
+  ${d.roles.map(r => `<th class="role">${esc(r.name)}<small>${esc(r.person || 'empty seat')}</small></th>`).join('')}<th>Findings</th></tr></thead><tbody>
+  ${d.groups.map(g => `<tr class="group"><td colspan="${d.roles.length + 4}">${esc(g.name)}</td></tr>` + g.rows.map(r => `<tr>
+    <td class="id">${esc(r.id)}</td><td>${esc(r.activity)}</td><td class="duty">${esc(r.duty)}</td>
+    ${d.roles.map(ro => `<td class="cell${bad.has(r.id + '|' + ro.id) ? ' bad' : ''}">${letter(r.cells[ro.id])}</td>`).join('')}
+    <td>${(r.flags || []).map(f => `<span class="flag${f.startsWith('exception') ? ' exc' : f.endsWith('fixed') ? ' ok' : ''}">${esc(f)}</span>`).join('')}</td></tr>`).join('')).join('')}
+  </tbody></table></div></section>`;
+
+const findings = `<section class="section"><h2>— Findings</h2>${d.findings.length ? `<div class="scroll"><table><thead><tr>
+  <th>#</th><th>Check</th><th>Row</th><th>Role</th><th>Clause</th><th>Fix or exception</th><th>Status</th><th>Ends</th></tr></thead><tbody>
+  ${d.findings.map(f => `<tr><td class="id">${esc(f.id)}</td><td><span class="flag">${esc(f.check)}</span></td><td class="mono">${esc(f.row)}</td>
+  <td>${esc((d.roles.find(r => r.id === f.role) || {}).name || f.role)}</td><td class="mono">${esc(f.clause)}</td><td>${esc(f.fix)}</td>
+  <td><span class="tag ${esc(f.status)}">${esc(f.status)}</span></td><td class="mono">${esc(f.ends)}</td></tr>`).join('')}
+  </tbody></table></div>` : '<p><span class="flag ok">No findings</span></p>'}</section>`;
+
+const count = (id, k) => rows.filter(r => (r.cells[id] || '').includes(k)).length;
+const roles = `<section class="section"><h2>— Roles</h2><div class="scroll"><table><thead><tr>
+  <th>Role</th><th>Person</th><th>Deputy</th><th>A</th><th>R</th></tr></thead><tbody>
+  ${d.roles.map(r => { const a = count(r.id, 'A'), rr = count(r.id, 'R');
+    return `<tr><td>${esc(r.name)}</td><td>${r.person ? esc(r.person) : '<span class="flag">empty seat</span>'}</td>
+    <td>${r.deputy ? esc(r.deputy) : '<span class="mono">none</span>'}</td>
+    <td class="load${a > rows.length / 2 ? ' over' : ''}">${a}</td><td class="load${rr > rows.length * 2 / 3 ? ' over' : ''}">${rr}</td></tr>`; }).join('')}
+  </tbody></table></div></section>`;
+
+document.getElementById('app').innerHTML = head + matrix + findings + roles;
+document.title = `RACI · ${d.scope}`;
+</script>
+</body></html>
