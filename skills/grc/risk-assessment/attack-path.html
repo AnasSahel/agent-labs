@@ -107,6 +107,21 @@
   .route.in { position:static; transform:none; justify-content:flex-end; margin-bottom:6px; }
   .control { white-space:nowrap; max-width:none; }
   .edge .rel, .route.in { background:var(--bg); }
+  /* Zones behind the fan: who attacks, how, what we protect, what it costs us. */
+  .zone { position:absolute; top:0; bottom:0; border-top:2px solid var(--zc); padding:10px 14px 0; }
+  .zone + .zone { border-left:1px dashed var(--line); }
+  .zone h4 { margin:0; font:500 10px var(--mono); letter-spacing:.08em; text-transform:uppercase; color:var(--zc); }
+  .zone p { margin:3px 0 0; font-size:12px; line-height:1.4; color:var(--ink-2); max-width:34ch; }
+  .fl { margin:6px auto 0; width:170px; text-align:left; border-left:2px dashed var(--red); padding:1px 0 1px 7px; font-size:12px; line-height:1.3; }
+  .fl small { display:block; color:var(--red); font:500 9px var(--mono); letter-spacing:.08em; text-transform:uppercase; }
+  .chip-s { display:inline-flex; gap:4px; align-items:center; text-align:left; font:500 11px var(--sans); color:var(--green); border:1px solid var(--green);
+            background:var(--green-soft); border-radius:2px; padding:1px 5px; margin-bottom:4px; }
+  .chip-s.planned { border-style:dashed; background:var(--card); }
+  .chip-s svg { width:11px; height:11px; stroke:currentColor; }
+  .hub .fl, .hub .fl-note { margin-left:calc(50% - 28px); width:160px; } .fl-note { display:block; margin-top:6px; padding:0; text-align:left; }
+  .lane-hit { position:absolute; cursor:pointer; }
+  .rc { cursor:pointer; padding:4px 6px; margin:0 -6px; border-radius:2px; } .rc.total { cursor:default; } .rc.sel { background:var(--accent-soft); }
+  .layout:not(.one) .legend .z { display:none; } /* the zones already say who attacks and what we protect */
 </style></head><body>
 
 <script type="application/json" id="data">
@@ -116,10 +131,10 @@
   "scenario": "Risk source could <feared event> <asset> through <path>.",
   "inherent": { "score": "G4·V3", "level": "high" },
   "residual": { "score": "G4·V2", "level": "medium" },
-  "source": { "icon": "attacker", "label": "Risk source", "type": "Risk source" },
-  "asset":  { "icon": "payment",  "label": "Asset",       "type": "Business asset" },
+  "source": { "icon": "attacker", "label": "Risk source", "type": "Risk source", "profile": "Who they are and what they want, in one plain line." },
+  "asset":  { "icon": "payment",  "label": "Asset",       "type": "Business asset", "profile": "What it is worth to the business, in one plain line." },
   "gives": "business-app",
-  "impact": { "icon": "alert",    "label": "Feared event", "type": "Impact · G4", "edge": { "label": "causes", "severity": "high" } },
+  "impact": { "icon": "alert",    "label": "Feared event", "type": "Impact · G4", "profile": "What it would cost us (G4), in one plain line.", "edge": { "label": "causes", "severity": "high" } },
   "routes": [
     {
       "name": "Most likely route",
@@ -154,8 +169,8 @@
 <div class="layout"><aside class="panel" id="score"></aside>
 <div class="stage"><div class="tabs" id="tabs" role="tablist" hidden></div><div id="canvas"></div></div></div>
 <template id="legend"><div class="legend">
-  <span><i style="background:var(--ink)"></i>Who attacks</span>
-  <span><i style="background:var(--accent)"></i>What we protect</span>
+  <span class="z"><i style="background:var(--ink)"></i>Who attacks</span>
+  <span class="z"><i style="background:var(--accent)"></i>What we protect</span>
   <span><i style="border:1px dashed var(--red)"></i>Weak spot</span>
   <span><i style="background:var(--green-soft);border:1px solid var(--green)"></i>Protection in place</span>
   <span><i style="border:1px dashed var(--green)"></i>Protection planned</span>
@@ -278,56 +293,81 @@ function drawPath(canvas, p) {
   canvas.innerHTML = wiresSvg(W, H, wires) + html;
 }
 
-// Several routes: they fan out from the source and meet again at the asset, one lane each, most likely on top.
-// Columns: source, the steps (the longest route sets how many), asset, impact.
-const fanCols = () => 3 + Math.max(...routes.map((r) => r.steps.length));
+// Several routes: they fan out from the source and join again where their steps become the same, else at the asset.
+// Steps every route ends with are drawn once. Only the route in focus (pick) shows its weak spots and full protection names;
+// the others show a count badge and the control's reference. Four zones say who attacks, how, what we protect, what it costs.
+const same = (a, b) => !!a && !!b && a.label === b.label && (a.icon || '') === (b.icon || '');
+const sharedCount = () => {
+  const min = Math.min(...routes.map((r) => r.steps.length)), at = (r, i) => r.steps[r.steps.length - 1 - i];
+  let n = 0;
+  while (n < min - 1 && routes.every((r) => same(at(r, n), at(routes[0], n)))) n++; // every route keeps at least one step of its own
+  return n;
+};
+const fanCols = () => { const n = sharedCount(); return 3 + n + Math.max(...routes.map((r) => r.steps.length - n)); };
 function drawFan(canvas) {
-  const W = canvas.clientWidth, left = 150, colW = (W - left - 75) / (fanCols() - 1), k = fanCols() - 3;
-  const X = (c) => left + c * colW;
-  // Measure each lane's tallest step, findings included.
-  const lanes = routes.map((r, li) => {
-    canvas.innerHTML = r.steps.map((s) => nodeHtml(s, s.findings || [], -999, 0, li > 0)).join('');
-    return { r, top: li === 0, half: li ? 22 : 28, tall: Math.max(0, ...[...canvas.querySelectorAll('.node')].map((el) => el.offsetHeight)) };
+  const n = sharedCount(), p = fanCols() - 3 - n, A = p + n + 1; // own-step columns 1..p, shared p+1..p+n, asset A, impact A+1
+  const W = canvas.clientWidth, left = 120, colW = (W - left - 90) / (A + 1), X = (c) => left + c * colW;
+  const dedupe = (fs) => [...new Map(fs.map((f) => [f.title, f])).values()];
+  const shared = routes[0].steps.slice(routes[0].steps.length - n).map((st, j) =>
+    ({ ...st, findings: dedupe(routes.flatMap((r) => r.steps[r.steps.length - n + j].findings || [])) }));
+  const fl = (f) => `<div class="fl" title="${esc(f.source)}"><small>${esc(f.kind)}</small>${esc(f.title)}</div>`;
+  const node = (nd, x, y, dim, open, extra = '') => `<div class="node ${esc(nd.role || 'step')}${dim ? ' dim' : ''}" style="left:${x}px;top:${y}px;width:180px">
+    <div class="tile">${svgIcon(nd.icon)}${(nd.findings || []).length ? `<span class="badge">${nd.findings.length}</span>` : ''}</div>
+    <div class="label">${esc(nd.label)}</div><div class="type">${esc(nd.type)}</div>${open ? (nd.findings || []).map(fl).join('') : ''}${extra}</div>`;
+  const measure = (htmls) => { canvas.innerHTML = htmls.join(''); return [0, ...[...canvas.querySelectorAll('.node')].map((el) => el.offsetHeight)]; };
+  const own = (r) => r.steps.slice(0, r.steps.length - n);
+  const zoneH = 92, head = 80; // room for the zone headers; above each lane, for its tag, label and protection
+  let y = zoneH;
+  const ly = routes.map((r, i) => {
+    const t = Math.max(...measure(own(r).map((st) => node(st, -999, 0, i !== pick, i === pick))));
+    const v = y + head + 28; y += head + t + 16; return v;
   });
-  const head = 78; // room above each lane for the edge label, its control chip and the route tag
-  let y = 10;
-  lanes.forEach((l) => { l.y = y + head + l.half; y += head + l.tall + 22; });
-  const mid = (lanes[0].y + lanes[lanes.length - 1].y) / 2;
-  canvas.innerHTML = [d.source, d.asset, d.impact].map((nd) => nodeHtml(nd, nd.findings || [], -999, 0)).join('');
-  const hubTall = Math.max(...[...canvas.querySelectorAll('.node')].map((el) => el.offsetHeight));
-  const H = Math.max(y, mid - 28 + hubTall + 24);
+  const mid = (ly[0] + ly[ly.length - 1]) / 2;
+  const hub = Math.max(...measure([...shared, d.source, d.asset, d.impact].map((st) => node(st, -999, 0, false, true, '<div class="type">x</div>'))));
+  const H = Math.max(y, mid - 28 + hub + 30);
   canvas.style.height = H + 'px';
 
+  const chip = (c, full) => c ? `<div class="chip-s${c.status === 'planned' ? ' planned' : ''}" title="${esc(c.name)} · ${esc(c.ref)}">${svgIcon('shield')}${full ? esc(c.name) + ' · ' : ''}${esc(c.ref)}</div>` : '';
+  const lab = (e, x, yy, dim, al, full, tag = '') => `<div class="edge${dim ? ' dim' : ''}" style="left:${x}px;top:${yy - 6}px;transform:translate(${al === 'r' ? '-100%' : al === 'l' ? '0' : '-50%'},-100%);text-align:${al === 'r' ? 'right' : al === 'l' ? 'left' : 'center'}">${tag}${chip(e.control, full)}<div class="rel">${esc(e.label)}</div></div>`;
+  const onHub = (e, x0, x1) => lab({ label: e.label }, (x0 + x1) / 2, mid, false, 'c', true)
+    + (e.control ? `<div class="edge" style="left:${(x0 + x1) / 2}px;top:${mid + 12}px;transform:translate(-50%,0)">${chip(e.control, true)}</div>` : '');
+  const wire = (path, dim) => `<path d="${path}" fill="none" stroke="${dim ? '#B4B9BF' : 'var(--ink)'}" stroke-width="${dim ? 1.2 : 1.6}" marker-end="url(#arrow${dim ? '-dim' : ''})"/>`;
   let html = startHtml(44, mid), wires = `<path d="M66 ${mid} L${X(0) - 40} ${mid}" stroke="var(--ink)" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>`;
-  const edge = (e, x, y, dim, room, align) => {
-    const sev = e.severity || 'high';
-    const al = align === 'r' ? 'transform:translate(-100%,-100%);text-align:right;' : align === 'l' ? 'transform:translate(0,-100%);text-align:left;' : '';
-    return `<div class="edge${dim ? ' dim' : ''}" style="left:${x}px;top:${y - 6}px;max-width:${room}px;${al}">${chipHtml(e.control)}<div class="rel">${esc(e.label)}</div>${dim ? '' : `<div class="sev ${esc(sev)}">${esc(sev)}</div>`}</div>`;
-  };
-  const wire = (path, dim) => `<path d="${path}" fill="none" stroke="${dim ? '#9AA0A6' : 'var(--ink)'}" stroke-width="${dim ? 1.2 : 1.5}" marker-end="url(#arrow${dim ? '-dim' : ''})"/>`;
-  lanes.forEach((l, li) => {
-    const { r } = l, dim = !l.top, gap = l.half + 12, m = r.steps.length, ly = l.y;
-    const lik = r.likelihood?.today;
-    r.steps.forEach((s, j) => { html += nodeHtml(s, s.findings || [], X(j + 1), ly - l.half, dim); });
-    // Out of the source: a curve into the lane. Its label, chip and route tag sit right-aligned on the lane, just before the step, clear of other labels.
-    const e0 = r.edges[0] || {}, ax = X(0) + 40, bx = X(1) - gap;
-    wires += wire(`M${ax} ${mid} C${ax + colW / 2} ${mid} ${bx - colW / 2} ${ly} ${bx} ${ly}`, dim);
-    html += edge(e0, bx - 10, ly, dim, colW - 40, 'r').replace('">', `"><div class="route in${l.top ? ' top' : ''}"><b>${li + 1}</b><span class="lik ${tone(lik)}">${esc(word(lik))}</span></div>`);
-    for (let j = 1; j < m; j++) {
-      wires += wire(`M${X(j) + gap} ${ly} L${X(j + 1) - gap} ${ly}`, dim);
-      html += edge(r.edges[j] || {}, (X(j) + X(j + 1)) / 2, ly, dim, colW - 2 * gap);
+  const join = X(p + 1) - 40; // where the lanes meet: the first shared step, else the asset
+  routes.map((_, i) => i).sort((a, b) => (a === pick) - (b === pick)).forEach((i) => { // the route in focus is drawn last, on top
+    const r = routes[i], u = r.steps.length - n, yy = ly[i], dim = i !== pick, g = dim ? 34 : 40, lik = r.likelihood?.today;
+    const tag = `<div class="route in${i === 0 ? ' top' : ''}"><b>${i + 1}</b><span class="lik ${tone(lik)}">${esc(word(lik))}</span></div>`;
+    wires += wire(`M${X(0) + 40} ${mid} C${X(0) + colW / 2} ${mid} ${X(1) - g - colW / 2} ${yy} ${X(1) - g} ${yy}`, dim);
+    html += lab(r.edges[0] || {}, X(1) - g - 8, yy, dim, 'r', !dim, tag);
+    for (let j = 1; j < u; j++) {
+      wires += wire(`M${X(j) + g} ${yy} L${X(j + 1) - g} ${yy}`, dim);
+      html += lab(r.edges[j] || {}, (X(j) + X(j + 1)) / 2, yy, dim, 'c', !dim);
     }
-    // Into the asset: straight along the lane while it has no more steps, then a curve, labelled where the curve starts.
-    const ex = X(m) + gap, run = X(k) + gap, tx = X(k + 1) - 40, eN = r.edges[m] || {};
-    wires += wire(`M${ex} ${ly} L${run} ${ly} C${run + colW / 2} ${ly} ${tx - colW / 2} ${mid} ${tx} ${mid}`, dim);
-    html += m < k ? edge(eN, (ex + run) / 2, ly, dim, run - ex - 10) : edge(eN, run + 6, ly, dim, colW - 60, 'l');
+    const run = X(p) + g; // straight along the lane while it has no more steps, then a curve into the join
+    wires += wire(`M${X(u) + g} ${yy} L${run} ${yy} C${run + colW / 2} ${yy} ${join - colW / 2} ${mid} ${join} ${mid}`, dim);
+    html += lab(r.edges[u] || {}, X(u) + g + 8, yy, dim, 'l', !dim).replace('text-align:left', `text-align:left;max-width:${Math.max(120, join + 12 - (X(u) + g + 8) - 8)}px`);
+    own(r).forEach((st, j) => { html += node(st, X(j + 1), yy - (dim ? 22 : 28), dim, !dim); });
+    html += `<div class="lane-hit" data-i="${i}" title="Show route ${i + 1}" style="left:${X(1) - colW / 2}px;top:${yy - 60}px;width:${colW * p}px;height:${head + 40}px"></div>`;
   });
-  html += nodeHtml({ ...d.source, role: 'source' }, d.source.findings || [], X(0), mid - 28);
-  html += nodeHtml({ ...d.asset, role: 'asset' }, d.asset.findings || [], X(k + 1), mid - 28);
-  html += nodeHtml({ ...d.impact, role: 'impact' }, d.impact.findings || [], X(k + 2), mid - 28);
-  wires += wire(`M${X(k + 1) + 40} ${mid} L${X(k + 2) - 40} ${mid}`, false);
-  html += edge(d.impact.edge || {}, (X(k + 1) + X(k + 2)) / 2, mid, false, colW - 90);
-  canvas.innerHTML = wiresSvg(W, H, wires) + html;
+  const fr = routes[pick], fu = fr.steps.length - n;
+  shared.forEach((st, j) => {
+    html += node({ ...st, role: 'hub' }, X(p + 1 + j), mid - 28, false, true, j === 0 ? `<div class="type fl-note">shared by all ${routes.length} routes</div>` : '');
+    wires += wire(`M${X(p + 1 + j) + 40} ${mid} L${X(p + 2 + j) - 40} ${mid}`, false);
+    html += onHub(fr.edges[fu + 1 + j] || {}, X(p + 1 + j), X(p + 2 + j));
+  });
+  html += node({ ...d.source, role: 'source' }, X(0), mid - 28, false, true);
+  html += node({ ...d.asset, role: 'asset' }, X(A), mid - 28, false, true);
+  html += node({ ...d.impact, role: 'impact' }, X(A + 1), mid - 28, false, true);
+  wires += wire(`M${X(A) + 40} ${mid} L${X(A + 1) - 40} ${mid}`, false);
+  html += onHub(d.impact.edge || {}, X(A), X(A + 1));
+  const b1 = X(0) + colW / 2, b2 = X(A) - colW / 2, b3 = X(A) + colW / 2;
+  const zone = (x0, x1, c, h, txt) => `<div class="zone" style="left:${x0}px;width:${x1 - x0}px;--zc:${c}"><h4>${h}</h4>${txt ? `<p>${txt}</p>` : ''}</div>`;
+  canvas.innerHTML = zone(0, b1, 'var(--ink)', 'Who attacks', esc(d.source.profile))
+    + zone(b1, b2, 'var(--muted)', `How · ${routes.length} ways in`, `<b>Showing route ${pick + 1} of ${routes.length}</b>: ${esc(fr.name)}. Click a route to switch.`)
+    + zone(b2, b3, 'var(--accent)', 'What we protect', esc(d.asset.profile))
+    + zone(b3, W, 'var(--red)', 'What it costs us', esc(d.impact.profile))
+    + wiresSvg(W, H, wires) + html;
+  canvas.querySelectorAll('.lane-hit').forEach((el) => el.onclick = () => { pick = +el.dataset.i; draw(); });
 }
 
 // The left rail: the verdict, one bar per route (today faded, after fixes solid), the risk itself, the next best fix, the legend.
@@ -352,14 +392,16 @@ let pick = 0;
 function draw() {
   const canvas = $("canvas"), W = canvas.clientWidth;
   if (legacy) return drawPath(canvas, { nodes: d.nodes, edges: d.edges || [], findings: d.findings || [] });
-  // The fan needs 200px per column (two steps per route at full width); below that, one route at a time behind tabs.
-  const fan = many && (W - 225) / (fanCols() - 1) >= 200;
+  // The fan needs 180px per column; below that, one route at a time behind tabs.
+  const fan = many && (W - 210) / (fanCols() - 1) >= 180;
   $("tabs").hidden = !many || fan;
   if (many && !fan) {
     $("tabs").innerHTML = routes.map((r, i) => `<button class="tab" role="tab" aria-selected="${i === pick}" data-i="${i}"><b>${i + 1}</b>${esc(r.name)} · <span class="lik ${tone(r.likelihood?.today)}">${esc(word(r.likelihood?.today))}</span></button>`).join('');
     $("tabs").querySelectorAll('.tab').forEach((t) => t.onclick = () => { pick = +t.dataset.i; draw(); });
   }
   if (fan) drawFan(canvas); else drawPath(canvas, flat(routes[many ? pick : 0]));
+  // The rail's route rows switch the route in focus too.
+  document.querySelectorAll('.routes .rc:not(.total)').forEach((el, i) => { el.classList.toggle('sel', i === pick); el.onclick = () => { pick = i; draw(); }; });
 }
 if (many) drawScore(); else { $("score").innerHTML = $("legend").innerHTML; document.querySelector('.layout').classList.add('one'); }
 draw(); addEventListener('resize', draw);
