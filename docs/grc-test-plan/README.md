@@ -597,8 +597,8 @@ Each prompt starts in a **new session**, so the router (not a skill already load
 > Get us ready for the ISO 27001 audit in June.
 
 **Pass if**
-- [ ] **(#50, still failing in evals)** It writes the plan and order as text **before** the first Skill call, in the same message, never call first and explain after. The evals ran headless and saw the plan come after the first call (0 of 3): this is the one to watch in the Desktop app. Note which you see.
-- [ ] The plan follows the flow, following the flow (e.g. `gap-analysis`, then `audit-evidence` on the controls in scope, then requests).
+- [ ] It shows the plan and order as a message, ends on `Go?` and makes **no** Skill call until you say go (a chain waits for your go; a single owner is called at once). Then say **go**.
+- [ ] The plan follows the flow (e.g. `gap-analysis`, then `audit-evidence` on the controls in scope, then requests).
 - [ ] Each step is called only after the last hands back, passing its outputs (gap ids, paths).
 - [ ] Ends with **one** next step in one line.
 
@@ -607,7 +607,7 @@ Each prompt starts in a **new session**, so the router (not a skill already load
 > Do our yearly review and take it to the executive committee.
 
 **Pass if**
-- [ ] **(#50)** The plan is written before the first Skill call (as RT4).
+- [ ] The plan is shown and it waits for **go** before the first Skill call (as RT4).
 - [ ] Plan in flow order, only the steps needed: `gap-analysis` → `risk-assessment` for gaps above appetite → `risk-register` review → `committee-report`.
 - [ ] Each grilling step keeps its own intensity (no extra questions from the router).
 
