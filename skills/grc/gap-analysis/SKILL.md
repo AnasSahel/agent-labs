@@ -18,7 +18,7 @@ Tell the user how far they are from each framework in scope and what to fix firs
    - Each other framework in scope: every **Mapping** row of `<id>.md`, then every **Extras** row.
    - A framework in scope with no file: list it under "Not checked: no mapping file in frameworks/" and check nothing from memory.
 
-   Done when the line count per framework equals its row count in the file. Say the counts in one line (`ISO 27001: 116 · NIS2: 16 + 8 extras`).
+   Done when the line count per framework equals its row count in the file. Say the counts in one line (`ISO 27001: 116 · NIS2: 16 + 8 extras`), before the first question.
 
 3. **Assess** each ISO 27001 line once, from the docs:
    - `met`: a doc shows it is in place and working (policy approved, evidence dated within 12 months, control `in place` in a risk report).
@@ -31,12 +31,12 @@ Tell the user how far they are from each framework in scope and what to fix firs
 
 4. **Grill.** Call the Skill tool with `grc-grill`:
    - intensity: `light`
-   - destination: the frameworks and scope to check (when `grc/context.md` leaves them open), the `unknown` lines with the most framework rows behind them, each `n/a` exclusion and its reason, the target date (certification, audit or regulator deadline)
+   - destination: the frameworks and scope to check (when `grc/context.md` leaves them open), the `unknown` lines with the most framework rows behind them, each `n/a` exclusion `grc/context.md` does not already give with a reason (one it gives is settled as `fact: context.md`; a doubt about it goes in "What we need", not in a question), the target date (certification, audit or regulator deadline)
    - docs: `grc/context.md`, `grc/policies/`, `grc/evidence/`, `grc/risk-register.md`, `grc/risks/`, `grc/gaps/`
    - framework: the frameworks in scope, cited from the lines being asked
    - output default: `xlsx`
 
-   An `n/a` is the user's decision, never a `call`. The `unknown` lines left after the budget stay `unknown`, listed. Done when it hands back every field and the formats.
+   One question per message, never a form or tabs with all of them at once. A new `n/a` is the user's decision, never a `call`. The `unknown` lines left after the budget stay `unknown`, listed. Done when it hands back every field and the formats.
 
 5. **Prioritise.** Every line `missing`, `partial` or `unknown` is a **gap** (`G-01`, `G-02`…), grouped by the ISO 27001 ref that closes it, so one fix closes every framework row mapped to it. Rank them:
    1. Legal duties with a deadline or a fine (Extras such as a 24 h or 72 h notification, a register for the authority).
@@ -53,13 +53,13 @@ Tell the user how far they are from each framework in scope and what to fix firs
 
    Done when the analysis and every requested file is listed with its path.
 
-7. **Show** in the chat: the verdict sentence, the **coverage bars** (one bar per framework, split met, partial, missing, unknown, with the % met), the **Annex A map** (93 small squares in 4 rows by theme, colored by status), and the top 5 gaps with what each closes. Draw it with the visualize tool when one exists, else as a markdown table. Example: [examples/sample-gaps.png](examples/sample-gaps.png). Then offer to assess the top gap as a risk with `risk-assessment`. Done when the user sees the bars and the top gaps.
+7. **Show** in the chat: the verdict sentence, the **coverage bars** (one bar per framework, split met, partial, missing, unknown, with the % met), the **Annex A map** (93 small squares in 4 rows by theme, colored by status), the color key next to both (met · partial · missing · unknown · n/a), and the top 5 gaps with what each closes. Draw it with the visualize tool when one exists, else as a markdown table. Example: [examples/sample-gaps.png](examples/sample-gaps.png). Then offer to assess the top gap as a risk with `risk-assessment`. Done when the user sees the bars and the top gaps.
 
 ## Formats
 
 Plain words for managers: "Backups are not tested" before "A.8.13 partial". The Newsroom layout of `theme.md`: eyebrow `GAP ANALYSIS · <FRAMEWORKS> · <date>`, the verdict as the headline (`64% of ISO 27001 met` / `12 gaps, 4 legal deadlines first.` in accent), the executive summary right after.
 
-- **xlsx** (default): sheets `Summary` (eyebrow, verdict, executive summary, coverage per framework as real cells), `Gaps` (`ID | Gap | Fix | Closes | Leverage | Owner | Due | Effort | Priority`, filters on), `ISO 27001` (every line: `Ref | Requirement | Theme | Status | Evidence or gap | Applicable | Reason if n/a`, usable as a statement of applicability), one sheet per other framework (`Clause | Requirement | ISO 27001 | Fit | Status | Why`, then its Extras), `Decisions` (the grill trace). Status cells in the status colors.
+- **xlsx** (default): sheets `Summary` (eyebrow, verdict, executive summary, coverage per framework as real cells), `Gaps` (`ID | Gap | Fix | Closes | Leverage | Owner | Due | Effort | Priority`, filters on), `ISO 27001` (every line: `Ref | Requirement | Theme | Status | Evidence or gap | Applicable | Reason if n/a`, usable as a statement of applicability), one sheet per other framework (`Clause | Requirement | ISO 27001 | Fit | Status | Why`, then its Extras), `Decisions` (the grill trace). Status cells in the status colors. Empty cells are `None`, never `""`: openpyxl saves `""` as an empty inline string and Excel then calls the whole file corrupt.
 - **pptx**: the Split deck of `theme.md`, six slides: title, executive summary, coverage bars, Annex A map, top gaps (`Gap | Fix | Closes | Owner | Due`), decisions.
 - **html / pdf**: the same sections on one page, sections between rules; A4 for pdf; the full checklist as an appendix.
 - **docx**: the html sections as a memo.
