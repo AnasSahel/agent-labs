@@ -26,7 +26,7 @@ Send each GRC request to the one skill that **owns** it, in the right order when
 
 ## Steps
 
-**Plan first.** Your first output is the plan as text. The first Skill call comes after it, never before, and never as the only thing in your first message. Example:
+**Plan first.** Your first output is the plan as reply text the user sees, never only in your thinking. The first Skill call comes after it, never before, and never as the only thing in your first message. Example:
 
 > Audit prep for ISO 27001: `gap-analysis` first (no gap analysis since 2025), then `audit-evidence` on the controls it marks in place. Starting with gap-analysis.
 
