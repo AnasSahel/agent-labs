@@ -10,7 +10,7 @@ status: draft, to review by a GRC practitioner
 
 Digital operational resilience of EU financial entities, applicable since 17 January 2025. Mapped at article level, with paragraph numbers in Extras. Detail sits in the RTS/ITS: Delegated Regulation (EU) 2024/1774 (ICT risk management framework), 2024/1772 (incident classification) and 2025/301 (incident report content and time limits).
 
-Checked line by line against the EUR-Lex texts on 2026-10-30.
+Checked line by line against the EUR-Lex texts on 2026-10-30; Art. 2, 19(2) and 23 added and checked on 2026-10-31.
 
 ## Mapping
 
@@ -47,6 +47,9 @@ Duties the pivot does not carry. **gap-analysis** checks them on their own; a ri
 | Clause | Duty | Why ISO 27001 misses it |
 |---|---|---|
 | Art. 5(4) | Management body members follow specific ICT risk training on a regular basis | ISO asks for commitment, not training of the board |
+| Art. 2 | Scope: applies to the financial entities listed in Art. 2(1) (a) credit institutions, (b) payment institutions incl. exempted ones, (c) account information service providers, (d) e-money institutions, (e) investment firms, (f) crypto-asset service providers, (g) to (t) market infrastructures, fund managers, insurers, pension institutions, rating agencies, benchmark administrators, crowdfunding and securitisation; and (u) ICT third-party service providers. Art. 2(3) excludes small AIFMs, small insurers, pension schemes of 15 members or fewer, insurance intermediaries that are SMEs, and post office giro institutions | Who is in scope is set by law, not by an ISMS |
+| Art. 19(2) | Voluntary notification of significant cyber threats to the competent authority, when relevant to the financial system, service users or clients (member states may let it go to the NIS2 CSIRTs too) | ISO has no regulator notification of threats |
+| Art. 23 | The Chapter III incident rules (Art. 17 to 22) also apply to operational or security payment-related incidents of credit institutions, payment institutions, account information service providers and e-money institutions | A regulatory reporting scope, not a control |
 | Art. 5(2)(g) | Management body allocates and reviews the digital operational resilience budget | ISO asks for resources, not a board-set budget |
 | Art. 5(3) | A role (or a senior manager) monitors arrangements with ICT third-party providers | A role the regulation defines |
 | Art. 6(4) | Independent ICT risk control function, segregated from internal audit (not microenterprises) | ISO asks for roles, not this independence |
