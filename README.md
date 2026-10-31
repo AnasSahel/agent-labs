@@ -15,6 +15,7 @@ Skills and agents for Claude Code.
 - [risk-assessment](skills/grc/risk-assessment/SKILL.md): assess a security risk as an EBIOS RM scenario, score it before and after treatment (ISO 27005), map its controls to ISO 27001, NIS2, DORA and GDPR, and record it in `grc/risk-register.md`, with the report in md, html, pdf, pptx, xlsx, csv, json or a Jira issue.
 - [risk-register](skills/grc/risk-register/SKILL.md): keep `grc/risk-register.md` as the one list of your risks: view and filter it, flag what is overdue, stale or above your risk appetite, update status, owner, due dates and controls, import from a spreadsheet or Jira, and export it with a portfolio heat map. No grilling; new scores go back to risk-assessment.
 - [committee-report](skills/grc/committee-report/SKILL.md): turn the risk register into a report for a committee or board: posture in one sentence, a heat map of what moved since last time, risks above appetite, fix progress and numbered decisions, as a 7-slide deck by default. After the meeting, records what was decided and updates the register.
+- [attack-chain](skills/grc/attack-chain/SKILL.md): chain risks from the register into one bigger attack, where what the attacker holds after one risk is the way in to the next. Scored by its hardest step and its final impact, so three medium risks can add up to one high; names the one fix that breaks the whole chain and draws it for managers. risk-assessment looks for new chains after every risk.
 - [vendor-risk](skills/grc/vendor-risk/SKILL.md): assess a supplier or SaaS before signing or at renewal: tier it by how much you depend on it, check its certificates, questionnaire, contract and DPA against what that tier requires, score it as one risk and give a verdict (approve, approve with conditions, reject) with owned, dated conditions. Keeps the vendor list in `grc/vendors/` (DORA register of information fields included) and sends high-risk vendors to the risk register.
 
 ## Agents
@@ -24,6 +25,10 @@ Skills and agents for Claude Code.
 - Edit an agent in `agents/` only, then run `scripts/sync-agents` and commit the copies with it, scoped by each skill that carries it (`fix(factory-design): …`): that's what bumps the skill's version.
 - CI (`agents.yml`) fails when a copy is missing, stale or no longer listed.
 - The files also work as Claude Code agents: copy them to `~/.claude/agents/`.
+
+## Frameworks
+
+[frameworks/](frameworks) holds the fixed mappings the GRC skills cite, so a clause is looked up, never recalled: ISO 27001:2022 (the pivot, all 93 Annex A controls) and 14 frameworks mapped to it (NIS2, DORA, GDPR, AI Act, CRA, ISO 27701, ISO 22301, ISO 42001, SOC 2, PCI DSS, HDS, NIST CSF 2.0, CIS v8.1, ANSSI hygiene guide), each with the duties ISO doesn't cover (deadlines, registers). Same copy rule as agents: a skill lists them in `metadata.frameworks`, `scripts/sync-agents` copies them, and CI also runs `scripts/check-frameworks`, which fails on an ISO ref that doesn't exist. How to add one: [frameworks/README.md](frameworks/README.md).
 
 ## Versioning
 

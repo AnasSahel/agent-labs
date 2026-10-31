@@ -4,6 +4,7 @@ description: Assess a supplier, SaaS or service provider before signing or at re
 metadata:
   author: Anas Sahel
   version: 1.0.0 # x-release-please-version
+  frameworks: [iso27001, nis2, dora, gdpr, nist-csf, cis, soc2, pci-dss, hds, anssi-hygiene, iso27701, iso22301, iso42001, ai-act, cra]
 ---
 
 Turn "can we use this vendor?" into one **verdict** a manager can sign: approve, approve with conditions, or reject. The **tier** sets how deep you look: you check the vendor's **evidence** against what its tier requires, never a generic 200-line questionnaire. Each vendor is scored as one risk: **severity** from how much the business depends on it, **likelihood** from the gaps in its evidence.
@@ -24,12 +25,12 @@ Turn "can we use this vendor?" into one **verdict** a manager can sign: approve,
    - intensity: `light`
    - destination: the tier facts the documents left open, the business owner, the decision date (signing or renewal), the verdict when the evidence alone does not settle it, the conditions and their deadlines
    - docs: `grc/context.md`, `grc/vendors/`, `grc/policies/`, the documents the user gave
-   - framework: the frameworks in scope; cite ISO 27001 A.5.19 to A.5.23, NIS2 Art. 21(2)(d), DORA Art. 28 to 30 for an ICT third party of a financial entity, GDPR Art. 28 when it processes personal data on our behalf
+   - framework: the frameworks in scope; the supplier controls are ISO 27001 A.5.19 to A.5.23, and each other framework's clauses are the rows of its file in [frameworks/](frameworks/) that hold those refs (NIS2 supply chain, DORA ICT third parties, GDPR processors), plus its Extras (DORA register of information, GDPR processor contract)
    - output default: `html`
 
    Done when it hands back every field and the formats.
 
-4. **Check.** Go through the **checks** below that the tier requires. Each one is `met` (cite the document and section), `partial` (say what is missing) or `missing`. A certificate counts only when its scope covers the service we buy. Done when every required check has a status and a source.
+4. **Check.** Go through the **checks** below that the tier requires. Each one is `met` (cite the document and section), `partial` (say what is missing) or `missing`. A certificate counts only when its scope covers the service we buy. Cite each check's clauses from [frameworks/](frameworks/), never from memory: its ISO 27001 ref from `iso27001.md`, then the rows of each in-scope framework's `<id>.md` that hold that ref; a framework in scope with no file: cite it and write "clause to confirm". Done when every required check has a status, a source and its clauses.
 
 5. **Score.** Use the scales in `grc/context.md`, else those of `risk-assessment`. Say the word first, the code after: "Critical (G4)".
    - **Severity** from the tier: Low G1, Medium G2, High G3, Critical G4.

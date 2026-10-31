@@ -1,0 +1,60 @@
+#!/usr/bin/env python3
+# Check frameworks/: every ISO 27001 ref a mapping or a GRC skill cites exists in frameworks/iso27001.md,
+# every Fit is full or partial, and every partial row has an extra on the same clause, article or a sub-clause.
+# Usage: scripts/check-frameworks
+import glob, os, re, sys
+os.chdir(os.path.join(os.path.dirname(__file__), ".."))
+bad = []
+
+def rows(text, section):
+    m = re.search(rf"^## {section}\n(.*?)(?=^## |\Z)", text, re.M | re.S)
+    if not m:
+        return None
+    out = []
+    for line in m.group(1).splitlines():
+        cells = [c.strip() for c in line.strip().strip("|").split("|")]
+        if line.startswith("|") and not set(cells[0]) <= set("-:") and cells[0] != "Clause":
+            out.append(cells)
+    return out
+
+iso = open("frameworks/iso27001.md").read()
+refs = re.findall(r"^\| (A\.\d+\.\d+|\d+\.\d+(?:\.\d+)?) \|", iso, re.M)
+if len(refs) != len(set(refs)):
+    bad.append("iso27001.md: duplicate refs")
+known = set(refs)
+if sum(r.startswith("A.") for r in known) != 93:
+    bad.append("iso27001.md: Annex A must list 93 controls")
+
+article = lambda clause: re.match(r"Art\. \d+", clause).group(0) if re.match(r"Art\. \d+", clause) else clause
+
+for path in sorted(glob.glob("frameworks/*.md")):
+    name = os.path.basename(path)[:-3]
+    if name in ("iso27001", "README"):
+        continue
+    text = open(path).read()
+    if not re.search(rf"^id: {re.escape(name)}$", text, re.M):
+        bad.append(f"{path}: frontmatter id must be {name}")
+    mapping, extras = rows(text, "Mapping"), rows(text, "Extras")
+    if mapping is None or extras is None:
+        bad.append(f"{path}: needs a ## Mapping and a ## Extras table")
+        continue
+    extra_clauses = [c for e in extras for c in e[0].split(", ")]
+    covered = lambda clause: any(article(c) == article(clause) or c.startswith(clause + ".") for c in extra_clauses)
+    for clause, _req, iso_refs, fit in (r[:4] for r in mapping):
+        for ref in iso_refs.split(", "):
+            if ref not in known:
+                bad.append(f"{path}: {clause} cites {ref}, not in iso27001.md")
+        if fit not in ("full", "partial"):
+            bad.append(f"{path}: {clause} has Fit '{fit}', expected full or partial")
+        if fit == "partial" and not covered(clause):
+            bad.append(f"{path}: {clause} is partial but has no extra on it")
+
+for path in sorted(glob.glob("skills/grc/**/*.md", recursive=True)):
+    if "/frameworks/" in path:
+        continue
+    for ref in re.findall(r"\bA\.\d+\.\d+\b", open(path).read()):
+        if ref not in known:
+            bad.append(f"{path}: cites {ref}, not in iso27001.md")
+
+print("\n".join(bad) if bad else "frameworks: ok")
+sys.exit(1 if bad else 0)

@@ -1,0 +1,203 @@
+<!doctype html>
+<!-- Attack chain template. Fill only the JSON in <script id="data">; the page draws itself. -->
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Attack chain</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+  /* Theme: see risk-assessment/theme.md. One blue accent, grays, risk colors only as signals. Flat, square, light only. */
+  :root { --bg:#F1F2F3; --card:#FAFAFA; --ink:#111418; --ink-2:#3D434C; --muted:#6F757E; --line:#D9DBDE;
+          --accent:#2F5BFF;
+          --red:#C4314B; --red-soft:#F8E6E9; --amber:#A86400; --amber-soft:#F7EEDF; --green:#2E7D4F; --green-soft:#E4F1E9;
+          --sans:Geist, system-ui, -apple-system, sans-serif; --mono:"Geist Mono", ui-monospace, Menlo, monospace; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:14px/1.4 var(--sans); }
+  main { max-width:84rem; margin:0 auto; padding:0 1.25rem 24px; }
+  @media (min-width:40rem) { main { padding:0 2rem 24px; } }
+  header { padding:28px 0 18px; }
+  .eyebrow { font:400 11px var(--mono); letter-spacing:.08em; text-transform:uppercase; color:var(--accent); margin-bottom:10px; }
+  h1 { margin:0 0 12px; font-size:clamp(24px,3vw,30px); line-height:1.15; font-weight:600; letter-spacing:-.03em; }
+  h1 .accent { color:var(--accent); display:block; }
+  .summary { margin:0; color:var(--ink-2); max-width:46rem; line-height:1.55; }
+  .summary b { font:500 11px var(--mono); letter-spacing:.06em; text-transform:uppercase; color:var(--ink); margin-right:6px; }
+  .section { border-top:1px solid var(--ink); }
+  .section h2 { margin:0; padding:12px 0; border-bottom:1px solid var(--line); font-size:12px; font-weight:600; }
+
+  .row { display:flex; align-items:center; padding:34px 0 64px; }
+  .start { width:40px; height:40px; border-radius:50%; border:1px solid var(--ink); background:var(--card); display:grid; place-items:center; flex:none; }
+  .start svg { width:18px; height:18px; fill:var(--ink); margin-left:2px; }
+  .wire { flex:1; min-width:20px; height:1px; background:var(--ink); position:relative; }
+  .wire::after { content:""; position:absolute; right:-1px; top:-4px; border-left:7px solid var(--ink);
+                 border-top:4.5px solid transparent; border-bottom:4.5px solid transparent; }
+  .wire.cut { background:repeating-linear-gradient(90deg,var(--muted) 0 4px,transparent 4px 8px); }
+
+  .hand { position:relative; flex:0 1 auto; min-width:96px; }
+  .tag { background:var(--card); border:1px solid var(--ink); border-radius:2px; padding:6px 9px; text-align:center; }
+  .tag .k { display:flex; align-items:center; gap:5px; font-weight:600; font-size:13px; justify-content:center; }
+  .tag svg { width:14px; height:14px; stroke:var(--ink); }
+  .tag small { display:block; font:500 10px var(--mono); letter-spacing:.08em; text-transform:uppercase; margin-top:2px; }
+  .brk { position:absolute; top:calc(100% + 10px); left:50%; transform:translateX(-50%); width:max-content; max-width:240px; text-align:center; }
+  .brk em { display:block; font:500 10px var(--mono); font-style:normal; letter-spacing:.08em; text-transform:uppercase; color:var(--green); margin-bottom:4px; }
+  .ctl { display:inline-flex; gap:5px; align-items:center; background:var(--green-soft); color:var(--green); border:1px solid var(--green);
+         border-radius:2px; padding:4px 8px; font:500 11.5px var(--sans); text-align:left; }
+  .ctl.planned { border-style:dashed; }
+  .ctl svg { width:13px; height:13px; flex:none; stroke:currentColor; }
+
+  .ch { flex:0 1 208px; min-width:140px; background:var(--card); border:1px solid var(--line); border-radius:3px; padding:10px 12px 12px; position:relative; }
+  .ch.assumed { border:1px dashed var(--muted); background:transparent; }
+  .ch .id { font:500 10.5px var(--mono); letter-spacing:.08em; color:var(--muted); text-transform:uppercase; display:flex; justify-content:space-between; gap:6px; }
+  .ch .id span { white-space:nowrap; }
+  .ch h3 { margin:4px 0 10px; font-size:14px; font-weight:600; letter-spacing:-.01em; line-height:1.25; min-height:36px; }
+  .ch.assumed h3 { color:var(--muted); font-weight:500; }
+  .mini { display:flex; align-items:center; gap:4px; }
+  .mini .t { width:30px; height:30px; border:1px solid var(--line); border-radius:3px; display:grid; place-items:center; background:#fff; flex:none; }
+  .mini .t svg { width:16px; height:16px; stroke:var(--ink-2); }
+  .mini .t.source { background:var(--ink); border-color:var(--ink); transform:rotate(45deg) scale(.86); }
+  .mini .t.source svg { stroke:#fff; transform:rotate(-45deg); }
+  .mini .t.asset { background:var(--accent); border-color:var(--accent); }
+  .mini .t.asset svg { stroke:#fff; }
+  .mini i { flex:1; height:1px; background:var(--muted); }
+  .lvl { font:500 10px var(--mono); letter-spacing:.06em; text-transform:uppercase; padding:2px 6px; border-radius:2px; white-space:nowrap; }
+  .lvl.high { color:var(--red); background:var(--red-soft); } .lvl.medium { color:var(--amber); background:var(--amber-soft); } .lvl.low { color:var(--green); background:var(--green-soft); }
+  .routes { position:absolute; top:-9px; right:10px; font:500 10px var(--mono); letter-spacing:.06em; text-transform:uppercase; background:var(--ink); color:#fff; padding:2px 6px; border-radius:2px; }
+  a.ch { color:inherit; text-decoration:none; } a.ch:hover { border-color:var(--ink); }
+
+  .imp { flex:0 1 150px; min-width:110px; text-align:center; }
+  .imp .tile { width:58px; height:58px; margin:0 auto 8px; border:1px dashed var(--red); background:var(--red-soft); border-radius:4px; display:grid; place-items:center; position:relative; }
+  .imp .tile svg { width:26px; height:26px; stroke:var(--red); }
+  .imp .badge { position:absolute; top:-8px; right:-10px; background:var(--red); color:#fff; font:500 11px/18px var(--mono); padding:0 4px; border-radius:2px; }
+  .imp b { font-size:14px; } .imp small { display:block; font:400 10px var(--mono); letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-top:2px; }
+
+  .high { color:var(--red); } .medium { color:var(--amber); } .low { color:var(--green); }
+  .score { display:grid; grid-template-columns:1fr; border-top:1px solid var(--line); }
+  @media (min-width:48rem) { .score { grid-template-columns:repeat(3,1fr); } }
+  .score div { padding:12px 16px 4px 0; }
+  .score small { display:block; font:400 10.5px var(--mono); letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-bottom:5px; }
+  .score .big { font-size:20px; font-weight:600; letter-spacing:-.02em; }
+  .score p { margin:3px 0 0; color:var(--ink-2); font-size:12.5px; }
+  .legend { display:flex; flex-wrap:wrap; gap:16px; padding:14px 0 0; margin-top:14px; border-top:1px solid var(--line); color:var(--muted); font:400 11px var(--mono); letter-spacing:.04em; }
+  .legend i { display:inline-block; width:11px; height:11px; border-radius:2px; margin-right:6px; vertical-align:-1px; }
+
+  /* Narrow screens: one column, wires run down. */
+  @media (max-width:60rem) {
+    .row { flex-direction:column; align-items:stretch; padding:24px 0; }
+    .row > * { margin-left:auto; margin-right:auto; }
+    .ch, .imp { width:min(100%, 320px); flex:none; }
+    .wire { flex:none; width:1px; height:26px; min-width:0; }
+    .wire::after { right:-4px; top:auto; bottom:-1px; border-left:4.5px solid transparent; border-right:4.5px solid transparent; border-top:7px solid var(--ink); border-bottom:0; }
+    .wire.cut { background:repeating-linear-gradient(180deg,var(--muted) 0 4px,transparent 4px 8px); }
+    .hand { display:flex; flex-direction:column; align-items:center; gap:8px; }
+    .brk { position:static; transform:none; }
+  }
+</style></head><body>
+<script type="application/json" id="data">
+{
+  "id": "C-000",
+  "goal": "Payroll",
+  "title": "Three medium risks add up to one high risk.",
+  "verdict": "Patch the file server and the chain breaks.",
+  "summary": "A phishing email leads, step by step, to salaries paid into an attacker's account. Each step alone looks medium; together they are high.",
+  "draft": false,
+  "links": [
+    { "risk": "R-003", "title": "Staff member opens a fake invoice email", "score": "G2·V3", "level": "medium", "routes": 1,
+      "icons": ["attacker", "mail", "computer"], "report": "../risks/R-003-attack-path.html",
+      "gives": { "id": "staff-laptop", "label": "Staff laptop", "step": "V3" } },
+    { "risk": "R-007", "title": "Old file server lets them become admin", "score": "G2·V3", "level": "medium", "routes": 2,
+      "icons": ["computer", "server", "key"], "report": "../risks/R-007-attack-path.html",
+      "gives": { "id": "admin-account", "label": "Admin account", "step": "V3" } },
+    { "risk": "R-002", "title": "Admin changes payroll bank details", "score": "G4·V1", "level": "medium", "routes": 1,
+      "icons": ["key", "payment"], "report": "../risks/R-002-attack-path.html", "step": "V3" }
+  ],
+  "impact": { "label": "Salaries paid to attacker", "severity": "G4" },
+  "breakHere": { "link": 1, "control": "Patch within 14 days", "ref": "A.8.8", "status": "planned" },
+  "score": {
+    "alone": "Medium × 3", "aloneNote": "R-002 looked unlikely: nobody outside has admin.",
+    "today": { "score": "G4·V3", "level": "high" }, "todayNote": "Every step is likely once the last one worked.",
+    "after": { "score": "G4·V1", "level": "medium" }, "afterNote": "One patched server makes the whole chain unlikely."
+  }
+}
+</script>
+<main>
+<header><div class="eyebrow" id="eyebrow"></div><h1 id="title"></h1><p class="summary" id="summary"></p></header>
+<section class="section"><h2>— How the attack chains</h2>
+<div class="row" id="row"></div>
+<div class="score" id="score"></div>
+<div class="legend">
+  <span><i style="border:1px solid var(--ink);background:var(--card)"></i>What the attacker holds next</span>
+  <span><i style="background:var(--accent)"></i>What we protect</span>
+  <span><i style="border:1px dashed var(--muted)"></i>Step not assessed yet</span>
+  <span><i style="background:var(--green-soft);border:1px dashed var(--green)"></i>Fix that breaks the chain</span>
+</div>
+</section>
+</main>
+<script>
+const ICONS = {
+  attacker: '<circle cx="12" cy="7" r="4"/><path d="M5.5 21a6.5 6.5 0 0 1 13 0"/><path d="M9 7h6"/>',
+  user: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+  mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>',
+  phone: '<rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/>',
+  key: '<circle cx="7.5" cy="15.5" r="4.5"/><path d="m11 12 9-9M16 7l3 3M14 9l2 2"/>',
+  web: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',
+  computer: '<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/>',
+  server: '<rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 7.5h.01M7 16.5h.01"/>',
+  cloud: '<path d="M7 18a4.5 4.5 0 0 1-.6-9 6 6 0 0 1 11.6 1.5A3.75 3.75 0 0 1 17.5 18Z"/>',
+  database: '<ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/>',
+  container: '<path d="M12 2 3 7v10l9 5 9-5V7Z"/><path d="m3 7 9 5 9-5M12 12v10"/>',
+  vendor: '<path d="M3 21V9l6-4v4l6-4v4l6-4v16Z"/><path d="M7 17h2M11 17h2M15 17h2"/>',
+  payment: '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/>',
+  lock: '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+  bug: '<rect x="8" y="6" width="8" height="14" rx="4"/><path d="M12 6V3M4 13h4M16 13h4M5 7l3 2M19 7l-3 2M5 19l3-2M19 19l-3-2"/>',
+  alert: '<path d="M12 3 2 21h20Z"/><path d="M12 10v5M12 18h.01"/>',
+  shield: '<path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6Z"/><path d="m9 12 2 2 4-4"/>'
+};
+const svgIcon = (n) => `<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICONS[n] || ICONS.alert}</svg>`;
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const WORD = { V1:['Unlikely','low'], V2:['Possible','medium'], V3:['Likely','high'], V4:['Near certain','high'] };
+const SEV = { G1:'Minor', G2:'Significant', G3:'Serious', G4:'Critical' };
+const cap = (s) => s ? s.charAt(0).toUpperCase() + s.slice(1) : '';
+const $ = (id) => document.getElementById(id);
+
+const d = JSON.parse($('data').textContent);
+document.title = `${d.id} · ${d.title}`;
+$('eyebrow').textContent = ['Chain', d.id, d.goal, d.draft ? 'Draft' : ''].filter(Boolean).join(' · ');
+$('title').innerHTML = esc(d.title) + (d.verdict ? `<span class="accent">${esc(d.verdict)}</span>` : '');
+$('summary').innerHTML = d.summary ? `<b>What could happen</b>${esc(d.summary)}` : '';
+
+const brk = d.breakHere;
+const brkHtml = brk ? `<div class="brk"><em>Break here</em><div class="ctl ${brk.status === 'in place' ? '' : 'planned'}">${svgIcon('shield')}<span>${esc(brk.control)}${brk.ref ? ' · ' + esc(brk.ref) : ''}</span></div></div>` : '';
+
+const chapter = (l, i) => {
+  if (l.assumed) return `<div class="ch assumed"><div class="id"><span>Gap</span></div><h3>${esc(l.title || 'Not assessed yet')}</h3><div class="mini"><div class="t">${svgIcon('alert')}</div></div></div>`;
+  const icons = (l.icons || []).map((n, k, a) => {
+    const role = k === 0 && i === 0 ? 'source' : (k === a.length - 1 && i === d.links.length - 1 ? 'asset' : '');
+    return `<div class="t ${role}">${svgIcon(n)}</div>`;
+  }).join('<i></i>');
+  const tag = l.report ? 'a' : 'div';
+  return `<${tag} class="ch" ${l.report ? `href="${esc(l.report)}"` : ''}>${l.routes > 1 ? `<span class="routes">${l.routes} routes</span>` : ''}
+    <div class="id"><span>${esc(l.risk)}</span><span class="lvl ${esc(l.level)}">${esc(cap(l.level))} · ${esc(l.score)}</span></div>
+    <h3>${esc(l.title)}</h3><div class="mini">${icons}</div></${tag}>`;
+};
+const handoff = (g, i) => {
+  const w = WORD[g.step] || ['', ''];
+  return `<div class="hand"><div class="tag"><div class="k">${svgIcon('key')}${esc(g.label)}</div>
+    ${g.step ? `<small class="${w[1]}">${w[0]} next step</small>` : ''}</div>${brk && brk.link === i ? brkHtml : ''}</div>`;
+};
+
+let html = `<div class="start"><svg viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></svg></div>`;
+d.links.forEach((l, i) => {
+  html += `<div class="wire ${l.assumed || (i > 0 && d.links[i-1].assumed) ? 'cut' : ''}"></div>` + chapter(l, i);
+  if (l.gives && i < d.links.length - 1) html += `<div class="wire"></div>` + handoff(l.gives, i);
+  else if (brk && brk.link === i) html += `<div class="wire"></div><div class="hand">${brkHtml.replace('class="brk"', 'class="brk" style="position:static;transform:none"')}</div>`;
+});
+const sev = d.impact.severity;
+html += `<div class="wire"></div><div class="imp"><div class="tile"><span class="badge">${esc(sev)}</span>${svgIcon(d.impact.icon || 'alert')}</div>
+  <b>${esc(d.impact.label)}</b><small>Impact · ${esc(SEV[sev] || '')}</small></div>`;
+$('row').innerHTML = html;
+
+const s = d.score || {};
+const cell = (label, v, note, cls) => v ? `<div><small>${label}</small><div class="big ${cls}">${esc(v)}</div>${note ? `<p>${esc(note)}</p>` : ''}</div>` : '';
+$('score').innerHTML =
+  cell('Each risk alone', s.alone, s.aloneNote, ['high', 'medium', 'low'].find(v => d.links.some(l => l.level === v))) +
+  cell('The chain today', s.today && `${cap(s.today.level)} · ${s.today.score}`, s.todayNote, s.today && s.today.level) +
+  cell('After the fix', s.after && `${cap(s.after.level)} · ${s.after.score}`, s.afterNote, s.after && s.after.level);
+</script>
+</body></html>
