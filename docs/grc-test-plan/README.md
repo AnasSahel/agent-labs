@@ -153,6 +153,17 @@ for d in "$REPO"/skills/grc/*/; do ln -sfn "${d%/}" .claude/skills/"$(basename "
 
 Use one option, not both. In what follows, `.claude/skills/` means the test folder's.
 
+**Then, before any test:**
+
+```bash
+git add -A && git commit -qm "install skills"   # the Desktop app may run sessions in a worktree, which only holds committed files
+ls -l ~/.claude/skills | grep -E 'grc|risk|policy|raci|vendor|committee|framework|gap|audit|attack'   # old global copies?
+```
+
+- If the second command lists GRC skills, they load in every project and can mix with the test copies: remove them (`rm ~/.claude/skills/<name>` for each) so the test runs only what you just installed.
+- Open every test session **on the test folder**, never on the agent-labs repo: in the Desktop Code tab, pick `~/workspace/tmp/test-grc` as the session's folder. A session under `agent-labs/.claude/worktrees/…` is a copy of the repo and doesn't count.
+
+
 ### I1 · Skills installed
 **Run** `ls .claude/skills` in the test folder. **Pass if**
 - [ ] 12 folders, one per skill, and no `YAML parse error` warning from `npx skills add` (option B: no broken link, `find .claude/skills -xtype l` prints nothing).
