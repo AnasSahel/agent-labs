@@ -332,8 +332,8 @@ Finish this one: it is the first link of the chain in AC1 (finance laptop = `sta
 > Assess the risk that our AWS root account password is shared in a team vault. We'll accept it as it is.
 
 **Pass if**
-- [ ] With treatment `accept` and a residual above medium (the appetite), it asks for the owner's acceptance in **their words**, and notes that `context.md` says high needs the executive committee.
-- [ ] The trace holds that acceptance as a `user` row, never a `call` or `yes`.
+- [ ] With treatment `accept` and a residual above medium (the appetite), it notes that `context.md` says a high residual needs the executive committee, keeps the acceptance `pending` and asks for the committee minutes. (A medium or low residual: it asks for the owner's acceptance in **their words** instead.)
+- [ ] The trace holds the acceptance as `pending` (or, for a medium or low residual, as a `user` row), never a `call` or `yes`.
 
 ### RA5 · Two more risks (for chains)
 Assess these two, answering so they link (the laptop gives a foothold the server needs, the server gives an admin account payroll needs):
@@ -414,10 +414,10 @@ Assess these two, answering so they link (the laptop gives a foothold the server
 > We want to sign with PayFlow HR. Here's their questionnaire: inbox/vendor/payflow-questionnaire.md
 
 **Pass if**
-- [ ] **(#50)** Tier **High** with a one-line reason (personal data incl. sick leave, API link, payroll depends on it), said **before Q1**; marked `provisional` if a tier fact is still open.
+- [ ] **(#50)** Tier **Critical** with a one-line reason (sensitive data: sick leave, API link, payroll depends on it), said **before Q1**; marked `provisional` if a tier fact is still open.
 - [ ] **(#50)** Missing documents (the signed DPA, a recent pentest) are listed once as a **request** above Q1 and scored `missing` until they arrive, never asked as grill questions.
 - [ ] A **light** grill: Q1 is an open tier fact, the business owner or the decision date; then conditions; the verdict is the owner's, quoted.
-- [ ] Checks: Security `met` (SOC 2 covers the service), Contract `partial` or `missing` (no DPA, no breach deadline), Incidents `partial` (pentest older than 12 months), Data notes the Morocco support access (GDPR Art. 44 to 49).
+- [ ] Checks: Security `partial` until the SOC 2 report itself is in `inbox/` (a claim isn't evidence), `met` once it is, Contract `partial` or `missing` (no DPA, no breach deadline), Incidents `partial` (pentest older than 12 months), Data notes the Morocco support access (GDPR Art. 44 to 49).
 - [ ] Verdict **approve with conditions**, e.g. `DPA signed before go-live`, `breach notice deadline in the contract`, each with owner and deadline.
 - [ ] Files: `grc/vendors/payflow-hr.md`, row `V-001` in `grc/vendors/vendors.md` with next review 12 months out; csv/json carry DORA register-of-information fields.
 - [ ] If the level after conditions is high, the vendor is added to the risk register.
@@ -435,7 +435,7 @@ Assess these two, answering so they link (the laptop gives a foothold the server
 
 ### CR1 · Prepare the committee
 **Prompt**
-> Prepare the risk report for the executive committee on 2026-12-10.
+> Prepare the risk report for today's executive committee.
 
 **Pass if**
 - [ ] A **light** grill (audience, date, period, decisions, featured risks, presenter). **(#50)** Q1 is about the audience or the decisions, never whether a fix is done: a late fix shows in the story as late, and its update goes to `risk-register`.
@@ -480,10 +480,11 @@ Assess these two, answering so they link (the laptop gives a foothold the server
 
 ### PW3 · Record the approval
 **Prompt**
-> The executive committee approved POL-001 on 2026-12-10: "Approved as presented."
+> The executive committee approved POL-001 yesterday: "Approved as presented."
 
 **Pass if**
 - [ ] `status: approved`, the date, approver and quote; `next review` = approval + cycle; index updated; `grc/traces/<date>-policies.md` row.
+- [ ] Every rendered copy already written (the docx from PW1) is regenerated: none still says `draft`.
 
 ### RB1 · Incident response RACI
 **Prompt**
