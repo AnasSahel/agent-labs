@@ -116,11 +116,13 @@
   .zone + .zone { border-left:1px dashed var(--line); }
   .zone h4 { margin:0; font:500 10px var(--mono); letter-spacing:.08em; text-transform:uppercase; color:var(--zc); }
   .zone p { margin:3px 0 0; font-size:12px; line-height:1.4; color:var(--ink-2); max-width:34ch; }
+  .fl { margin:6px auto 0; width:170px; text-align:left; border-left:2px dashed var(--red); padding:1px 0 1px 7px; font-size:12px; line-height:1.3; }
+  .fl small { display:block; color:var(--red); font:500 9px var(--mono); letter-spacing:.08em; text-transform:uppercase; }
   .chip-s { display:inline-flex; gap:4px; align-items:center; text-align:left; font:500 11px var(--sans); color:var(--green); border:1px solid var(--green);
             background:var(--green-soft); border-radius:0; padding:1px 5px; margin-bottom:4px; }
   .chip-s.planned { border-style:dashed; background:var(--card); }
   .chip-s svg { width:11px; height:11px; stroke:currentColor; }
-  .hub .finding, .hub .fl-note { margin-left:calc(50% - 28px); width:160px; } .fl-note { display:block; margin-top:6px; padding:0; text-align:left; }
+  .hub .fl, .hub .fl-note { margin-left:calc(50% - 28px); width:160px; } .fl-note { display:block; margin-top:6px; padding:0; text-align:left; }
   .lane-hit { position:absolute; cursor:pointer; }
   .rc { cursor:pointer; padding:4px 6px; margin:0 -6px; border-radius:0; } .rc.total { cursor:default; } .rc.sel { background:var(--accent-soft); }
   .layout:not(.one) .legend .z { display:none; } /* the zones already say who attacks and what we protect */
@@ -297,8 +299,8 @@ function drawPath(canvas, p) {
 }
 
 // Several routes: they fan out from the source and join again where their steps become the same, else at the asset.
-// Steps every route ends with are drawn once. Every route shows its weak spots and protections; route 1 (or the one
-// clicked) is drawn in full, the others lighter. Four zones say who attacks, how, what we protect, what it costs.
+// Steps every route ends with are drawn once. Only the route in focus (pick) shows its weak spots and full protection names;
+// the others show a count badge and the control's reference. Four zones say who attacks, how, what we protect, what it costs.
 const same = (a, b) => !!a && !!b && a.label === b.label && (a.icon || '') === (b.icon || '');
 const sharedCount = () => {
   const min = Math.min(...routes.map((r) => r.steps.length)), at = (r, i) => r.steps[r.steps.length - 1 - i];
@@ -313,15 +315,16 @@ function drawFan(canvas) {
   const dedupe = (fs) => [...new Map(fs.map((f) => [f.title, f])).values()];
   const shared = routes[0].steps.slice(routes[0].steps.length - n).map((st, j) =>
     ({ ...st, findings: dedupe(routes.flatMap((r) => r.steps[r.steps.length - n + j].findings || [])) }));
+  const fl = (f) => `<div class="fl" title="${esc(f.source)}"><small>${esc(f.kind)}</small>${esc(f.title)}</div>`;
   const node = (nd, x, y, dim, open, extra = '') => `<div class="node ${esc(nd.role || 'step')}${dim ? ' dim' : ''}" style="left:${x}px;top:${y}px;width:180px">
     <div class="tile">${svgIcon(nd.icon)}${(nd.findings || []).length ? `<span class="badge">${nd.findings.length}</span>` : ''}</div>
-    <div class="label">${esc(nd.label)}</div><div class="type">${esc(nd.type)}</div>${open ? (nd.findings || []).map(findingHtml).join('') : ''}${extra}</div>`;
+    <div class="label">${esc(nd.label)}</div><div class="type">${esc(nd.type)}</div>${open ? (nd.findings || []).map(fl).join('') : ''}${extra}</div>`;
   const measure = (htmls) => { canvas.innerHTML = htmls.join(''); return [0, ...[...canvas.querySelectorAll('.node')].map((el) => el.offsetHeight)]; };
   const own = (r) => r.steps.slice(0, r.steps.length - n);
   const zoneH = 92, head = 80; // room for the zone headers; above each lane, for its tag, label and protection
   let y = zoneH;
   const ly = routes.map((r, i) => {
-    const t = Math.max(...measure(own(r).map((st) => node(st, -999, 0, i !== pick, true))));
+    const t = Math.max(...measure(own(r).map((st) => node(st, -999, 0, i !== pick, i === pick))));
     const v = y + head + 28; y += head + t + 16; return v;
   });
   const mid = (ly[0] + ly[ly.length - 1]) / 2;
@@ -340,15 +343,15 @@ function drawFan(canvas) {
     const r = routes[i], u = r.steps.length - n, yy = ly[i], dim = i !== pick, g = dim ? 34 : 40, lik = r.likelihood?.today;
     const tag = `<div class="route in${i === 0 ? ' top' : ''}"><b>${i + 1}</b><span class="lik ${tone(lik)}">${esc(word(lik))}</span></div>`;
     wires += wire(`M${X(0) + 40} ${mid} C${X(0) + colW / 2} ${mid} ${X(1) - g - colW / 2} ${yy} ${X(1) - g} ${yy}`, dim);
-    html += lab(r.edges[0] || {}, X(1) - g - 8, yy, dim, 'r', true, tag);
+    html += lab(r.edges[0] || {}, X(1) - g - 8, yy, dim, 'r', !dim, tag);
     for (let j = 1; j < u; j++) {
       wires += wire(`M${X(j) + g} ${yy} L${X(j + 1) - g} ${yy}`, dim);
-      html += lab(r.edges[j] || {}, (X(j) + X(j + 1)) / 2, yy, dim, 'c', true);
+      html += lab(r.edges[j] || {}, (X(j) + X(j + 1)) / 2, yy, dim, 'c', !dim);
     }
     const run = X(p) + g; // straight along the lane while it has no more steps, then a curve into the join
     wires += wire(`M${X(u) + g} ${yy} L${run} ${yy} C${run + colW / 2} ${yy} ${join - colW / 2} ${mid} ${join} ${mid}`, dim);
-    html += lab(r.edges[u] || {}, X(u) + g + 8, yy, dim, 'l', true).replace('text-align:left', `text-align:left;max-width:${Math.max(120, join + 12 - (X(u) + g + 8) - 8)}px`);
-    own(r).forEach((st, j) => { html += node(st, X(j + 1), yy - (dim ? 22 : 28), dim, true); });
+    html += lab(r.edges[u] || {}, X(u) + g + 8, yy, dim, 'l', !dim).replace('text-align:left', `text-align:left;max-width:${Math.max(120, join + 12 - (X(u) + g + 8) - 8)}px`);
+    own(r).forEach((st, j) => { html += node(st, X(j + 1), yy - (dim ? 22 : 28), dim, !dim); });
     html += `<div class="lane-hit" data-i="${i}" title="Show route ${i + 1}" style="left:${X(1) - colW / 2}px;top:${yy - 60}px;width:${colW * p}px;height:${head + 40}px"></div>`;
   });
   const fr = routes[pick], fu = fr.steps.length - n;
@@ -365,7 +368,7 @@ function drawFan(canvas) {
   const b1 = X(0) + colW / 2, b2 = X(A) - colW / 2, b3 = X(A) + colW / 2;
   const zone = (x0, x1, c, h, txt) => `<div class="zone" style="left:${x0}px;width:${x1 - x0}px;--zc:${c}"><h4>${h}</h4>${txt ? `<p>${txt}</p>` : ''}</div>`;
   canvas.innerHTML = zone(0, b1, 'var(--ink)', 'Who attacks', esc(d.source.profile))
-    + zone(b1, b2, 'var(--muted)', `How · ${routes.length} ways in`, 'Each lane is one way in, most likely on top. Red boxes are the weak spots it uses; green ones are the protections on its way.')
+    + zone(b1, b2, 'var(--muted)', `How · ${routes.length} ways in`, `<b>Showing route ${pick + 1} of ${routes.length}</b>: ${esc(fr.name)}. Click a route to switch.`)
     + zone(b2, b3, 'var(--accent)', 'What we protect', esc(d.asset.profile))
     + zone(b3, W, 'var(--red)', 'What it costs us', esc(d.impact.profile))
     + wiresSvg(W, H, wires) + html;
