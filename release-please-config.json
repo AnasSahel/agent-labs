@@ -21,6 +21,7 @@
     "skills/grc/vendor-risk": { "component": "vendor-risk", "extra-files": ["SKILL.md"] },
     "skills/grc/grc-router": { "component": "grc-router", "extra-files": ["SKILL.md"] },
     "skills/grc/policy-writer": { "component": "policy-writer", "extra-files": ["SKILL.md"] },
-    "skills/grc/audit-evidence": { "component": "audit-evidence", "extra-files": ["SKILL.md"] }
+    "skills/grc/audit-evidence": { "component": "audit-evidence", "extra-files": ["SKILL.md"] },
+    "skills/grc/gap-analysis": { "component": "gap-analysis", "extra-files": ["SKILL.md"] }
   }
 }
