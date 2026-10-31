@@ -33,7 +33,7 @@ Keep `grc/evidence/` the proof that controls work, ready for the auditor any day
 
 ## Formats
 
-Text-only (md, csv, json, yaml, Jira) stay plain. Visual ones (html, pdf, pptx, xlsx, docx) follow `theme.md` of the `risk-assessment` skill: read it from that skill's folder; when it is not installed, use its rules in short: electric blue `#2F5BFF` the only accent, grays, Geist, flat, light only. The status colors are the theme's `low`, `medium` and `high` on their soft fills.
+Text-only (md, csv, json, yaml, Jira) stay plain. Visual ones (html, pdf, pptx, xlsx, docx) follow `theme.md` of the `risk-assessment` skill: read it from that skill's folder; when it is not installed, use its rules in short: electric blue `#2F5BFF` the only accent, white background, grays, Geist, flat, square corners; html follows the system light/dark setting, files (pdf, pptx, xlsx, docx) stay light. The status colors are the theme's `low`, `medium` and `high` on their soft fills.
 
 - **html / pdf**: eyebrow `AUDIT EVIDENCE · <framework> · <date>`, headline `<x> of <y> controls evidenced` with `<k> missing, <u> unproven.` in accent, the executive summary (**Where we stand**, **What is unproven**, **What is late**, **What we need**), the coverage map, the requests by owner, then the coverage table.
 - **xlsx**: sheets `Summary` (eyebrow, headline, executive summary, counts by status), `Coverage` (one row per control: ref, title, theme, status as a colored cell, evidence ids, valid until, owner; filters on), `Evidence` (the index), `Requests`, `Findings`. Frozen headers, gridlines off.

@@ -37,7 +37,7 @@ Turn a topic ("we need an access control policy") into one policy in `grc/polici
 
 5. **Write.** Save `grc/policies/<id>-<slug>.md` from the template, `status: draft`, and its row in `grc/policies/index.md` (create it from the template). Then render each format picked:
    - `md`, `csv` (the rules table), `json`: write them yourself, plain.
-   - `html`, `pdf`, `docx`, `pptx`: follow `theme.md` of the `risk-assessment` skill (read it from that skill's folder; without it: electric blue `#2F5BFF` the only accent, grays, Geist, flat, light only). Call the Skill tool with `pdf`, `docx` or `pptx` with the policy and the theme as source. Layouts in **Formats**.
+   - `html`, `pdf`, `docx`, `pptx`: follow `theme.md` of the `risk-assessment` skill (read it from that skill's folder; without it: electric blue `#2F5BFF` the only accent, white background, grays, Geist, flat, square corners; html follows the system light/dark setting, files (pdf, pptx, xlsx, docx) stay light). Call the Skill tool with `pdf`, `docx` or `pptx` with the policy and the theme as source. Layouts in **Formats**.
 
    Done when the policy, the index row and every requested file are listed with their path.
 

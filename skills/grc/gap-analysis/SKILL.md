@@ -48,7 +48,7 @@ Tell the user how far they are from each framework in scope and what to fix firs
 
 6. **Write.** Save the analysis as `grc/gaps/<YYYY-MM-DD>-<frameworks>.md` from the template, **snapshot included** (the next run shows what moved from it). Then render each format picked:
    - `md`, `csv`, `json`: write them yourself next to the analysis, plain.
-   - `html`, `pdf`, `pptx`, `xlsx`, `docx`: follow `theme.md` of the `risk-assessment` skill (read it from that skill's folder; without it: electric blue `#2F5BFF` the only accent, grays, Geist, flat, light only). Status colors: `met` low green, `partial` medium amber, `missing` high red, `unknown` gray, `n/a` light gray with a strike. Call the Skill tool with `pdf`, `pptx`, `xlsx` or `docx` with the analysis and the theme as source. Layouts are in **Formats**.
+   - `html`, `pdf`, `pptx`, `xlsx`, `docx`: follow `theme.md` of the `risk-assessment` skill (read it from that skill's folder; without it: electric blue `#2F5BFF` the only accent, white background, grays, Geist, flat, square corners; html follows the system light/dark setting, files (pdf, pptx, xlsx, docx) stay light). Status colors: `met` low green, `partial` medium amber, `missing` high red, `unknown` gray, `n/a` light gray with a strike. Call the Skill tool with `pdf`, `pptx`, `xlsx` or `docx` with the analysis and the theme as source. Layouts are in **Formats**.
    - Jira: one issue per top-10 gap (fix, owner, due, the clauses it closes); without a connector, say so and hand over the CSV.
 
    Done when the analysis and every requested file is listed with its path.

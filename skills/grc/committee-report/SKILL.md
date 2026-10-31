@@ -34,7 +34,7 @@ Turn `grc/risk-register.md` into one report a committee reads in five minutes an
 
 4. **Write.** Save the report as `grc/reports/<YYYY-MM-DD>-<audience>.md` from the template, **snapshot included** (the next report computes its moves from it). Then render each format picked:
    - `md`, `csv`, `json`: write them yourself next to the report, plain.
-   - `html`, `pdf`, `pptx`, `xlsx`, `docx`: follow `theme.md` of the `risk-assessment` skill (read it from that skill's folder; without it: electric blue `#2F5BFF` the only accent, grays, Geist, flat, light only, the heat map as real colored cells). Call the Skill tool with `pdf`, `pptx`, `xlsx` or `docx` with the report and the theme as source. The layouts are in **Formats**.
+   - `html`, `pdf`, `pptx`, `xlsx`, `docx`: follow `theme.md` of the `risk-assessment` skill (read it from that skill's folder; without it: electric blue `#2F5BFF` the only accent, white background, grays, Geist, flat, square corners; html follows the system light/dark setting, files (pdf, pptx, xlsx, docx) stay light, the heat map as real colored cells). Call the Skill tool with `pdf`, `pptx`, `xlsx` or `docx` with the report and the theme as source. The layouts are in **Formats**.
 
    Done when the report and every requested file is listed with its path.
 

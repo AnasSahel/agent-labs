@@ -3,35 +3,38 @@
 <title>V-003 Paylane</title>
 <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-:root{--accent:#2F5BFF;--bg:#F1F2F3;--surface:#FAFAFA;--s2:#E7E8EA;--ink:#111418;--ink2:#3D434C;--muted:#6F757E;--line:#D9DBDE;
+:root{--accent:#2F5BFF;--accent-soft:#EBEFFF;--accent-ink:#1A2F80;--bg:#FFFFFF;--surface:#F4F5F7;--s2:#F4F5F7;--ink:#111418;--ink2:#3D434C;--muted:#62686F;--line:#E3E5E8;
 --high:#C4314B;--highs:#F8E6E9;--med:#A86400;--meds:#F7EEDF;--low:#2E7D4F;--lows:#E4F1E9}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--accent:#8AA4FF;--accent-soft:#1B2340;--accent-ink:#DBE3FF;--bg:#141516;--surface:#1C1D1F;--s2:#1C1D1F;--ink:#ECEEF1;--ink2:#B6BCC6;--muted:#868C95;--line:#2C2E31;--high:#F2788C;--highs:#3A1E25;--med:#E3A64B;--meds:#33270F;--low:#62C48E;--lows:#16291E;color-scheme:dark}}
+:root[data-theme="dark"]{--accent:#8AA4FF;--accent-soft:#1B2340;--accent-ink:#DBE3FF;--bg:#141516;--surface:#1C1D1F;--s2:#1C1D1F;--ink:#ECEEF1;--ink2:#B6BCC6;--muted:#868C95;--line:#2C2E31;--high:#F2788C;--highs:#3A1E25;--med:#E3A64B;--meds:#33270F;--low:#62C48E;--lows:#16291E;color-scheme:dark}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.6 Geist,system-ui,sans-serif}
 .wrap{max-width:76rem;margin:0 auto;padding:2.5rem 2rem 3rem}
 .mono{font-family:"Geist Mono",ui-monospace,monospace}
 .eyebrow{font:500 12px "Geist Mono",ui-monospace,monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
 h1{font-weight:600;font-size:40px;line-height:1.15;letter-spacing:-.02em;margin:.5rem 0 1.5rem}
 h1 span{display:block;color:var(--accent)}
-.sum{max-width:44rem;display:grid;grid-template-columns:11rem 1fr;gap:.35rem 1rem;color:var(--ink2)}
-.sum b{font:500 11px "Geist Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-top:3px}
+.sum{max-width:48rem;display:grid;grid-template-columns:11rem 1fr;gap:.35rem 1rem;background:var(--accent-soft);color:var(--accent-ink);padding:1rem 1.25rem}
+.sum b{font:500 11px "Geist Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);padding-top:3px}
 section{margin-top:2.25rem}
 .sec{border-top:1px solid var(--ink);border-bottom:1px solid var(--line);padding:.45rem 0;font-weight:600;font-size:14px;margin-bottom:1rem}
 .cols{display:grid;grid-template-columns:1.6fr 1fr;gap:2.5rem}
 table{width:100%;border-collapse:collapse;font-size:14px}
 th{background:var(--s2);text-align:left;font-weight:500;padding:.5rem .6rem;border-bottom:1px solid var(--ink)}
-td{padding:.5rem .6rem;border-bottom:1px solid var(--line);vertical-align:top;background:var(--surface)}
+td{padding:.5rem .6rem;border-bottom:1px solid var(--line);vertical-align:top}
 td.ev{color:var(--muted);font-size:13px}
-.tag{display:inline-block;font:500 11px "Geist Mono",monospace;letter-spacing:.06em;text-transform:uppercase;padding:2px 6px;border-radius:2px;white-space:nowrap}
+.tag{display:inline-block;font:500 11px "Geist Mono",monospace;letter-spacing:.06em;text-transform:uppercase;padding:2px 6px;border-radius:0;white-space:nowrap}
 .met{color:var(--low);background:var(--lows)}.part{color:var(--med);background:var(--meds)}.miss{color:var(--high);background:var(--highs)}
 .na{color:var(--muted);background:var(--s2)}
 .tier{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
 .tier div{background:var(--surface);padding:.7rem .8rem}
 .tier small{display:block;font:500 11px "Geist Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .grid{display:grid;grid-template-columns:2.2rem repeat(4,1fr);gap:3px;font-family:"Geist Mono",monospace;font-size:11px}
-.grid .c{height:62px;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:500;border-radius:2px}
+.grid .c{height:62px;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:500;border-radius:0}
 .grid .lab{display:flex;align-items:center;justify-content:center;color:var(--muted)}
 .h{background:var(--highs);color:var(--high)}.m{background:var(--meds);color:var(--med)}.l{background:var(--lows);color:var(--low)}
 .axis{font:500 11px "Geist Mono",monospace;color:var(--muted);letter-spacing:.06em;margin-top:.5rem}
 .note{color:var(--ink2);font-size:14px;margin-top:.75rem}
+.n{font:500 11px "Geist Mono",monospace;color:var(--accent);margin-right:10px;letter-spacing:.04em}
 </style></head><body><div class="wrap">
 <div class="eyebrow">Vendor · V-003 · 2026-10-30</div>
 <h1>Paylane payroll SaaS: holds every employee's pay data<span>Approve with 3 conditions.</span></h1>
@@ -42,12 +45,12 @@ td.ev{color:var(--muted);font-size:13px}
 <b>What we need</b><div>HR director signs the approval by 2026-11-15. Paylane fixes the 3 gaps before go-live on 2027-01-05.</div>
 </div>
 
-<section><div class="sec">— Tier</div>
+<section><div class="sec"><span class="n">01</span>Tier</div>
 <p style="margin:0 0 .8rem"><span class="tag miss">High</span>&nbsp; Holds employees' personal and bank data; payroll stops for 3 days without it.</p>
 <div class="tier"><div><small>Data</small>Personal + bank details</div><div><small>Function</small>Key process (payroll)</div><div><small>Connection</small>User login + HR API</div><div><small>Replaceable</small>Yes, in about 3 months</div></div>
 </section>
 
-<section class="cols"><div><div class="sec">— Checks</div>
+<section class="cols"><div><div class="sec"><span class="n">02</span>Checks</div>
 <table><tr><th>Family</th><th>Check</th><th>Status</th><th>Evidence</th></tr>
 <tr><td>Security</td><td>ISO 27001 certificate covering payroll service</td><td><span class="tag met">Met</span></td><td class="ev">ISO 27001 cert, scope p.2, valid to 2028-03-14</td></tr>
 <tr><td>Access</td><td>Single sign-on or MFA for our users</td><td><span class="tag part">Partial</span></td><td class="ev">Questionnaire Q14: SSO only on Enterprise plan</td></tr>
@@ -57,7 +60,7 @@ td.ev{color:var(--muted);font-size:13px}
 <tr><td>Resilience</td><td>Backups, continuity plan, sub-processors listed</td><td><span class="tag part">Partial</span></td><td class="ev">BCP tested 2026-04; no sub-processor list</td></tr>
 <tr><td>Exit</td><td>Data return and a plan B</td><td><span class="tag na">Not required</span></td><td class="ev">Tier High, replaceable</td></tr>
 </table></div>
-<div><div class="sec">— Score</div>
+<div><div class="sec"><span class="n">03</span>Score</div>
 <div class="grid">
 <div></div><div class="lab">V1</div><div class="lab">V2</div><div class="lab">V3</div><div class="lab">V4</div>
 <div class="lab">G4</div><div class="c m"></div><div class="c h"></div><div class="c h"></div><div class="c h"></div>
@@ -69,14 +72,14 @@ td.ev{color:var(--muted);font-size:13px}
 <p class="note">Severity stays serious (G3): it's our pay data. The missing DPA makes a problem likely (V3); the 3 conditions bring it to unlikely (V1).</p>
 </div></section>
 
-<section><div class="sec">— Conditions</div>
+<section><div class="sec"><span class="n">04</span>Conditions</div>
 <table><tr><th>#</th><th>Condition</th><th>Closes</th><th>Owner</th><th>Deadline</th><th>Status</th></tr>
 <tr><td class="mono">C1</td><td>DPA signed as an annex to the contract</td><td>Contract</td><td>Legal (C. Martin)</td><td class="mono">2026-12-15</td><td><span class="tag part">Open</span></td></tr>
 <tr><td class="mono">C2</td><td>SSO with our identity provider, included in price</td><td>Access</td><td>IT (S. Diallo)</td><td class="mono">2027-01-05</td><td><span class="tag part">Open</span></td></tr>
 <tr><td class="mono">C3</td><td>Sub-processor list, with 30 days' notice of changes</td><td>Resilience</td><td>Procurement (L. Roy)</td><td class="mono">2026-12-15</td><td><span class="tag part">Open</span></td></tr>
 </table></section>
 
-<section><div class="sec">— Decisions</div>
+<section><div class="sec"><span class="n">05</span>Decisions</div>
 <p class="note" style="margin:0">Trace: <span class="mono">grc/traces/2026-10-30-vendor-paylane.md</span>. Verdict pending the HR director's signature. Calls made without the user: tier from the HR API spec; review every 12 months (next 2027-10-30).</p>
 </section>
 </div></body></html>

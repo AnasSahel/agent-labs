@@ -4,11 +4,15 @@
 <title>Attack chain</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
 <style>
-  /* Theme: see risk-assessment/theme.md. One blue accent, grays, risk colors only as signals. Flat, square, light only. */
-  :root { --bg:#F1F2F3; --card:#FAFAFA; --ink:#111418; --ink-2:#3D434C; --muted:#6F757E; --line:#D9DBDE;
+  /* Theme: see risk-assessment/theme.md. One blue accent, grays, risk colors only as signals. Flat, square corners, light and dark. */
+  :root { --bg:#FFFFFF; --card:#F4F5F7; --ink:#111418; --ink-2:#3D434C; --muted:#62686F; --line:#E3E5E8;
           --accent:#2F5BFF;
           --red:#C4314B; --red-soft:#F8E6E9; --amber:#A86400; --amber-soft:#F7EEDF; --green:#2E7D4F; --green-soft:#E4F1E9;
+          --accent-ink:#1A2F80; --on-solid:#FFFFFF; --dim:#B4B9BF;
           --sans:Geist, system-ui, -apple-system, sans-serif; --mono:"Geist Mono", ui-monospace, Menlo, monospace; }
+  /* Dark: follows the system, or data-theme on <html>. Print stays light. */
+  @media (prefers-color-scheme:dark) { :root:not([data-theme="light"]) { --bg:#141516; --card:#1C1D1F; --ink:#ECEEF1; --ink-2:#B6BCC6; --muted:#868C95; --line:#2C2E31; --accent:#8AA4FF; --accent-ink:#DBE3FF; --on-solid:#141516; --dim:#4A4E54; --red:#F2788C; --red-soft:#3A1E25; --amber:#E3A64B; --amber-soft:#33270F; --green:#62C48E; --green-soft:#16291E; color-scheme:dark; } }
+  :root[data-theme="dark"] { --bg:#141516; --card:#1C1D1F; --ink:#ECEEF1; --ink-2:#B6BCC6; --muted:#868C95; --line:#2C2E31; --accent:#8AA4FF; --accent-ink:#DBE3FF; --on-solid:#141516; --dim:#4A4E54; --red:#F2788C; --red-soft:#3A1E25; --amber:#E3A64B; --amber-soft:#33270F; --green:#62C48E; --green-soft:#16291E; color-scheme:dark; }
   * { box-sizing:border-box; }
   body { margin:0; background:var(--bg); color:var(--ink); font:14px/1.4 var(--sans); }
   main { max-width:84rem; margin:0 auto; padding:0 1.25rem 24px; }
@@ -17,8 +21,8 @@
   .eyebrow { font:400 11px var(--mono); letter-spacing:.08em; text-transform:uppercase; color:var(--accent); margin-bottom:10px; }
   h1 { margin:0 0 12px; font-size:clamp(24px,3vw,30px); line-height:1.15; font-weight:600; letter-spacing:-.03em; }
   h1 .accent { color:var(--accent); display:block; }
-  .summary { margin:0; color:var(--ink-2); max-width:46rem; line-height:1.55; }
-  .summary b { font:500 11px var(--mono); letter-spacing:.06em; text-transform:uppercase; color:var(--ink); margin-right:6px; }
+  .summary { margin:0; max-width:46rem; line-height:1.55; background:var(--accent-soft); color:var(--accent-ink); padding:12px 16px; }
+  .summary b { font:500 11px var(--mono); letter-spacing:.06em; text-transform:uppercase; color:var(--accent); margin-right:6px; }
   .section { border-top:1px solid var(--ink); }
   .section h2 { margin:0; padding:12px 0; border-bottom:1px solid var(--line); font-size:12px; font-weight:600; }
 
@@ -31,40 +35,40 @@
   .wire.cut { background:repeating-linear-gradient(90deg,var(--muted) 0 4px,transparent 4px 8px); }
 
   .hand { position:relative; flex:0 1 auto; min-width:96px; }
-  .tag { background:var(--card); border:1px solid var(--ink); border-radius:2px; padding:6px 9px; text-align:center; }
+  .tag { background:var(--card); border:1px solid var(--ink); border-radius:0; padding:6px 9px; text-align:center; }
   .tag .k { display:flex; align-items:center; gap:5px; font-weight:600; font-size:13px; justify-content:center; }
   .tag svg { width:14px; height:14px; stroke:var(--ink); }
   .tag small { display:block; font:500 10px var(--mono); letter-spacing:.08em; text-transform:uppercase; margin-top:2px; }
   .brk { position:absolute; top:calc(100% + 10px); left:50%; transform:translateX(-50%); width:max-content; max-width:240px; text-align:center; }
   .brk em { display:block; font:500 10px var(--mono); font-style:normal; letter-spacing:.08em; text-transform:uppercase; color:var(--green); margin-bottom:4px; }
   .ctl { display:inline-flex; gap:5px; align-items:center; background:var(--green-soft); color:var(--green); border:1px solid var(--green);
-         border-radius:2px; padding:4px 8px; font:500 11.5px var(--sans); text-align:left; }
+         border-radius:0; padding:4px 8px; font:500 11.5px var(--sans); text-align:left; }
   .ctl.planned { border-style:dashed; }
   .ctl svg { width:13px; height:13px; flex:none; stroke:currentColor; }
 
-  .ch { flex:0 1 208px; min-width:140px; background:var(--card); border:1px solid var(--line); border-radius:3px; padding:10px 12px 12px; position:relative; }
+  .ch { flex:0 1 208px; min-width:140px; background:var(--card); border:1px solid var(--line); border-radius:0; padding:10px 12px 12px; position:relative; }
   .ch.assumed { border:1px dashed var(--muted); background:transparent; }
   .ch .id { font:500 10.5px var(--mono); letter-spacing:.08em; color:var(--muted); text-transform:uppercase; display:flex; justify-content:space-between; gap:6px; }
   .ch .id span { white-space:nowrap; }
   .ch h3 { margin:4px 0 10px; font-size:14px; font-weight:600; letter-spacing:-.01em; line-height:1.25; min-height:36px; }
   .ch.assumed h3 { color:var(--muted); font-weight:500; }
   .mini { display:flex; align-items:center; gap:4px; }
-  .mini .t { width:30px; height:30px; border:1px solid var(--line); border-radius:3px; display:grid; place-items:center; background:#fff; flex:none; }
+  .mini .t { width:30px; height:30px; border:1px solid var(--line); border-radius:0; display:grid; place-items:center; background:var(--bg); flex:none; }
   .mini .t svg { width:16px; height:16px; stroke:var(--ink-2); }
   .mini .t.source { background:var(--ink); border-color:var(--ink); transform:rotate(45deg) scale(.86); }
-  .mini .t.source svg { stroke:#fff; transform:rotate(-45deg); }
+  .mini .t.source svg { stroke:var(--on-solid); transform:rotate(-45deg); }
   .mini .t.asset { background:var(--accent); border-color:var(--accent); }
-  .mini .t.asset svg { stroke:#fff; }
+  .mini .t.asset svg { stroke:var(--on-solid); }
   .mini i { flex:1; height:1px; background:var(--muted); }
-  .lvl { font:500 10px var(--mono); letter-spacing:.06em; text-transform:uppercase; padding:2px 6px; border-radius:2px; white-space:nowrap; }
+  .lvl { font:500 10px var(--mono); letter-spacing:.06em; text-transform:uppercase; padding:2px 6px; border-radius:0; white-space:nowrap; }
   .lvl.high { color:var(--red); background:var(--red-soft); } .lvl.medium { color:var(--amber); background:var(--amber-soft); } .lvl.low { color:var(--green); background:var(--green-soft); }
-  .routes { position:absolute; top:-9px; right:10px; font:500 10px var(--mono); letter-spacing:.06em; text-transform:uppercase; background:var(--ink); color:#fff; padding:2px 6px; border-radius:2px; }
+  .routes { position:absolute; top:-9px; right:10px; font:500 10px var(--mono); letter-spacing:.06em; text-transform:uppercase; background:var(--ink); color:var(--on-solid); padding:2px 6px; border-radius:0; }
   a.ch { color:inherit; text-decoration:none; } a.ch:hover { border-color:var(--ink); }
 
   .imp { flex:0 1 150px; min-width:110px; text-align:center; }
-  .imp .tile { width:58px; height:58px; margin:0 auto 8px; border:1px dashed var(--red); background:var(--red-soft); border-radius:4px; display:grid; place-items:center; position:relative; }
+  .imp .tile { width:58px; height:58px; margin:0 auto 8px; border:1px dashed var(--red); background:var(--red-soft); border-radius:0; display:grid; place-items:center; position:relative; }
   .imp .tile svg { width:26px; height:26px; stroke:var(--red); }
-  .imp .badge { position:absolute; top:-8px; right:-10px; background:var(--red); color:#fff; font:500 11px/18px var(--mono); padding:0 4px; border-radius:2px; }
+  .imp .badge { position:absolute; top:-8px; right:-10px; background:var(--red); color:var(--on-solid); font:500 11px/18px var(--mono); padding:0 4px; border-radius:0; }
   .imp b { font-size:14px; } .imp small { display:block; font:400 10px var(--mono); letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-top:2px; }
 
   .high { color:var(--red); } .medium { color:var(--amber); } .low { color:var(--green); }
@@ -75,7 +79,7 @@
   .score .big { font-size:20px; font-weight:600; letter-spacing:-.02em; }
   .score p { margin:3px 0 0; color:var(--ink-2); font-size:12.5px; }
   .legend { display:flex; flex-wrap:wrap; gap:16px; padding:14px 0 0; margin-top:14px; border-top:1px solid var(--line); color:var(--muted); font:400 11px var(--mono); letter-spacing:.04em; }
-  .legend i { display:inline-block; width:11px; height:11px; border-radius:2px; margin-right:6px; vertical-align:-1px; }
+  .legend i { display:inline-block; width:11px; height:11px; border-radius:0; margin-right:6px; vertical-align:-1px; }
 
   /* Narrow screens: one column, wires run down. */
   @media (max-width:60rem) {
@@ -88,6 +92,7 @@
     .hand { display:flex; flex-direction:column; align-items:center; gap:8px; }
     .brk { position:static; transform:none; }
   }
+  .n { font:500 11px var(--mono); color:var(--accent); margin-right:10px; letter-spacing:.04em; }
 </style></head><body>
 <script type="application/json" id="data">
 {
@@ -118,7 +123,7 @@
 </script>
 <main>
 <header><div class="eyebrow" id="eyebrow"></div><h1 id="title"></h1><p class="summary" id="summary"></p></header>
-<section class="section"><h2>— How the attack chains</h2>
+<section class="section"><h2><span class="n">01</span>How the attack chains</h2>
 <div class="row" id="row"></div>
 <div class="score" id="score"></div>
 <div class="legend">

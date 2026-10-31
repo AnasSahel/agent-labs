@@ -32,7 +32,7 @@ Keep `grc/risk-register.md` the **register**: the one source of truth every GRC 
 
 ## Formats
 
-Text-only (md, csv, json, yaml, Jira) stay plain. Visual ones (html, pdf, pptx, xlsx, docx) follow `theme.md` of the `risk-assessment` skill: read it from that skill's folder; when it is not installed, use its rules in short: electric blue `#2F5BFF` the only accent, grays, Geist, flat, light only, the heat map as real colored cells.
+Text-only (md, csv, json, yaml, Jira) stay plain. Visual ones (html, pdf, pptx, xlsx, docx) follow `theme.md` of the `risk-assessment` skill: read it from that skill's folder; when it is not installed, use its rules in short: electric blue `#2F5BFF` the only accent, white background, grays, Geist, flat, square corners; html follows the system light/dark setting, files (pdf, pptx, xlsx, docx) stay light, the heat map as real colored cells.
 
 - **html / pdf**: eyebrow `RISK REGISTER · <date>`, headline `<n> open risks` with `<k> above appetite.` in accent, the review flags as a short list, the portfolio heat map, then the table.
 - **xlsx**: sheets `Register` (every column, frozen header, level cells colored, filters on), `Heat map` (ids in the grid cells), `Review` (flagged rows and their reason).
