@@ -5,7 +5,8 @@ A step-by-step plan to install the 12 GRC skills and test every skill, every mod
 - **Who**: one tester, in Claude Desktop (Code tab) for the visuals, or the Claude Code CLI.
 - **Time**: about 4 to 5 hours for everything; Phase 0 and the smoke run take 20 minutes.
 - **Company**: Northwind Payroll, a fictional payroll SaaS and payment institution ([fixtures/context.md](fixtures/context.md)). ISO 27001, NIS2, DORA and GDPR in scope.
-- **Automated evals** live in `skills/grc/evals/` (built in a separate thread). They check the rules a grader can read in a transcript. This plan covers what they can't judge well: the drawings, how the grill feels, rendered files (xlsx, pptx, docx), and chaining across sessions. Don't redo here what an eval already passes.
+- **Automated evals**: 24 cases in `skills/grc/evals/` (PR #50), judged on the first turn of each skill. The **Eval** column below names the case that covers the same ground: for those tests, spend your time on what an eval can't judge (the drawings, how the grill feels, the rendered xlsx, pptx and docx files, and work across sessions).
+- **Before you start**: merge PR #50 first (or test on its branch, `eval/grc-skills`). Checks marked **(#50)** test behaviour that PR adds: they fail on today's main.
 
 ## How the test runs
 
@@ -38,61 +39,64 @@ flowchart LR
 
 Tick as you go. **P** = pass, **F** = fail (write what you saw in the notes column or in an issue).
 
-| Phase | ID | Test | Skill | P / F | Notes |
-|---|---|---|---|---|---|
-| 0 | I1 | Skills symlinked | install | ☐ | |
-| 0 | I2 | Skills visible to Claude | install | ☐ | |
-| 0 | I3 | Repo checks pass | install | ☐ | |
-| 0 | I4 | Crosswalk script runs | install | ☐ | |
-| 1 | RT1 | "Where do I start?" on an empty folder | grc-router | ☐ | |
-| 1 | GG1 | Standalone grill writes `context.md` | grc-grill | ☐ | |
-| 1 | GG2 | Grill stopped and resumed | grc-grill | ☐ | |
-| 3 | FM1 | Control in words → clauses | framework-mapper | ☐ | |
-| 3 | FM2 | Clause → ISO refs and extras | framework-mapper | ☐ | |
-| 3 | FM3 | Framework not mapped | framework-mapper | ☐ | |
-| 3 | FM4 | Full matrix to xlsx | framework-mapper | ☐ | |
-| 3 | GA1 | Baseline gap analysis | gap-analysis | ☐ | |
-| 4 | RA1 | New risk, full run | risk-assessment | ☐ | |
-| 4 | RA2 | Same risk, other words | risk-assessment | ☐ | |
-| 4 | RA3 | Resume a stopped assessment | risk-assessment | ☐ | |
-| 4 | RA4 | Accept above appetite | risk-assessment | ☐ | |
-| 4 | RA5 | Two more risks (for chains) | risk-assessment | ☐ | |
-| 4 | RR1 | View and heat map | risk-register | ☐ | |
-| 4 | RR2 | Import a spreadsheet | risk-register | ☐ | |
-| 4 | RR3 | Update and log | risk-register | ☐ | |
-| 4 | RR4 | Review flags | risk-register | ☐ | |
-| 4 | RR5 | Refuses to rescore | risk-register | ☐ | |
-| 4 | RR6 | Export xlsx | risk-register | ☐ | |
-| 4 | AC1 | Phishing to payroll chain | attack-chain | ☐ | |
-| 4 | AC2 | Chain with a missing link | attack-chain | ☐ | |
-| 4 | VR1 | New vendor, approve with conditions | vendor-risk | ☐ | |
-| 4 | VR2 | A claim without a document | vendor-risk | ☐ | |
-| 5 | CR1 | Prepare the committee | committee-report | ☐ | |
-| 5 | CR2 | Record the decisions | committee-report | ☐ | |
-| 5 | CR3 | Second report shows moves | committee-report | ☐ | |
-| 5 | PW1 | New access control policy | policy-writer | ☐ | |
-| 5 | PW2 | Review the same policy | policy-writer | ☐ | |
-| 5 | PW3 | Record the approval | policy-writer | ☐ | |
-| 5 | RB1 | Incident response RACI | raci-builder | ☐ | |
-| 5 | RB2 | Keep a conflict as an exception | raci-builder | ☐ | |
-| 6 | AE1 | Collect evidence | audit-evidence | ☐ | |
-| 6 | AE2 | Coverage and unproven controls | audit-evidence | ☐ | |
-| 6 | AE3 | Requests by owner | audit-evidence | ☐ | |
-| 6 | AE4 | Auditor's pack | audit-evidence | ☐ | |
-| 6 | AE5 | Record audit findings | audit-evidence | ☐ | |
-| 6 | GA2 | Second gap analysis shows moves | gap-analysis | ☐ | |
-| 7 | RT2 | One owner, by meaning | grc-router | ☐ | |
-| 7 | RT3 | Ambiguous request | grc-router | ☐ | |
-| 7 | RT4 | Audit prep chain | grc-router | ☐ | |
-| 7 | RT5 | Yearly review chain | grc-router | ☐ | |
-| 7 | RT6 | Missing skill | grc-router | ☐ | |
-| 7 | RT7 | Unfinished trace first | grc-router | ☐ | |
-| 8 | X1 | Prompt injection in a document | all | ☐ | |
-| 8 | X2 | No visualize tool | risk-assessment | ☐ | |
-| 8 | X3 | Jira without a connector | any | ☐ | |
-| 8 | X4 | Visual look and exec summary | all | ☐ | |
+| Phase | ID | Test | Skill | Eval | P / F | Notes |
+|---|---|---|---|---|---|---|
+| 0 | I1 | Skills symlinked | install | – | ☐ | |
+| 0 | I2 | Skills visible to Claude | install | – | ☐ | |
+| 0 | I3 | Repo checks pass | install | – | ☐ | |
+| 0 | I4 | Crosswalk script runs | install | – | ☐ | |
+| 1 | RT1 | "Where do I start?" on an empty folder | grc-router | `router-where-start` | ☐ | |
+| 1 | GG1 | Standalone grill writes `context.md` | grc-grill | `grill-standalone` | ☐ | |
+| 1 | GG2 | Grill stopped and resumed | grc-grill | `grill-resume` | ☐ | |
+| 3 | FM1 | Control in words → clauses | framework-mapper | – | ☐ | |
+| 3 | FM2 | Clause → ISO refs and extras | framework-mapper | `mapper-clause` | ☐ | |
+| 3 | FM3 | Framework not mapped | framework-mapper | `mapper-not-mapped` | ☐ | |
+| 3 | FM4 | Full matrix to xlsx | framework-mapper | – | ☐ | |
+| 3 | FM5 | NIS2 or DORA for incidents (#50) | framework-mapper | – | ☐ | |
+| 3 | GA1 | Baseline gap analysis | gap-analysis | `gap-nis2` | ☐ | |
+| 4 | RA1 | New risk, full run | risk-assessment | `risk-new` | ☐ | |
+| 4 | RA2 | Same risk, other words | risk-assessment | `risk-duplicate` | ☐ | |
+| 4 | RA3 | Resume a stopped assessment | risk-assessment | – | ☐ | |
+| 4 | RA4 | Accept above appetite | risk-assessment | – | ☐ | |
+| 4 | RA5 | Two more risks (for chains) | risk-assessment | – | ☐ | |
+| 4 | RR1 | View and heat map | risk-register | – | ☐ | |
+| 4 | RR2 | Import a spreadsheet | risk-register | – | ☐ | |
+| 4 | RR3 | Update and log | risk-register | `register-update` | ☐ | |
+| 4 | RR4 | Review flags | risk-register | `register-review` | ☐ | |
+| 4 | RR5 | Refuses to rescore | risk-register | – | ☐ | |
+| 4 | RR6 | Export xlsx | risk-register | – | ☐ | |
+| 4 | AC1 | Phishing to payroll chain | attack-chain | `chain-find` | ☐ | |
+| 4 | AC2 | Chain with a missing link | attack-chain | – | ☐ | |
+| 4 | VR1 | New vendor, approve with conditions | vendor-risk | `vendor-new` | ☐ | |
+| 4 | VR2 | A claim without a document | vendor-risk | – | ☐ | |
+| 5 | CR1 | Prepare the committee | committee-report | `committee` | ☐ | |
+| 5 | CR2 | Record the decisions | committee-report | – | ☐ | |
+| 5 | CR3 | Second report shows moves | committee-report | – | ☐ | |
+| 5 | PW1 | New access control policy | policy-writer | `policy-new` | ☐ | |
+| 5 | PW2 | Review the same policy | policy-writer | `policy-review-by-meaning` | ☐ | |
+| 5 | PW3 | Record the approval | policy-writer | – | ☐ | |
+| 5 | RB1 | Incident response RACI | raci-builder | `raci-ir` | ☐ | |
+| 5 | RB2 | Keep a conflict as an exception | raci-builder | – | ☐ | |
+| 6 | AE0 | Coverage before anything is filed (#50) | audit-evidence | – | ☐ | |
+| 6 | AE1 | Collect evidence | audit-evidence | `evidence-file` | ☐ | |
+| 6 | AE2 | Coverage and unproven controls | audit-evidence | `evidence-unproven` | ☐ | |
+| 6 | AE3 | Requests by owner | audit-evidence | – | ☐ | |
+| 6 | AE4 | Auditor's pack | audit-evidence | – | ☐ | |
+| 6 | AE5 | Record audit findings | audit-evidence | – | ☐ | |
+| 6 | GA2 | Second gap analysis shows moves | gap-analysis | – | ☐ | |
+| 7 | RT2 | One owner, by meaning | grc-router | `router-vendor, -register, -raci, -mapper, -attack-chain` | ☐ | |
+| 7 | RT3 | Ambiguous request | grc-router | – | ☐ | |
+| 7 | RT4 | Audit prep chain | grc-router | `router-chain-audit` | ☐ | |
+| 7 | RT5 | Yearly review chain | grc-router | – | ☐ | |
+| 7 | RT6 | Missing skill | grc-router | – | ☐ | |
+| 7 | RT7 | Unfinished trace first | grc-router | – | ☐ | |
+| 7 | RT8 | "What next?" with risks, no meeting (#50) | grc-router | – | ☐ | |
+| 8 | X1 | Prompt injection in a document | all | – | ☐ | |
+| 8 | X2 | No visualize tool | risk-assessment | – | ☐ | |
+| 8 | X3 | Jira without a connector | any | – | ☐ | |
+| 8 | X4 | Visual look and exec summary | all | – | ☐ | |
 
-**Smoke run** (20 minutes, after any change to a skill): I1 to I4, RT1, FM1, RA1, RR1, RT4.
+**Smoke run** (20 minutes, after any change to a skill): I1 to I4, RT1, FM1, RA1, RR1, RT4. If you just want to rerun the automated part: `skills/grc/evals/run.sh` (see its README).
 
 ---
 
@@ -161,17 +165,18 @@ Run in `~/workspace/grc-test` with **no** `grc/` folder.
 
 **Pass if**
 - [ ] `grc-router` answers in about three lines that there is nothing yet, and recommends `gap-analysis` on NIS2 (with ISO 27001 as the pivot).
-- [ ] It offers that one next step and **waits**: no grill question, no gap analysis started, no file written.
+- [ ] **(#50)** It offers **one** next step, never a list or a sequence, and **waits**: no grill question, no gap analysis started, no file written.
 
 ### GG1 · Standalone grill writes `context.md`
 **Prompt**
 > Grill me on whether we should accept SMS codes as MFA for our AWS admins for 6 more months.
 
 **Pass if**
-- [ ] It says in one line what it inferred (intensity, fields, framework).
+- [ ] **(#50)** Above Q1, one line says what it inferred, e.g. `Light grill, 5 questions: one decision on an existing risk.`
 - [ ] Because `grc/context.md` is missing, it first asks the context questions (sector, frameworks in scope, scales, appetite), **outside** the budget, then writes `grc/context.md` from the answers.
 - [ ] `grc/traces/<date>-<slug>.md` exists with `status: in progress` **before** Q1 is answered (check with `ls` while it waits).
 - [ ] One question per message, shaped `Q1/<budget>. <title>: …` then `Recommended: …, because <a clause>`, where the clause is a real ref (`A.8.5`, `NIS2 Art. 21(2)(j)`), not just "ISO 27001".
+- [ ] **(#50)** One decision per question: never parts (a), (b), (c) in one message.
 - [ ] Accepting the risk is asked as **yours** (never settled as `call`).
 - [ ] The last question asks the output format (md, html, pdf, pptx, xlsx, csv, json).
 - [ ] At the end the trace says `status: done`; `user` rows quote your words verbatim; `Settled by` is only `user`, `yes`, `call` or `fact: <source>`.
@@ -237,6 +242,14 @@ git add -A && git commit -qm "seed"
 - [ ] It asks the format **once**, recommending xlsx, and saves `grc/mappings/<date>-<query>.xlsx`.
 - [ ] Sheets `Matrix`, `Extras`, `Sources`; frozen header, filters on, `partial` cells tinted; theme look (X4).
 
+### FM5 · NIS2 or DORA for incidents
+**Prompt**
+> We're a payment institution. For incident reporting, do we follow NIS2 or DORA?
+
+**Pass if**
+- [ ] **(#50)** It cites NIS2 **Art. 4** from `nis2.md` (a sector act with equivalent duties applies instead): for a financial entity, DORA Art. 17 to 23 replace NIS2 Art. 23, and DORA Art. 5 to 16 replace NIS2 Art. 21.
+- [ ] Nothing cited that the files don't hold.
+
 ### GA1 · Baseline gap analysis
 **Prompt**
 > Run a gap analysis against everything in scope. Our ISO audit is on 2027-06-30.
@@ -244,6 +257,7 @@ git add -A && git commit -qm "seed"
 **Pass if**
 - [ ] It says the line counts per framework in one line (`ISO 27001: 116 · NIS2: … + … extras …`), and they match the row counts of the files.
 - [ ] A **light** grill: 5 questions at most, the `unknown` lines with the most framework rows first. A.7.5 and A.7.11 come out `n/a` from the SoA in `context.md` as `fact`, not asked.
+- [ ] **(#50)** When it talks about the NIS2 and DORA overlap, it cites NIS2 Art. 4 from `nis2.md`, never from memory.
 - [ ] Nothing is `met` without evidence (the folder has none yet, so almost everything is `unknown` or `missing`).
 - [ ] Gaps `G-01…` grouped by ISO ref, ranked **legal deadlines first** (NIS2 24 h warning, GDPR 72 h, DORA register), then leverage; each with a fix, an owner from `context.md` and a due date before 2027-06-30.
 - [ ] Chat shows the verdict sentence, coverage bars per framework, the Annex A map (93 squares in 4 rows), top 5 gaps.
@@ -265,6 +279,7 @@ git add -A && git commit -qm "seed"
 - [ ] "Any other way in?" asked **once**, right after the first route, with up to 2 suggestions and `none`.
 - [ ] After an answer that changes the path (say yes to a second route), it redraws in the same place with one line on what changed.
 - [ ] The look: play ▶ start circle, icons in every tile, black source, blue asset, dashed red weak spots and impact, green controls on the hop they stop (see `skills/grc/risk-assessment/theme.md`).
+- [ ] At most **3 routes** drawn, fanned out from the source and meeting at the asset, route 1 in full and the others lighter, each tagged with rank and likelihood word (`2 · POSSIBLE`); a 4th way in is listed in the report, not drawn.
 - [ ] Inherent and residual scores; the risk is as likely as its **easiest route**; a "next best fix" when 2+ routes.
 - [ ] Every control has an ISO 27001 ref and NIS2, DORA, GDPR columns from the files; triggered extras listed (DORA / NIS2 incident reporting if code is changed).
 - [ ] Files: row `R-001` in `grc/risk-register.md`, `grc/risks/R-001-<slug>.md` (exec summary first), `grc/risks/R-001-attack-path.html` (opens and draws itself), the trace `status: done`.
@@ -372,8 +387,9 @@ Assess these two, answering so they link (the laptop gives a foothold the server
 > We want to sign with PayFlow HR. Here's their questionnaire: inbox/vendor/payflow-questionnaire.md
 
 **Pass if**
-- [ ] Tier **High** with a one-line reason (personal data incl. sick leave, API link, payroll depends on it).
-- [ ] A **light** grill: business owner, decision date, conditions; the verdict is the owner's, quoted.
+- [ ] **(#50)** Tier **High** with a one-line reason (personal data incl. sick leave, API link, payroll depends on it), said **before Q1**; marked `provisional` if a tier fact is still open.
+- [ ] **(#50)** Missing documents (the signed DPA, a recent pentest) are listed once as a **request** above Q1 and scored `missing` until they arrive, never asked as grill questions.
+- [ ] A **light** grill: Q1 is an open tier fact, the business owner or the decision date; then conditions; the verdict is the owner's, quoted.
 - [ ] Checks: Security `met` (SOC 2 covers the service), Contract `partial` or `missing` (no DPA, no breach deadline), Incidents `partial` (pentest older than 12 months), Data notes the Morocco support access (GDPR Art. 44 to 49).
 - [ ] Verdict **approve with conditions**, e.g. `DPA signed before go-live`, `breach notice deadline in the contract`, each with owner and deadline.
 - [ ] Files: `grc/vendors/payflow-hr.md`, row `V-001` in `grc/vendors/vendors.md` with next review 12 months out; csv/json carry DORA register-of-information fields.
@@ -395,7 +411,8 @@ Assess these two, answering so they link (the laptop gives a foothold the server
 > Prepare the risk report for the executive committee on 2026-12-10.
 
 **Pass if**
-- [ ] A **light** grill (audience, date, period, decisions, featured risks, presenter); the board's accountability cited (NIS2 Art. 20, DORA Art. 5).
+- [ ] A **light** grill (audience, date, period, decisions, featured risks, presenter). **(#50)** Q1 is about the audience or the decisions, never whether a fix is done: a late fix shows in the story as late, and its update goes to `risk-register`.
+- [ ] The board's accountability cited (NIS2 Art. 20, DORA Art. 5).
 - [ ] Chat shows the posture sentence with a verdict, the heat map, and numbered decisions (one per risk above appetite, e.g. RA4's).
 - [ ] Default pptx: **7 slides** exactly (title, exec summary, portfolio, what changed, above appetite, treatment progress, decisions), Split layout ([sample](../../skills/grc/committee-report/examples/deck-sample.png)).
 - [ ] `grc/reports/<date>-executive.md` with a **Snapshot** section.
@@ -447,6 +464,7 @@ Assess these two, answering so they link (the laptop gives a foothold the server
 
 **Pass if**
 - [ ] A **Draft** matrix before any question, rows from `duties.md`, each tied to a duty ref.
+- [ ] **(#50)** Q1 comes in the **same message**, under the draft: it never stops at the draft and waits.
 - [ ] Asks **by group** (3 to 5 groups), one question settles a group's A; naming people is yours.
 - [ ] Flags **outsourced A** on BlueShield (the A stays inside; DORA Art. 28(1), NIS2 Art. 21(2)(d)).
 - [ ] Flags **no deputy** on the 24 h NIS2 warning and 72 h GDPR notification if none named.
@@ -464,6 +482,14 @@ Assess these two, answering so they link (the laptop gives a foothold the server
 
 ## Phase 6 · Evidence
 
+### AE0 · Coverage before anything is filed
+Run this **before** AE1, while `grc/evidence/` is still empty (POL-001 already exists from PW1). **Prompt**
+> How many controls can we prove for the audit?
+
+**Pass if**
+- [ ] **(#50)** Zero controls `evidenced`: coverage counts only rows of `grc/evidence/index.md`. The policy, risk reports and traces elsewhere in `grc/` are not evidence yet.
+- [ ] It offers to **collect** POL-001 (as `design` evidence) instead of counting it.
+
 ### AE1 · Collect evidence
 **Prompt**
 > File the evidence in inbox/evidence/ for our ISO audit.
@@ -478,7 +504,7 @@ Assess these two, answering so they link (the laptop gives a foothold the server
 > Where do we stand on evidence for the audit?
 
 **Pass if**
-- [ ] Headline `<x> of <y> controls evidenced, <u> unproven.`; coverage map of square tiles in 4 rows by theme; A.7.5 and A.7.11 `not applicable` from the SoA.
+- [ ] Headline `<x> of <y> controls evidenced, <u> unproven.`, counted from `grc/evidence/index.md` only; coverage map of square tiles in 4 rows by theme; A.7.5 and A.7.11 `not applicable` from the SoA.
 - [ ] The access review shows **stale** (expires before 2027-06-30).
 - [ ] Controls the register calls `in place` with no proof are **unproven**, and it routes them to `risk-register` to set back to `planned`.
 
@@ -543,7 +569,8 @@ Each prompt starts in a **new session**, so the router (not a skill already load
 > Get us ready for the ISO 27001 audit in June.
 
 **Pass if**
-- [ ] It states the plan and order before the first call, following the flow (e.g. `gap-analysis`, then `audit-evidence` on the controls in scope, then requests).
+- [ ] **(#50, still failing in evals)** It writes the plan and order as text **before** the first Skill call, in the same message, never call first and explain after. The evals ran headless and saw the plan come after the first call (0 of 3): this is the one to watch in the Desktop app. Note which you see.
+- [ ] The plan follows the flow, following the flow (e.g. `gap-analysis`, then `audit-evidence` on the controls in scope, then requests).
 - [ ] Each step is called only after the last hands back, passing its outputs (gap ids, paths).
 - [ ] Ends with **one** next step in one line.
 
@@ -552,6 +579,7 @@ Each prompt starts in a **new session**, so the router (not a skill already load
 > Do our yearly review and take it to the executive committee.
 
 **Pass if**
+- [ ] **(#50)** The plan is written before the first Skill call (as RT4).
 - [ ] Plan in flow order, only the steps needed: `gap-analysis` → `risk-assessment` for gaps above appetite → `risk-register` review → `committee-report`.
 - [ ] Each grilling step keeps its own intensity (no extra questions from the router).
 
@@ -568,6 +596,13 @@ Each prompt starts in a **new session**, so the router (not a skill already load
 
 **Pass if**
 - [ ] The three-line "where you stand" answer mentions the unfinished incident response policy and offers to resume it with `policy-writer` first.
+
+### RT8 · "What next?" with risks, no meeting
+**Prompt** (new session)
+> What should we do next on risk?
+
+**Pass if**
+- [ ] **(#50)** One next step: the `risk-register` review flags (overdue, stale, above appetite). It does **not** jump to `committee-report` unless you say a meeting is due.
 
 ---
 
