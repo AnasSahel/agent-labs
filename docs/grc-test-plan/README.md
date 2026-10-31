@@ -12,7 +12,7 @@ A step-by-step plan to install the 12 GRC skills and test every skill, every mod
 
 ```mermaid
 flowchart LR
-  P0["0 · Install<br/>symlinks + checks"] --> P1["1 · Cold start<br/>empty folder"]
+  P0["0 · Install<br/>npx skills + checks"] --> P1["1 · Cold start<br/>empty folder"]
   P1 --> P2["2 · Seed<br/>copy context.md"]
   P2 --> P3["3 · Compliance<br/>mapper, gaps"]
   P3 --> P4["4 · Risk<br/>assess, register,<br/>chain, vendor"]
@@ -41,7 +41,7 @@ Tick as you go. **P** = pass, **F** = fail (write what you saw in the notes colu
 
 | Phase | ID | Test | Skill | Eval | P / F | Notes |
 |---|---|---|---|---|---|---|
-| 0 | I1 | Skills symlinked | install | – | ☐ | |
+| 0 | I1 | Skills installed | install | – | ☐ | |
 | 0 | I2 | Skills visible to Claude | install | – | ☐ | |
 | 0 | I3 | Repo checks pass | install | – | ☐ | |
 | 0 | I4 | Crosswalk script runs | install | – | ☐ | |
@@ -107,28 +107,16 @@ Tick as you go. **P** = pass, **F** = fail (write what you saw in the notes colu
 | Need | Why | Check |
 |---|---|---|
 | Claude Code: Desktop app (Code tab) or CLI | runs the skills | `claude --version` |
+| Node.js | `npx skills add` | `node --version` |
 | This repo cloned, on `main` | the skills | `git -C ~/workspace/repos/agent-labs pull` |
 | Python 3 | `framework-mapper` runs `crosswalk.py` | `python3 --version` |
 | The `pdf`, `docx`, `pptx`, `xlsx` skills | every rendered file | already there in Claude Desktop; in the CLI: `/plugin marketplace add anthropics/skills` then `/plugin install document-skills@anthropic-agent-skills` |
 | A `visualize` tool (Desktop Code tab) | inline drawings | optional: without it, X2 tests the fallbacks |
 | A headless browser (Playwright or Chrome) | screenshots of drawings into pptx/pdf | optional |
 
-### Install the 12 skills
-
-Claude Code finds a skill only one level under `~/.claude/skills/`, so each GRC skill gets its own link (the `grc/` group folder is for the repo, not for Claude). Links keep the install in sync with `git pull`.
-
-```bash
-REPO=~/workspace/repos/agent-labs
-mkdir -p ~/.claude/skills
-for d in "$REPO"/skills/grc/*/; do
-  ln -sfn "${d%/}" ~/.claude/skills/"$(basename "$d")"
-done
-ls -l ~/.claude/skills | grep agent-labs/skills/grc
-```
-
-For one project only, link into `<project>/.claude/skills/` instead. To uninstall: `rm ~/.claude/skills/{grc-router,grc-grill,risk-assessment,risk-register,attack-chain,vendor-risk,committee-report,policy-writer,raci-builder,framework-mapper,gap-analysis,audit-evidence}` (removes the links, not the repo).
-
 ### Make the test folder
+
+Use any empty folder (here `~/workspace/grc-test`), outside the repo:
 
 ```bash
 mkdir -p ~/workspace/grc-test && cd ~/workspace/grc-test
@@ -137,9 +125,37 @@ git init -q && git commit -q --allow-empty -m "start"
 
 Commit after each test (`git add -A && git commit -qm "<test id>"`): `git diff HEAD~1 --stat` then shows exactly what each skill wrote, and `git checkout <commit>` replays a test from a known state.
 
-### I1 · Skills symlinked
-**Run** the `ls` above. **Pass if**
-- [ ] 12 links, one per folder in `skills/grc/`, none broken (`find ~/.claude/skills -xtype l` prints nothing).
+### Install the 12 skills
+
+**Option A, `npx skills add`** (recommended). Run it **inside the test folder**: it pulls the skills from GitHub `main` into `./.claude/skills/`, so they apply to this folder only and your other projects stay clean. Needs Node.js (`node --version`).
+
+```bash
+cd ~/workspace/grc-test
+npx skills add AnasSahel/agent-labs --list          # optional: see what the repo offers
+npx skills add AnasSahel/agent-labs -a claude-code -y -s \
+  grc-router grc-grill risk-assessment risk-register attack-chain vendor-risk \
+  committee-report policy-writer raci-builder framework-mapper gap-analysis audit-evidence
+ls .claude/skills
+```
+
+- It installs from `main`, not your local clone: push or merge a skill change first, then `npx skills update -p` to refresh.
+- Add `-g` to install for all your projects (`~/.claude/skills/`) instead.
+- Uninstall: `npx skills remove -s '*' -y` in the test folder.
+- A skill missing from the list with a `YAML parse error` warning has a front matter a strict parser can't read: that's a bug to fix in its `SKILL.md`, not in the install.
+
+**Option B, links to your clone**, when you edit skills and want to test before pushing. Claude Code finds a skill only one level under `.claude/skills/`, so each GRC skill gets its own link (the `grc/` group folder is for the repo, not for Claude):
+
+```bash
+REPO=~/workspace/repos/agent-labs
+mkdir -p .claude/skills
+for d in "$REPO"/skills/grc/*/; do ln -sfn "${d%/}" .claude/skills/"$(basename "$d")"; done
+```
+
+Use one option, not both. In what follows, `.claude/skills/` means the test folder's.
+
+### I1 · Skills installed
+**Run** `ls .claude/skills` in the test folder. **Pass if**
+- [ ] 12 folders, one per skill, and no `YAML parse error` warning from `npx skills add` (option B: no broken link, `find .claude/skills -xtype l` prints nothing).
 
 ### I2 · Skills visible to Claude
 **Run** in a new session from `~/workspace/grc-test`: `/skills` (CLI) or ask "Which GRC skills do you have? Just list their names." **Pass if**
@@ -150,7 +166,7 @@ Commit after each test (`git add -A && git commit -qm "<test id>"`): `git diff H
 - [ ] `frameworks: ok`, and `git status` shows no change (every skill's `frameworks/` copy is current).
 
 ### I4 · Crosswalk script runs
-**Run** `cd ~/.claude/skills/framework-mapper && python3 crosswalk.py --frameworks nis2,dora ref A.8.5`. **Pass if**
+**Run** `cd ~/workspace/grc-test/.claude/skills/framework-mapper && python3 crosswalk.py --frameworks nis2,dora ref A.8.5`. **Pass if**
 - [ ] A table with `A.8.5 | Secure authentication | Art. 9 (full) | Art. 21(2)(j) (full)`, plus one `checked … status …` line per file on stderr.
 
 ---
@@ -584,11 +600,11 @@ Each prompt starts in a **new session**, so the router (not a skill already load
 - [ ] Each grilling step keeps its own intensity (no extra questions from the router).
 
 ### RT6 · Missing skill
-**Do** `rm ~/.claude/skills/vendor-risk` (the link only). **Prompt**
+**Do** `mv .claude/skills/vendor-risk /tmp/` in the test folder, then start a new session. **Prompt**
 > Assess our new cloud backup provider.
 
 **Pass if**
-- [ ] It says `vendor-risk` is not installed, stops that branch, and does **not** assess the vendor itself. Put the link back afterwards (Phase 0 loop).
+- [ ] It says `vendor-risk` is not installed, stops that branch, and does **not** assess the vendor itself. Put it back afterwards: `mv /tmp/vendor-risk .claude/skills/`.
 
 ### RT7 · Unfinished trace first
 **Do** start a policy ("Write an incident response policy"), answer 2 questions, close. New session: **Prompt**
