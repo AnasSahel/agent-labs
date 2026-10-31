@@ -86,9 +86,9 @@ Five sheets, in this order, with these exact names. Nothing else.
    - Real cells with fills, never a picture or a chart, so it prints and filters.
 3. **Attack path**
    - The screenshot of the filled `<id>-attack-path.html` anchored at A1, scaled to about 900px wide.
-   - Below it, the table: `Step | Node | Type | Attacker action | Severity | Weak spots | Control | ISO 27001 | Status`. One row per hop, weak spots one per line in the cell, severity and status as level cells (`planned` amber soft, `in place` green soft).
+   - Below it, the table: `Route | Step | Node | Type | Attacker action | Severity | Weak spots | Control | ISO 27001 | Status`. One row per hop, route 1 first, weak spots one per line in the cell, severity and status as level cells (`planned` amber soft, `in place` green soft).
 4. **Controls**
-   - `# | Control | Status | Owner | Due | ISO 27001 | NIS2 | DORA | GDPR`. Planned first, then in place (numbered E1, E2…). Refs in Geist Mono. Widths: Control 48, others 14.
+   - `# | Control | Status | Owner | Due | ISO 27001 | <one column per framework in scope>`, then the triggered extras below. Planned first, then in place (numbered E1, E2…). Refs in Geist Mono. Widths: Control 48, others 14.
 5. **Decisions**
    - The grill trace: `# | Field | Question | Recommended (citation) | Answer | Settled by`. `Settled by` as text (`user`, `yes`, `call`, `fact: <source>`), `user` rows bold.
 
@@ -106,7 +106,7 @@ The **Split** layout: the point on the left, the evidence on the right. Referenc
 **Slides**:
 1. **Title**: left, eyebrow `RISK REVIEW · <ID> · <date>` at the top and `OWNER · DUE · TREATMENT` in Geist Mono at the bottom; a 1px `ink` divider at x 4.6 in; right, the title (Geist 600, 50pt) with the verdict in accent below it.
 2. **Executive summary**: title states the risk in one sentence; one takeaway = the ask. Right: the 4 lines as a two-column table (labels in Geist Mono 10pt muted, text Geist 16pt), 1px `line` rules between rows; risk levels as level tags.
-3. **Attack path**: title `<n> steps from <entry> to <impact>`; takeaways = the key weak spot and how many protections are planned. Right: the screenshot of the filled `<id>-attack-path.html` (icons and ▶ included), as wide as the panel.
+3. **Attack path**: title `<n> steps from <entry> to <impact>`, or `<n> ways in, the easiest is <route>` with several routes; takeaways = the key weak spot and how many protections are planned, and with several routes the one left open after the fixes. Right: the screenshot of the filled `<id>-attack-path.html` (icons and ▶ included), as wide as the panel.
 4. **Score**: title `<Likely> today, <unlikely> after fixes`; takeaways = why severity stays or moves, why likelihood moves, appetite. Right: the 4×4 heat map as real table cells (not an image), full-strength soft fills, `● TODAY` and `○ AFTER FIXES` in Geist Mono bold, the axis labels `SEVERITY ↑ · LIKELIHOOD →`.
 5. **Treatment**: title `<n> fixes, <k> by <date>`; takeaways = cost and the main framework refs. Right: table `Protection | Due | ISO 27001 | Status`, header `surface-2` with a 1px `ink` rule, status as level tags (planned amber, in place green).
 6. **Decision**: title = the ask (`Approve the plan today.`); takeaway = the result (`High → medium, within appetite`). Right: the numbered decisions, Geist 22pt.

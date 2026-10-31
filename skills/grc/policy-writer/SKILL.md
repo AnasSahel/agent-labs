@@ -4,7 +4,7 @@ description: Write or review a security policy (access control, acceptable use, 
 metadata:
   author: Anas Sahel
   version: 1.0.0 # x-release-please-version
-  frameworks: [iso27001, nis2, dora, gdpr]
+  frameworks: [iso27001, nis2, dora, gdpr, nist-csf, cis, soc2, pci-dss, hds, anssi-hygiene, iso27701, iso22301, iso42001, ai-act, cra]
 ---
 
 Turn a topic ("we need an access control policy") into one policy in `grc/policies/` that staff can read in five minutes and an auditor can trace line by line. A policy says **what** must happen and **who** is accountable; the how belongs to procedures. Every **rule** traces to a clause or a risk, and nothing is `approved` until the user says the approver signed.
