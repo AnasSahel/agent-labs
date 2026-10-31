@@ -1,0 +1,4 @@
+Title,Risk owner,Rating,Target date,Comments
+Laptops not encrypted in Lisbon office,Sofia Almeida,High,2026-12-15,Found during asset inventory
+No tested restore of the payroll database,Ines Costa,Medium,2027-01-31,Last restore test unknown
+Shared admin password for the AWS root account,Lea Martin,High,2026-11-30,Stored in a team vault
