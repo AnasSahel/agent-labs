@@ -1,10 +1,10 @@
 ---
 name: gap-analysis
-description: Check the organisation against ISO 27001, NIS2, DORA or GDPR, requirement by requirement from the fixed framework files, mark each one met, partial, missing, not applicable or unknown with its evidence, and turn the gaps into a prioritised plan, after a short grill. Use when the user wants a gap analysis, a readiness or maturity check, a statement of applicability, to know how far they are from a framework or a certification, or to see what changed since the last gap analysis.
+description: Check the organisation against ISO 27001 and any framework mapped to it (NIS2, DORA, GDPR, SOC 2, PCI DSS, NIST CSF, AI Act and more), requirement by requirement from the fixed framework files, mark each one met, partial, missing, not applicable or unknown with its evidence, and turn the gaps into a prioritised plan, after a short grill. Use when the user wants a gap analysis, a readiness or maturity check, a statement of applicability, to know how far they are from a framework or a certification, or to see what changed since the last gap analysis.
 metadata:
   author: Anas Sahel
   version: 1.0.0 # x-release-please-version
-  frameworks: [iso27001, nis2, dora, gdpr]
+  frameworks: [iso27001, nis2, dora, gdpr, nist-csf, cis, soc2, pci-dss, hds, anssi-hygiene, iso27701, iso22301, iso42001, ai-act, cra]
 ---
 
 Tell the user how far they are from each framework in scope and what to fix first. The **checklist** is built from the files in [frameworks/](frameworks/), never from memory: a requirement missing from those files is not checked, so nothing gets added or forgotten. Each line gets a **status** backed by **evidence** from `grc/`; the user only settles what the documents cannot.
@@ -27,7 +27,7 @@ Tell the user how far they are from each framework in scope and what to fix firs
    - `n/a`: excluded, with a reason (Annex A only; clauses 4 to 10 can never be `n/a`).
    - `unknown`: no doc says either way. Never `met` without evidence.
 
-   Each line keeps its **evidence** (file and section) or its gap in one plain line. Then each framework line **inherits**: a Mapping row takes the weakest status of its ISO 27001 refs (`missing`, then `unknown`, `partial`, `met`; `n/a` refs skipped), and a `partial` row stays at most `partial` until its Extras on the same article are `met`. Extras are assessed on their own, from the docs. Done when every line has a status and a source.
+   Each line keeps its **evidence** (file and section) or its gap in one plain line. Then each framework line **inherits**: a Mapping row takes the weakest status of its ISO 27001 refs (`missing`, then `unknown`, `partial`, `met`; `n/a` refs skipped), and a `partial` row stays at most `partial` until its Extras on the same clause, article or a sub-clause are `met`. Extras are assessed on their own, from the docs. Done when every line has a status and a source.
 
 4. **Grill.** Call the Skill tool with `grc-grill`:
    - intensity: `light`
