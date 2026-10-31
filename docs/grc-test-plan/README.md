@@ -116,10 +116,10 @@ Tick as you go. **P** = pass, **F** = fail (write what you saw in the notes colu
 
 ### Make the test folder
 
-Use any empty folder (here `~/workspace/grc-test`), outside the repo:
+Use any empty folder (here `~/workspace/tmp/test-grc`, Anas's), outside the repo:
 
 ```bash
-mkdir -p ~/workspace/grc-test && cd ~/workspace/grc-test
+mkdir -p ~/workspace/tmp/test-grc && cd ~/workspace/tmp/test-grc
 git init -q && git commit -q --allow-empty -m "start"
 ```
 
@@ -130,7 +130,7 @@ Commit after each test (`git add -A && git commit -qm "<test id>"`): `git diff H
 **Option A, `npx skills add`** (recommended). Run it **inside the test folder**: it pulls the skills from GitHub `main` into `./.claude/skills/`, so they apply to this folder only and your other projects stay clean. Needs Node.js (`node --version`).
 
 ```bash
-cd ~/workspace/grc-test
+cd ~/workspace/tmp/test-grc
 npx skills add AnasSahel/agent-labs --list          # optional: see what the repo offers
 npx skills add AnasSahel/agent-labs -a claude-code -y -s \
   grc-router grc-grill risk-assessment risk-register attack-chain vendor-risk \
@@ -158,7 +158,7 @@ Use one option, not both. In what follows, `.claude/skills/` means the test fold
 - [ ] 12 folders, one per skill, and no `YAML parse error` warning from `npx skills add` (option B: no broken link, `find .claude/skills -xtype l` prints nothing).
 
 ### I2 · Skills visible to Claude
-**Run** in a new session from `~/workspace/grc-test`: `/skills` (CLI) or ask "Which GRC skills do you have? Just list their names." **Pass if**
+**Run** in a new session from `~/workspace/tmp/test-grc`: `/skills` (CLI) or ask "Which GRC skills do you have? Just list their names." **Pass if**
 - [ ] All 12 names are listed: grc-router, grc-grill, risk-assessment, risk-register, attack-chain, vendor-risk, committee-report, policy-writer, raci-builder, framework-mapper, gap-analysis, audit-evidence.
 
 ### I3 · Repo checks pass
@@ -166,14 +166,14 @@ Use one option, not both. In what follows, `.claude/skills/` means the test fold
 - [ ] `frameworks: ok`, and `git status` shows no change (every skill's `frameworks/` copy is current).
 
 ### I4 · Crosswalk script runs
-**Run** `cd ~/workspace/grc-test/.claude/skills/framework-mapper && python3 crosswalk.py --frameworks nis2,dora ref A.8.5`. **Pass if**
+**Run** `cd ~/workspace/tmp/test-grc/.claude/skills/framework-mapper && python3 crosswalk.py --frameworks nis2,dora ref A.8.5`. **Pass if**
 - [ ] A table with `A.8.5 | Secure authentication | Art. 9 (full) | Art. 21(2)(j) (full)`, plus one `checked … status …` line per file on stderr.
 
 ---
 
 ## Phase 1 · Cold start (empty folder)
 
-Run in `~/workspace/grc-test` with **no** `grc/` folder.
+Run in `~/workspace/tmp/test-grc` with **no** `grc/` folder.
 
 ### RT1 · "Where do I start?" on an empty folder
 **Prompt**
@@ -211,7 +211,7 @@ Run in `~/workspace/grc-test` with **no** `grc/` folder.
 Replace the `context.md` from Phase 1 with the fixed one, so everyone gets comparable results, and drop the fixtures next to it:
 
 ```bash
-cd ~/workspace/grc-test
+cd ~/workspace/tmp/test-grc
 F=~/workspace/repos/agent-labs/docs/grc-test-plan/fixtures
 mkdir -p grc inbox && cp "$F/context.md" grc/context.md && cp -R "$F"/vendor "$F"/evidence "$F"/risks-import.csv inbox/
 git add -A && git commit -qm "seed"
