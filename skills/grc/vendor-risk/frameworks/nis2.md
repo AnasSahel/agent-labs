@@ -8,7 +8,7 @@ status: draft, to review by a GRC practitioner
 
 # NIS2
 
-The cybersecurity duties of essential and important entities. Member states transpose it into national law (France: the *loi relative à la résilience*): when `grc/context.md` names the national law, its article numbers win and these stay as the EU reference. For digital infrastructure and digital providers (cloud, DNS, data centres, MSPs...), Implementing Regulation (EU) 2024/2690 details Art. 21(2) further.
+The cybersecurity duties of essential and important entities. Member states transpose it into national law (France: the *loi relative à la résilience*): when `grc/context.md` names the national law, its article numbers win and these stay as the EU reference. For digital infrastructure and digital providers (cloud, DNS, data centres, MSPs...), Implementing Regulation (EU) 2024/2690 details Art. 21(2) further. Art. 4: where a sector act imposes equivalent duties, it applies instead; for financial entities DORA's risk-management (Art. 5 to 16) and incident-reporting (Art. 17 to 23) duties replace NIS2 Art. 21 and 23.
 
 Checked line by line against the EUR-Lex text on 2026-10-30.
 

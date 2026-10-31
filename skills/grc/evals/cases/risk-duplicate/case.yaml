@@ -1,0 +1,15 @@
+schema_version: "1.1"
+name: risk-duplicate
+description: "A reworded existing risk is matched by meaning to R-004 (reassessment, same id), not created again."
+tags: [risk-assessment]
+context:
+  scaffold_script: scaffold.sh
+execution:
+  max_turns: 30
+  timeout_seconds: 600
+  allowed_tools: [Bash, Write, Edit, Read, Glob, Grep, Skill]
+  prompt: |
+    /grc:risk-assessment A developer who left in the summer can still push to our payments repo. Assess it.
+graders:
+  - {"name": "matches-r004", "type": "llm", "weight": 2, "focus": "trace", "criteria": "The register already has R-004: a former developer with active GitHub write access to the payment service repo. PASS only if the agent recognises this request as the same risk as R-004 (reassessment of R-004, or asks once whether to reassess R-004 or start a new risk) and does not create a new id R-005 for it."}
+  - {"name": "no-r005-row", "type": "regex", "pattern": "\\| R-005 \\|", "target": {"source": "file", "path": "grc/risk-register.md"}, "match": "count:0"}

@@ -1,0 +1,16 @@
+schema_version: "1.1"
+name: router-vendor
+description: "Routes a single-supplier request to vendor-risk."
+tags: [grc-router]
+context:
+  scaffold_script: scaffold.sh
+execution:
+  max_turns: 20
+  timeout_seconds: 600
+  allowed_tools: [Bash, Write, Edit, Read, Glob, Grep, Skill]
+  prompt: |
+    /grc:grc-router We want to sign with PayFit for payroll next month. Is that safe for us?
+graders:
+  - {"name": "calls-vendor-risk", "type": "tool_used", "tool": "Skill", "input_match": "\"skill\"\\s*:\\s*\"(grc:)?vendor-risk\"", "arm": "both"}
+  - {"name": "no-risk-register", "type": "tool_used", "tool": "Skill", "input_match": "\"skill\"\\s*:\\s*\"(grc:)?risk-register\"", "min": 0, "max": 0, "arm": "both"}
+  - {"name": "no-risk-assessment", "type": "tool_used", "tool": "Skill", "input_match": "\"skill\"\\s*:\\s*\"(grc:)?risk-assessment\"", "min": 0, "max": 0, "arm": "both"}

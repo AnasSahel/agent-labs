@@ -1,0 +1,14 @@
+schema_version: "1.1"
+name: policy-review-by-meaning
+description: "'IAM policy' is matched by meaning to the existing access-control policy (review, not a new one)."
+tags: [policy-writer]
+context:
+  scaffold_script: scaffold.sh
+execution:
+  max_turns: 30
+  timeout_seconds: 600
+  allowed_tools: [Bash, Write, Edit, Read, Glob, Grep, Skill]
+  prompt: |
+    /grc:policy-writer Review our IAM policy.
+graders:
+  - {"name": "finds-access-control", "type": "llm", "weight": 2, "focus": "trace", "criteria": "grc/policies/access-control.md (v2.1) exists; there is no file named IAM. PASS only if the agent treats 'IAM policy' as that access control policy and reviews it (or asks to confirm that one), rather than writing a brand-new IAM policy."}

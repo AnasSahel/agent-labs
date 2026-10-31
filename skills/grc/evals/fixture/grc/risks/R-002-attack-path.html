@@ -1,0 +1,280 @@
+<!doctype html>
+<!-- Attack path template. Fill only the JSON in <script id="data">; the page draws itself. -->
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>R-002 Admin Phishing Path</title>
+<style>
+  :root { --bg:#fff; --card:#fff; --ink:#0f1b33; --muted:#66728a; --line:#d7deea;
+          --red:#e0245e; --red-soft:#fde8ef; --teal:#0e9fb8; --teal-soft:#e2f6f9;
+          --amber:#f29d0b; --green:#1f9d55; --green-soft:#e6f6ec; --slate:#3b4a66; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:14px/1.35 Inter, system-ui, -apple-system, sans-serif; }
+  header { display:flex; flex-wrap:wrap; align-items:center; gap:12px 20px; padding:22px 28px 6px; }
+  h1 { margin:0; font-size:22px; letter-spacing:-.01em; }
+  .id { font:600 12px system-ui, sans-serif; color:var(--muted); background:var(--card); border:1px solid var(--line); border-radius:6px; padding:3px 8px; }
+  .levels { display:flex; gap:8px; margin-left:auto; }
+  .lvl { border-radius:999px; padding:4px 10px; font-weight:600; font-size:12px; border:1px solid; }
+  .lvl.high { color:var(--red); background:var(--red-soft); border-color:#f6b3c7; }
+  .lvl.medium { color:#a15c00; background:#fff4e0; border-color:#f7d69b; }
+  .lvl.low { color:var(--green); background:var(--green-soft); border-color:#a9dfbf; }
+  .scenario { padding:0 28px; color:var(--muted); max-width:900px; }
+  #canvas { position:relative; margin:8px 16px 16px; }
+  svg.wires { position:absolute; inset:0; overflow:visible; pointer-events:none; }
+  .node { position:absolute; width:150px; transform:translateX(-50%); text-align:center; }
+  .tile { width:58px; height:58px; margin:0 auto 8px; border-radius:16px; display:grid; place-items:center; background:var(--card);
+          border:1.5px solid var(--line); box-shadow:0 1px 4px rgba(15,27,51,.08); position:relative; }
+  .tile svg { width:28px; height:28px; stroke:var(--slate); }
+  .source .tile { background:var(--red); border-color:var(--red); transform:rotate(45deg); border-radius:14px; }
+  .source .tile svg { stroke:#fff; transform:rotate(-45deg); }
+  .asset .tile { background:var(--teal); border-color:var(--teal); }
+  .asset .tile svg { stroke:#fff; }
+  .impact .tile { background:var(--red-soft); border-color:var(--red); }
+  .impact .tile svg { stroke:var(--red); }
+  .badge { position:absolute; top:-8px; right:-8px; min-width:20px; height:20px; border-radius:10px; background:var(--red); color:#fff;
+           font:700 11px/20px system-ui; padding:0 5px; border:2px solid var(--bg); }
+  .source .badge { transform:rotate(-45deg); }
+  .start { position:absolute; width:44px; height:44px; margin:-22px 0 0 -22px; border-radius:50%; background:#f1f3f6;
+           border:1.5px solid #b9c2d0; display:grid; place-items:center; }
+  .start svg { width:24px; height:24px; fill:var(--slate); margin-left:2px; }
+  .label, .type { display:table; margin:0 auto; padding:0 4px; background:var(--bg); }
+  .label { font-weight:700; font-size:14px; }
+  .type { color:var(--muted); font-size:12px; }
+  .finding { margin:8px auto 0; width:150px; border:1.5px dotted var(--red); border-radius:8px; background:var(--card); padding:6px 8px; text-align:left; }
+  .finding small { display:block; color:var(--red); font:700 10px/1.2 system-ui; letter-spacing:.06em; text-transform:uppercase; margin-bottom:2px; }
+  .finding b { font-size:12px; display:block; }
+  .finding span { color:var(--muted); font-size:11px; }
+  .edge { position:absolute; transform:translate(-50%,-100%); text-align:center; white-space:nowrap; pointer-events:none; }
+  .edge .rel { font-size:12px; color:var(--slate); background:var(--bg); padding:0 4px; }
+  .sev { display:inline-flex; align-items:center; gap:4px; font:600 11px system-ui; color:var(--red); }
+  .sev.medium { color:#a15c00; } .sev.low { color:var(--green); }
+  .sev::before { content:""; width:7px; height:7px; transform:rotate(45deg); background:currentColor; }
+  .control { position:absolute; transform:translate(-50%,0); display:flex; align-items:center; gap:5px; white-space:nowrap;
+             background:var(--green-soft); color:var(--green); border:1.5px solid var(--green); border-radius:8px; padding:3px 8px; font:600 11px system-ui; }
+  .control.planned { border-style:dashed; background:#fff; }
+  .control svg { width:13px; height:13px; stroke:currentColor; }
+  .legend { display:flex; flex-wrap:wrap; gap:16px; padding:0 28px 24px; color:var(--muted); font-size:12px; }
+  .legend i { display:inline-block; width:12px; height:12px; border-radius:3px; margin-right:6px; vertical-align:-2px; }
+</style></head><body>
+
+<script type="application/json" id="data">
+{
+ "id": "R-002",
+ "title": "Admin login phished despite SMS codes",
+ "scenario": "A phishing gang could make payments unavailable and steal customer data in AWS production by tricking an IT admin into a fake Microsoft login page that captures their password and SMS code.",
+ "nodes": [
+  {
+   "icon": "attacker",
+   "label": "Phishing gang",
+   "type": "Risk source",
+   "role": "source"
+  },
+  {
+   "icon": "mail",
+   "label": "Fake email",
+   "type": "Lure"
+  },
+  {
+   "icon": "web",
+   "label": "Fake Microsoft login",
+   "type": "Lure site"
+  },
+  {
+   "icon": "user",
+   "label": "Admin Microsoft account",
+   "type": "Identity (Entra ID)"
+  },
+  {
+   "icon": "cloud",
+   "label": "AWS production",
+   "type": "Business asset",
+   "role": "asset"
+  },
+  {
+   "icon": "alert",
+   "label": "Payments down, data stolen",
+   "type": "Impact · G4",
+   "role": "impact"
+  }
+ ],
+ "edges": [
+  {
+   "label": "sends to admins",
+   "severity": "high"
+  },
+  {
+   "label": "admin clicks link",
+   "severity": "high",
+   "control": {
+    "name": "Separate admin accounts",
+    "ref": "A.8.2",
+    "status": "in place"
+   }
+  },
+  {
+   "label": "captures password + SMS",
+   "severity": "high",
+   "control": {
+    "name": "Security keys + company devices",
+    "ref": "A.8.5",
+    "status": "planned"
+   }
+  },
+  {
+   "label": "opens AWS via single sign-on",
+   "severity": "high",
+   "control": {
+    "name": "Admin rights need key + approval",
+    "ref": "A.8.2",
+    "status": "planned"
+   }
+  },
+  {
+   "label": "deletes or copies data",
+   "severity": "high",
+   "control": {
+    "name": "Locked backups, separate account",
+    "ref": "A.8.13",
+    "status": "planned"
+   }
+  }
+ ],
+ "findings": [
+  {
+   "node": 1,
+   "kind": "Incident",
+   "title": "Phishing wave under way",
+   "source": "Reported by user, 2026-10"
+  },
+  {
+   "node": 3,
+   "kind": "Weak spot",
+   "title": "SMS is the only second factor",
+   "source": "access-control.md v2.1"
+  },
+  {
+   "node": 3,
+   "kind": "Weak spot",
+   "title": "Admin rights reviewed only every 6 months",
+   "source": "access-control.md v2.1"
+  },
+  {
+   "node": 3,
+   "kind": "Weak spot",
+   "title": "Phone number can be hijacked (SIM swap), low likelihood",
+   "source": "User, grill Q1"
+  },
+  {
+   "node": 3,
+   "kind": "Missing control",
+   "title": "No device or location checks on admin sign-in",
+   "source": "User, grill Q2"
+  }
+ ],
+ "inherent": {
+  "score": "G4·V3",
+  "level": "high"
+ },
+ "residual": {
+  "score": "G4·V1",
+  "level": "medium"
+ }
+}
+</script>
+
+<header><h1 id="title"></h1><span class="id" id="rid"></span><div class="levels" id="levels"></div></header>
+<p class="scenario" id="scenario"></p>
+<div id="canvas"></div>
+<div class="legend">
+  <span><i style="background:var(--red)"></i>Who attacks</span>
+  <span><i style="background:var(--teal)"></i>What we protect</span>
+  <span><i style="border:1.5px dotted var(--red)"></i>Weak spot</span>
+  <span><i style="background:var(--green-soft);border:1.5px solid var(--green)"></i>Protection in place</span>
+  <span><i style="border:1.5px dashed var(--green)"></i>Protection planned</span>
+</div>
+
+<script>
+const ICONS = {
+  attacker: '<circle cx="12" cy="7" r="4"/><path d="M5.5 21a6.5 6.5 0 0 1 13 0"/><path d="M9 7h6"/>',
+  user: '<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+  mail: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>',
+  phone: '<rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/>',
+  key: '<circle cx="7.5" cy="15.5" r="4.5"/><path d="m11 12 9-9M16 7l3 3M14 9l2 2"/>',
+  web: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',
+  computer: '<rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/>',
+  server: '<rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 7.5h.01M7 16.5h.01"/>',
+  cloud: '<path d="M7 18a4.5 4.5 0 0 1-.6-9 6 6 0 0 1 11.6 1.5A3.75 3.75 0 0 1 17.5 18Z"/>',
+  database: '<ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/>',
+  container: '<path d="M12 2 3 7v10l9 5 9-5V7Z"/><path d="m3 7 9 5 9-5M12 12v10"/>',
+  vendor: '<path d="M3 21V9l6-4v4l6-4v4l6-4v16Z"/><path d="M7 17h2M11 17h2M15 17h2"/>',
+  payment: '<rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20M6 15h4"/>',
+  lock: '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+  bug: '<rect x="8" y="6" width="8" height="14" rx="4"/><path d="M12 6V3M4 13h4M16 13h4M5 7l3 2M19 7l-3 2M5 19l3-2M19 19l-3-2"/>',
+  alert: '<path d="M12 3 2 21h20Z"/><path d="M12 10v5M12 18h.01"/>',
+  shield: '<path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6Z"/><path d="m9 12 2 2 4-4"/>'
+};
+const svgIcon = (n) => `<svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${ICONS[n] || ICONS.alert}</svg>`;
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+const d = JSON.parse(document.getElementById('data').textContent);
+document.title = `${d.id} · ${d.title}`;
+const $ = (id) => document.getElementById(id);
+$("title").textContent = d.title; $("rid").textContent = d.id; $("scenario").textContent = d.scenario || "";
+$("levels").innerHTML = [['Today', d.inherent], ['After fixes', d.residual]].filter(([, v]) => v)
+  .map(([k, v]) => `<span class="lvl ${esc(v.level)}" title="${esc(v.score)}">${k}: ${esc(v.level)} risk</span>`).join('');
+
+function draw() {
+  const canvas = document.getElementById('canvas');
+  const W = canvas.clientWidth, n = d.nodes.length;
+  const gut = W > 700 ? 130 : 70, inner = W - 2 * gut;
+  const perRow = Math.max(1, Math.min(n, Math.floor(inner / 240) || 1, 4));
+  const colW = inner / perRow, rows = Math.ceil(n / perRow), single = perRow === 1;
+  const findingsAt = (i) => (d.findings || []).filter((f) => f.node === i);
+  const rowH = [...Array(rows)].map((_, r) => {
+    const most = Math.max(0, ...d.nodes.slice(r * perRow, r * perRow + perRow).map((_, k) => findingsAt(r * perRow + k).length));
+    return 170 + most * 64 + (single ? 90 : 0);
+  });
+  const lead = single ? 80 : 0;
+  const top = rowH.map((_, r) => 40 + lead + rowH.slice(0, r).reduce((a, b) => a + b, 0));
+  const pos = d.nodes.map((_, i) => {
+    const r = Math.floor(i / perRow), c = i % perRow, col = r % 2 ? perRow - 1 - c : c;
+    return { x: single ? 90 : gut + colW * col + colW / 2, y: top[r] + 29, r };
+  });
+  canvas.style.height = (top[rows - 1] + rowH[rows - 1]) + 'px';
+
+  let html = '', wires = '';
+  const s0 = pos[0], sx = single ? s0.x : Math.max(26, gut - 34), sy = single ? s0.y - 100 : s0.y;
+  html += `<div class="start" title="Start" style="left:${sx}px;top:${sy}px"><svg viewBox="0 0 24 24"><path d="M9 7v10l8-5Z"/></svg></div>`;
+  wires += single ? `<path d="M${sx} ${sy + 22} L${s0.x} ${s0.y - 40}" stroke="var(--muted)" stroke-width="2" fill="none"/>`
+                  : `<path d="M${sx + 22} ${sy} L${s0.x - 40} ${s0.y}" stroke="var(--muted)" stroke-width="2" fill="none"/>`;
+  d.nodes.forEach((nd, i) => {
+    const fs = findingsAt(i);
+    html += `<div class="node ${esc(nd.role || 'step')}" style="left:${pos[i].x}px;top:${pos[i].y - 29}px">
+      <div class="tile">${svgIcon(nd.icon)}${fs.length ? `<span class="badge">${fs.length}</span>` : ''}</div>
+      <div class="label">${esc(nd.label)}</div><div class="type">${esc(nd.type)}</div>
+      ${fs.map((f) => `<div class="finding"><small>${esc(f.kind)}</small><b>${esc(f.title)}</b><span>${esc(f.source)}</span></div>`).join('')}
+    </div>`;
+  });
+  (d.edges || []).slice(0, n - 1).forEach((e, i) => {
+    const a = pos[i], b = pos[i + 1];
+    let path, mx, my, turn = 0;
+    if (single) {
+      path = `M${a.x} ${a.y + 40} L${b.x} ${b.y - 40}`; mx = a.x + 22; my = b.y - 100; turn = 2;
+    } else if (a.r === b.r) {
+      const dir = Math.sign(b.x - a.x);
+      path = `M${a.x + dir * 40} ${a.y} L${b.x - dir * 40} ${b.y}`; mx = (a.x + b.x) / 2; my = a.y;
+    } else {
+      const side = a.x > W / 2 ? 1 : -1, ex = a.x + side * (colW / 2 + 10);
+      path = `M${a.x + side * 40} ${a.y} C${ex} ${a.y} ${ex} ${a.y} ${ex} ${(a.y + b.y) / 2} S${ex} ${b.y} ${b.x + side * 40} ${b.y}`;
+      mx = ex + side * 12; my = (a.y + b.y) / 2; turn = side;
+    }
+    const sev = e.severity || 'high';
+    const col = sev === 'low' ? 'var(--green)' : sev === 'medium' ? 'var(--amber)' : 'var(--red)';
+    wires += `<path d="${path}" fill="none" stroke="${col}" stroke-width="2.5" stroke-linecap="round"/>`;
+    const shift = turn === 2 ? 'none' : turn > 0 ? 'translate(0,-50%)' : turn < 0 ? 'translate(-100%,-50%)' : '';
+    html += `<div class="edge" style="left:${mx}px;top:${my - 6}px;${shift ? 'transform:' + shift + ';text-align:' + (turn > 0 ? 'left' : 'right') : ''}"><div class="rel">${esc(e.label)}</div><div class="sev ${esc(sev)}">${esc(sev)}</div></div>`;
+    if (e.control) html += `<div class="control ${e.control.status === 'planned' ? 'planned' : ''}" style="left:${mx}px;top:${my + (turn === 2 ? 40 : turn ? 30 : 10)}px;${turn > 0 ? 'transform:none' : turn < 0 ? 'transform:translate(-100%,0)' : ''}">${svgIcon('shield')}${esc(e.control.name)} · ${esc(e.control.ref)}</div>`;
+  });
+  canvas.innerHTML = `<svg class="wires" width="${W}" height="${canvas.style.height}">${wires}</svg>` + html;
+}
+draw(); addEventListener('resize', draw);
+</script>
+</body></html>

@@ -1,0 +1,15 @@
+schema_version: "1.1"
+name: router-chain-audit
+description: "A multi-skill request gets a chain in flow order, announced before the first call."
+tags: [grc-router]
+context:
+  scaffold_script: scaffold.sh
+execution:
+  max_turns: 25
+  timeout_seconds: 600
+  allowed_tools: [Bash, Write, Edit, Read, Glob, Grep, Skill]
+  prompt: |
+    /grc:grc-router Our ISO 27001 certification audit is in March. Find what we're missing, assess the big gaps as risks, and get me a board summary.
+graders:
+  - {"name": "calls-gap-analysis", "type": "tool_used", "tool": "Skill", "input_match": "\"skill\"\\s*:\\s*\"(grc:)?gap-analysis\"", "arm": "both"}
+  - {"name": "plan-in-flow-order", "type": "llm", "weight": 2, "focus": "trace", "criteria": "PASS only if, before or at the first skill call, the agent states a plan that runs gap-analysis first, then risk-assessment on the big gaps, then committee-report last (risk-register may sit between). Order matters: committee-report must not come before gap-analysis. The plan is one or two lines, not a long essay. Judge from the whole transcript."}

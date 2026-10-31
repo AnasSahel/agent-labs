@@ -12,7 +12,7 @@ Settle what a GRC deliverable needs from the user, and nothing more. Every quest
 
 ## Inputs
 
-A calling skill sets these. Standalone, infer them from the request and say in one line what you inferred.
+A calling skill sets these. Standalone, infer them from the request and say in one line, above Q1, what you inferred (`Light grill, 5 questions: one decision on an existing risk.`).
 
 - **intensity**: `hard` (budget 10), `light` (budget 5), `none` (budget 0: only the output question).
 - **destination**: the fields to settle, e.g. "scenario, asset, owner, likelihood, impact, treatment".
@@ -24,7 +24,7 @@ A calling skill sets these. Standalone, infer them from the request and say in o
 
 1. **Read.** Read every doc. Fill each field a doc answers as a **fact**, with its source (file and section). When `grc/context.md` is missing, its questions come first (sector, frameworks in scope, risk scales, risk appetite) outside the budget, and you write the file from the answers. Done when every field is either filled or known to be open.
 
-2. **Grill.** One question per message, the most consequential open field first, built on the last answer:
+2. **Grill.** One question per message, one decision per question (never parts (a), (b), (c): each is its own question), the most consequential open field first, built on the last answer:
 
    <question-template>
    **Q<n>/<budget>. <title>**: <question>

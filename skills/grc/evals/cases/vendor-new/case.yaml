@@ -1,0 +1,15 @@
+schema_version: "1.1"
+name: vendor-new
+description: "Tiers a payroll SaaS from the facts given, then a light cited grill."
+tags: [vendor-risk]
+context:
+  scaffold_script: scaffold.sh
+execution:
+  max_turns: 30
+  timeout_seconds: 600
+  allowed_tools: [Bash, Write, Edit, Read, Glob, Grep, Skill]
+  prompt: |
+    /grc:vendor-risk Assess PayFit before we sign: they'd run our payroll with all staff personal and bank data. They sent an ISO 27001 certificate.
+graders:
+  - {"name": "calls-grc-grill", "type": "tool_used", "tool": "Skill", "input_match": "\"skill\"\\s*:\\s*\"(grc:)?grc-grill\"", "arm": "both"}
+  - {"name": "tier-and-question", "type": "llm", "weight": 2, "focus": "trace", "criteria": "PASS only if the agent works from the tier facts given (staff personal and bank data, payroll as a key process): it either states a provisional tier with that reason, or its first question settles a tier fact that is still open (how PayFit connects, how hard it is to replace, or the evidence itself); it treats the ISO 27001 certificate as counting only if its scope covers the service, and asks a grill question numbered `Q1/5` with a `Recommended:` answer citing a specific clause (e.g. DORA Art. 28, ISO 27001 A.5.19/A.5.20, GDPR Art. 28). It does not ask for the sector or frameworks in scope."}

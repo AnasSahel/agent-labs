@@ -21,6 +21,8 @@ Turn `grc/risk-register.md` into one report a committee reads in five minutes an
    - framework: the frameworks in scope (NIS2 Art. 20 and DORA Art. 5 make the management body accountable for these risks: cite them when the audience is the board)
    - output default: `pptx`
 
+   Ask the destination fields, most consequential first. Whether one fix is done is a fact for the register, not a question: show it as late in the story and leave the update to `risk-register`.
+
    Done when it hands back every field and the formats.
 
 3. **Write the story.** Lead with the answer, for people who read nothing else:
