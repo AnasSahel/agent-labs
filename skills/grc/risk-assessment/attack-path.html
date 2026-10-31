@@ -48,6 +48,7 @@
   .edge { position:absolute; transform:translate(-50%,-100%); text-align:center; width:max-content; pointer-events:none; }
   .edge.side .control { margin:10px 0 0; }
   .edge.side[style*="text-align:right"] .control { margin-left:auto; }
+  .edge[style*=right] .control { margin-left:auto; } .edge[style*=right] .sev { float:right; }
   .edge .rel { font-size:12px; color:var(--ink-2); background:var(--bg); padding:0 4px; }
   .sev { display:inline-flex; align-items:center; gap:4px; font:500 10px var(--mono); letter-spacing:.08em; text-transform:uppercase; color:var(--red); background:var(--bg); padding:0 4px; }
   .sev.medium { color:var(--amber); } .sev.low { color:var(--green); }
@@ -75,15 +76,37 @@
   .tab { display:flex; gap:6px; align-items:center; background:none; border:1px solid var(--line); border-radius:2px; padding:5px 8px;
          font:500 10px var(--mono); letter-spacing:.06em; text-transform:uppercase; color:var(--ink-2); cursor:pointer; }
   .tab[aria-selected="true"] { border-color:var(--ink); }
-  .score { display:grid; grid-template-columns:1fr; gap:24px; border-top:1px solid var(--line); padding:14px 0 18px; }
-  @media (min-width:56rem) { .score { grid-template-columns:1fr 1fr; gap:32px; } }
-  .score h3 { margin:0 0 8px; font:500 10px var(--mono); letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
-  .bars .row { display:grid; grid-template-columns:minmax(0,150px) 1fr 76px; align-items:center; gap:10px; margin:6px 0; font-size:13px; }
-  .bars .row.total { border-top:1px solid var(--line); padding-top:8px; font-weight:600; }
   .bar { height:8px; background:var(--line); position:relative; }
   .bar i { position:absolute; inset:0 auto 0 0; }
-  .bars .v { font:500 11px var(--mono); text-align:right; }
-  .note { font-size:13px; color:var(--ink-2); margin:0 0 10px; padding:8px 10px; background:var(--card); border-left:2px solid var(--accent); }
+
+  main { max-width:96rem; } /* wide enough for the rail plus the three-lane fan */
+  .panel h3 { margin:0 0 6px; font:500 10px var(--mono); letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
+  .panel .big { margin:0 0 6px; font-size:18px; font-weight:600; letter-spacing:-.02em; line-height:1.25; }
+  .panel .big em { font-style:normal; color:var(--accent); }
+  .panel .why { margin:0; font-size:12.5px; color:var(--ink-2); line-height:1.5; }
+  .rc { display:grid; grid-template-columns:22px 1fr; gap:2px 8px; align-items:center; }
+  .rc .n { grid-row:span 2; display:grid; place-items:center; width:20px; height:20px; border-radius:2px; border:1px solid var(--line); background:var(--card);
+           font:500 11px var(--mono); color:var(--ink-2); }
+  .rc.top .n { background:var(--ink); color:#fff; border-color:var(--ink); }
+  .rc.total .n { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .rc .nm { font-size:13px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .rc .vv { display:flex; gap:8px; align-items:center; font:500 10px var(--mono); letter-spacing:.06em; text-transform:uppercase; }
+  .rc .vv .bar { flex:1; height:6px; }
+  .rc .vv .arrow { color:var(--muted); }
+  .fixbox { background:var(--card); border-left:2px solid var(--accent); padding:8px 10px; font-size:12.5px; line-height:1.45; }
+  .panel .legend { border-top:1px solid var(--line); padding:10px 0 0; gap:6px 16px; }
+  /* Left rail: the score, routes, next fix and legend sit beside the diagram, read before it, and stay in view while scrolling. */
+  .layout { display:grid; grid-template-columns:290px minmax(0,1fr); gap:32px; }
+  .panel { display:grid; align-content:start; gap:18px; padding:16px 24px 16px 0; border-right:1px solid var(--line); position:sticky; top:0; align-self:start; }
+  .routes { display:grid; gap:12px; }
+  .panel .legend { flex-direction:column; }
+  .rc.total { border-top:1px solid var(--line); padding-top:10px; }
+  /* One route, or a narrow screen: no rail, the panel (or just the legend) goes above the diagram. */
+  .layout.one { display:block; } .layout.one .panel { border:0; padding:12px 0 0; position:static; } .layout.one .panel .legend { flex-direction:row; border:0; }
+  @media (max-width:64rem) { .layout { display:block; } .panel { border:0; border-bottom:1px solid var(--line); padding:16px 0; position:static; } .panel .legend { flex-direction:row; } .routes, .fixbox { max-width:36rem; } }
+  .route.in { position:static; transform:none; justify-content:flex-end; margin-bottom:6px; }
+  .control { white-space:nowrap; max-width:none; }
+  .edge .rel, .route.in { background:var(--bg); }
 </style></head><body>
 
 <script type="application/json" id="data">
@@ -128,16 +151,15 @@
 <main>
 <header><div class="eyebrow" id="eyebrow"></div><h1 id="title"></h1><p class="scenario" id="scenario"></p></header>
 <section class="section"><h2 id="section">— Attack path</h2>
-<div class="tabs" id="tabs" role="tablist" hidden></div>
-<div id="canvas"></div>
-<div class="score" id="score" hidden></div>
-<div class="legend">
+<div class="layout"><aside class="panel" id="score"></aside>
+<div class="stage"><div class="tabs" id="tabs" role="tablist" hidden></div><div id="canvas"></div></div></div>
+<template id="legend"><div class="legend">
   <span><i style="background:var(--ink)"></i>Who attacks</span>
   <span><i style="background:var(--accent)"></i>What we protect</span>
   <span><i style="border:1px dashed var(--red)"></i>Weak spot</span>
   <span><i style="background:var(--green-soft);border:1px solid var(--green)"></i>Protection in place</span>
   <span><i style="border:1px dashed var(--green)"></i>Protection planned</span>
-</div>
+</div></template>
 </section>
 </main>
 
@@ -170,6 +192,7 @@ const lv = (v) => v ? v.level.charAt(0).toUpperCase() + v.level.slice(1) : '';
 const vn = (s) => +((String(s || '').match(/\d/) || [0])[0]);
 const LIK = { 1: ['Unlikely', 'low'], 2: ['Possible', 'medium'], 3: ['Likely', 'high'], 4: ['Near certain', 'high'] };
 const word = (s) => (LIK[vn(s)] || ['', ''])[0];
+const vf = (s) => vn(s) ? 'V' + Math.max(1, vn(s)) : '—';
 const tone = (s) => (LIK[vn(s)] || ['', ''])[1];
 
 // One shape for every case: a list of routes from the same source to the same asset and impact.
@@ -177,6 +200,8 @@ const tone = (s) => (LIK[vn(s)] || ['', ''])[1];
 const legacy = !d.routes && d.nodes;
 const routes = legacy ? [] : [...d.routes]
   .sort((a, b) => vn(b.likelihood?.today) - vn(a.likelihood?.today) || a.steps.length - b.steps.length).slice(0, 3);
+// After fixes never drops below V1 (Unlikely); a missing value stays missing and shows as a dash.
+routes.forEach((r) => { if (r.likelihood && /\d/.test(String(r.likelihood.after ?? '')) && !vn(r.likelihood.after)) r.likelihood.after = 'V1'; });
 const many = routes.length > 1;
 const flat = (r) => {
   const nodes = [{ ...d.source, role: 'source' }, ...r.steps, { ...d.asset, role: 'asset' }, { ...d.impact, role: 'impact' }];
@@ -274,28 +299,28 @@ function drawFan(canvas) {
   canvas.style.height = H + 'px';
 
   let html = startHtml(44, mid), wires = `<path d="M66 ${mid} L${X(0) - 40} ${mid}" stroke="var(--ink)" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>`;
-  const edge = (e, x, y, dim, room) => {
+  const edge = (e, x, y, dim, room, align) => {
     const sev = e.severity || 'high';
-    return `<div class="edge${dim ? ' dim' : ''}" style="left:${x}px;top:${y - 6}px;max-width:${room}px">${chipHtml(e.control)}<div class="rel">${esc(e.label)}</div>${dim ? '' : `<div class="sev ${esc(sev)}">${esc(sev)}</div>`}</div>`;
+    const al = align === 'r' ? 'transform:translate(-100%,-100%);text-align:right;' : align === 'l' ? 'transform:translate(0,-100%);text-align:left;' : '';
+    return `<div class="edge${dim ? ' dim' : ''}" style="left:${x}px;top:${y - 6}px;max-width:${room}px;${al}">${chipHtml(e.control)}<div class="rel">${esc(e.label)}</div>${dim ? '' : `<div class="sev ${esc(sev)}">${esc(sev)}</div>`}</div>`;
   };
   const wire = (path, dim) => `<path d="${path}" fill="none" stroke="${dim ? '#9AA0A6' : 'var(--ink)'}" stroke-width="${dim ? 1.2 : 1.5}" marker-end="url(#arrow${dim ? '-dim' : ''})"/>`;
   lanes.forEach((l, li) => {
     const { r } = l, dim = !l.top, gap = l.half + 12, m = r.steps.length, ly = l.y;
     const lik = r.likelihood?.today;
-    html += `<div class="route${l.top ? ' top' : ''}" style="left:${X(1)}px;top:${ly - l.half - 10}px"><b>${li + 1}</b><span class="lik ${tone(lik)}">${esc(word(lik))}</span></div>`;
     r.steps.forEach((s, j) => { html += nodeHtml(s, s.findings || [], X(j + 1), ly - l.half, dim); });
-    // Out of the source: a curve into the lane, its label at the bend's middle.
+    // Out of the source: a curve into the lane. Its label, chip and route tag sit right-aligned on the lane, just before the step, clear of other labels.
     const e0 = r.edges[0] || {}, ax = X(0) + 40, bx = X(1) - gap;
     wires += wire(`M${ax} ${mid} C${ax + colW / 2} ${mid} ${bx - colW / 2} ${ly} ${bx} ${ly}`, dim);
-    html += edge(e0, (ax + bx) / 2, (mid + ly) / 2, dim, colW - 20);
+    html += edge(e0, bx - 10, ly, dim, colW - 40, 'r').replace('">', `"><div class="route in${l.top ? ' top' : ''}"><b>${li + 1}</b><span class="lik ${tone(lik)}">${esc(word(lik))}</span></div>`);
     for (let j = 1; j < m; j++) {
       wires += wire(`M${X(j) + gap} ${ly} L${X(j + 1) - gap} ${ly}`, dim);
       html += edge(r.edges[j] || {}, (X(j) + X(j + 1)) / 2, ly, dim, colW - 2 * gap);
     }
-    // Into the asset: straight along the lane while it has no more steps, then a curve.
+    // Into the asset: straight along the lane while it has no more steps, then a curve, labelled where the curve starts.
     const ex = X(m) + gap, run = X(k) + gap, tx = X(k + 1) - 40, eN = r.edges[m] || {};
     wires += wire(`M${ex} ${ly} L${run} ${ly} C${run + colW / 2} ${ly} ${tx - colW / 2} ${mid} ${tx} ${mid}`, dim);
-    html += m < k ? edge(eN, (ex + run) / 2, ly, dim, run - ex - 10) : edge(eN, (run + tx) / 2, (ly + mid) / 2, dim, colW - 20);
+    html += m < k ? edge(eN, (ex + run) / 2, ly, dim, run - ex - 10) : edge(eN, run + 6, ly, dim, colW - 60, 'l');
   });
   html += nodeHtml({ ...d.source, role: 'source' }, d.source.findings || [], X(0), mid - 28);
   html += nodeHtml({ ...d.asset, role: 'asset' }, d.asset.findings || [], X(k + 1), mid - 28);
@@ -305,19 +330,22 @@ function drawFan(canvas) {
   canvas.innerHTML = wiresSvg(W, H, wires) + html;
 }
 
-// The risk is as likely as its easiest route: one bar per route, today faded and after fixes solid, then the risk itself.
+// The left rail: the verdict, one bar per route (today faded, after fixes solid), the risk itself, the next best fix, the legend.
+// The risk is as likely as its easiest route.
 function drawScore() {
-  const bar = (a, b, ca, cb) => `<div class="bar"><i style="width:${vn(a) * 25}%;background:${ca};opacity:.25"></i><i style="width:${vn(b) * 25}%;background:${cb}"></i></div>`;
   const col = (s) => ({ high: 'var(--red)', medium: 'var(--amber)', low: 'var(--green)' })[tone(s)] || 'var(--muted)';
+  const bar = (a, b, ca, cb) => `<div class="bar"><i style="width:${vn(a) * 25}%;background:${ca};opacity:.25"></i><i style="width:${Math.max(vn(b) ? 1 : 0, vn(b)) * 25}%;background:${cb}"></i></div>`;
   const worst = (k) => routes.reduce((w, r) => (vn(r.likelihood?.[k]) > vn(w.likelihood?.[k]) ? r : w), routes[0]);
   const t = worst('today'), a = worst('after'), T = t.likelihood?.today, A = a.likelihood?.after;
-  const rows = routes.map((r, i) => `<div class="row"><span>${i + 1} · ${esc(r.name)}</span>${bar(r.likelihood?.today, r.likelihood?.after, col(r.likelihood?.today), col(r.likelihood?.after))}<span class="v">${esc(vn(r.likelihood?.today) ? 'V' + vn(r.likelihood.today) : '')} → ${esc(vn(r.likelihood?.after) ? 'V' + vn(r.likelihood.after) : '')}</span></div>`).join('');
-  const total = `<div class="row total"><span>Risk (easiest route)</span>${bar(T, A, 'var(--ink)', 'var(--ink)')}<span class="v">V${vn(T)} → V${vn(A)}</span></div>`;
-  const why = `The risk is as likely as its easiest route. Today that is <b>${esc(t.name)}</b>: <b>${esc(word(T))} (V${vn(T)})</b>.` +
-    (A ? ` After the fixes it is <b>${esc(a.name)}</b>: <b>${esc(word(A))} (V${vn(A)})</b>.` : '');
-  $("score").innerHTML = `<div><h3>Likelihood per route · today → after fixes</h3><div class="bars">${rows}${total}</div></div>
-    <div><h3>What the score means</h3><p class="note">${why}</p>${d.nextFix ? `<p class="note">Next best fix: ${esc(d.nextFix)}</p>` : ''}</div>`;
-  $("score").hidden = false;
+  const card = (n, name, x, y, cls, ca, cb) => `<div class="rc ${cls}"><span class="n">${n}</span><span class="nm" title="${esc(name)}">${esc(name)}</span>
+    <span class="vv"><span class="lik ${tone(x)}">${esc(word(x))}</span>${bar(x, y, ca, cb)}<span>${vf(x)} <span class="arrow">→</span> ${vf(y)}</span></span></div>`;
+  const rows = routes.map((r, i) => card(i + 1, r.name, r.likelihood?.today, r.likelihood?.after, i ? '' : 'top', col(r.likelihood?.today), col(r.likelihood?.after))).join('');
+  const total = card('R', 'The risk = its easiest route', T, A, 'total', 'var(--ink)', 'var(--ink)');
+  $("score").innerHTML = `<div><h3>Likelihood</h3><p class="big">${esc(word(T))} today,<br><em>${A ? esc(word(A).toLowerCase()) + ' after fixes' : 'no fix planned yet'}.</em></p>
+    <p class="why">Easiest way in today: <b>${esc(t.name)}</b>. A risk is as likely as its easiest route.</p></div>
+    <div class="routes">${rows}${total}</div>
+    ${d.nextFix ? `<div><h3>Next best fix</h3><div class="fixbox">${esc(d.nextFix)}</div></div>` : ''}
+    ${$("legend").innerHTML}`;
 }
 
 let pick = 0;
@@ -333,7 +361,7 @@ function draw() {
   }
   if (fan) drawFan(canvas); else drawPath(canvas, flat(routes[many ? pick : 0]));
 }
-if (many) drawScore();
+if (many) drawScore(); else { $("score").innerHTML = $("legend").innerHTML; document.querySelector('.layout').classList.add('one'); }
 draw(); addEventListener('resize', draw);
 </script>
 </body></html>
