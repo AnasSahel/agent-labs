@@ -34,11 +34,11 @@ Turn `grc/risk-register.md` into one report a committee reads in five minutes an
 
 4. **Write.** Save the report as `grc/reports/<YYYY-MM-DD>-<audience>.md` from the template, **snapshot included** (the next report computes its moves from it). Then render each format picked:
    - `md`, `csv`, `json`: write them yourself next to the report, plain.
-   - `html`, `pdf`, `pptx`, `xlsx`, `docx`: follow `theme.md` of the `risk-assessment` skill (read it from that skill's folder; without it: electric blue `#2F5BFF` the only accent, grays, Geist, flat, light only, the heat map as real colored cells). Call the Skill tool with `pdf`, `pptx`, `xlsx` or `docx` with the report and the theme as source. The layouts are in **Formats**.
+   - `html`, `pdf`, `pptx`, `xlsx`, `docx`: follow `theme.md` of the `risk-assessment` skill (read it from that skill's folder; without it: electric blue `#2F5BFF` the only accent, white background, grays, Geist, flat, square corners; html follows the system light/dark setting, files (pdf, pptx, xlsx, docx) stay light, the heat map as real colored cells). Call the Skill tool with `pdf`, `pptx`, `xlsx` or `docx` with the report and the theme as source. The layouts are in **Formats**.
 
    Done when the report and every requested file is listed with its path.
 
-5. **Show** in the chat: the posture sentence, the portfolio heat map (each risk's id in the cell of its current level, a cell colored by its level, `↑` or `↓` next to an id that moved since last report, `→` to its residual while fixes are planned), and the numbered decisions. Draw it with the visualize tool when one exists, else as a markdown table. Done when the user sees the map and the asks.
+5. **Show** in the chat: the posture sentence, the portfolio heat map (each risk's id in the cell of its current level, a cell colored by its level, `↑` or `↓` next to an id that moved since last report, `→` to its residual while fixes are planned, the color key under it: high · medium · low), and the numbered decisions. Draw it with the visualize tool when one exists, else as a markdown table. Done when the user sees the map and the asks.
 
 ## Record
 
@@ -63,7 +63,7 @@ The Newsroom layout of `theme.md`: eyebrow `<AUDIENCE> · RISK REVIEW · <date>`
   6. **Treatment progress**: title `<x> of <y> fixes in place`; right, a single bar of in place / planned / overdue (green, gray, red), then the overdue ones as a table with owner and new date asked.
   7. **Decisions**: title = the ask (`Take 3 decisions today.`); right, the numbered decisions with the recommendation under each.
 - **html / pdf**: the same sections in that order on one page, sections between rules; A4 for pdf.
-- **xlsx**: sheets `Summary` (eyebrow, posture, executive summary, KPIs), `Heat map` (real cells as in `theme.md`, ids in the cells), `Changes`, `Above appetite`, `Treatment`, `Decisions`.
+- **xlsx**: sheets `Summary` (eyebrow, posture, executive summary, KPIs), `Heat map` (real cells as in `theme.md`, ids in the cells), `Changes`, `Above appetite`, `Treatment`, `Decisions`. Empty cells are `None`, never `""`: openpyxl saves `""` as an empty inline string and Excel then calls the whole file corrupt.
 - **docx**: the html sections as a memo, for boards that want a paper.
 
 Keep it to the featured risks; the full list is an appendix (html, pdf, docx) or the `Register` sheet (xlsx), never extra slides.

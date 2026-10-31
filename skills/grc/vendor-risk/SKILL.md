@@ -1,6 +1,6 @@
 ---
 name: vendor-risk
-description: "Assess a supplier, SaaS or service provider before signing or at renewal: tier it by how much the business depends on it, check its security evidence (certificates, questionnaire, contract, DPA) against what its tier requires, score it as one risk, and give a verdict (approve, approve with conditions, reject) after a short grill; keep the vendor list in `grc/vendors/`. Use when the user onboards, renews or reviews a vendor, supplier, processor or ICT third party, sends or reads a security questionnaire, a SOC 2 or ISO certificate, asks whether a vendor is safe to use, or needs the vendor inventory or DORA register of information."
+description: "Assess a supplier, SaaS or service provider before signing or at renewal: tier it by how much the business depends on it, check its security evidence (certificates, questionnaire, contract, DPA) against what its tier requires, score it as one risk, and give a verdict (approve, approve with conditions, reject) after a short grill; keep the vendor list in `grc/vendors/`. Use for one named vendor: when the user onboards, renews or reviews a vendor, supplier, processor or ICT third party, sends or reads a security questionnaire, a SOC 2 or ISO certificate, asks whether a vendor is safe to use, or needs the vendor inventory or DORA register of information."
 metadata:
   author: Anas Sahel
   version: 1.0.0 # x-release-please-version
@@ -46,11 +46,11 @@ Turn "can we use this vendor?" into one **verdict** a manager can sign: approve,
    - **Approve with conditions**: within appetite once conditions are met. Each condition is one fix the vendor or we deliver (`DPA signed before go-live`, `SSO on, by 2027-01-31`), with an owner and a deadline. Until they are met, approving is an interim **acceptance** of today's level.
    - **Reject**: above appetite even after conditions.
 
-   The verdict, an acceptance and an exception to policy are the business owner's, quoted in the trace; ask once when they are missing. Done when the verdict and every condition have an owner and a date.
+   The verdict, an acceptance and an exception to policy are the business owner's, quoted in the trace; ask once when they are missing. When a later finding contradicts an answer the user gave (they accepted conditions after go-live, the evidence now says that is above appetite), ask again in one question; never change their answer yourself. Done when the verdict and every condition have an owner and a date.
 
 7. **Write.** Save the vendor file `grc/vendors/<slug>.md` from the template and its row in `grc/vendors/vendors.md` (create both when missing; ids `V-001`, `V-002`…; a review keeps the id and sets the next review: Critical 12 months, High 12, Medium 24, Low 36). When the level after conditions is high, or the verdict is a reject the business wants to override, add the vendor to `grc/risk-register.md` by calling the Skill tool with `risk-assessment` on the scenario `<vendor> could expose or stop <what it touches> through <its weakest check>`, and link the risk id. Then render each format picked:
    - `md`, `csv`, `json`: write them yourself next to the file, plain. `csv` and `json` of the inventory carry the DORA register of information fields when DORA is in scope (provider, function supported, criticality, data location, contract dates, exit plan).
-   - `html`, `pdf`, `pptx`, `xlsx`, `docx`: follow `theme.md` of the `risk-assessment` skill (read it from that skill's folder; without it: electric blue `#2F5BFF` the only accent, grays, Geist, flat, light only, the heat map as real colored cells). Call the Skill tool with `pdf`, `pptx`, `xlsx` or `docx` with the vendor file and the theme as source. Layouts in **Formats**.
+   - `html`, `pdf`, `pptx`, `xlsx`, `docx`: follow `theme.md` of the `risk-assessment` skill (read it from that skill's folder; without it: electric blue `#2F5BFF` the only accent, white background, grays, Geist, flat, square corners; html follows the system light/dark setting, files (pdf, pptx, xlsx, docx) stay light, the heat map as real colored cells). Call the Skill tool with `pdf`, `pptx`, `xlsx` or `docx` with the vendor file and the theme as source. Layouts in **Formats**.
    - Jira: one issue per condition (owner, deadline, link to the file); without a connector, say so and hand over the CSV.
 
    Done when the file, the inventory row and every requested format are listed with their paths.
@@ -77,7 +77,7 @@ The Newsroom layout of `theme.md`: eyebrow `VENDOR · <ID> · <date>`, headline 
 
 - **html / pdf**: one page ([examples/vendor-sample.png](examples/vendor-sample.png)): executive summary, **Tier** (the four facts), **Checks** (one row per check: family, check, status tag, evidence), **Score** (the 4×4 heat map with `●` and `○`), **Conditions** (owner, deadline), **Decisions** (trace link). A4 for pdf.
 - **pptx**: the Split deck of `theme.md`, four slides: title, executive summary, checks with the heat map, conditions and the ask.
-- **xlsx**: sheets `Summary`, `Checks`, `Heat map` (real cells), `Conditions`, `Inventory` (every vendor in `grc/vendors/vendors.md`).
+- **xlsx**: sheets `Summary`, `Checks`, `Heat map` (real cells), `Conditions`, `Inventory` (every vendor in `grc/vendors/vendors.md`). Empty cells are `None`, never `""`: openpyxl saves `""` as an empty inline string and Excel then calls the whole file corrupt.
 - **docx**: the html sections as a memo for procurement.
 
 ## Templates

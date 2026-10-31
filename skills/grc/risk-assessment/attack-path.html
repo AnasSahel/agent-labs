@@ -4,11 +4,15 @@
 <title>Attack path</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
 <style>
-  /* Theme: see theme.md. One blue accent, grays, risk colors only as signals. Flat, square, light only. */
-  :root { --bg:#F1F2F3; --card:#FAFAFA; --ink:#111418; --ink-2:#3D434C; --muted:#6F757E; --line:#D9DBDE;
-          --accent:#2F5BFF; --accent-soft:#E6ECFF;
+  /* Theme: see theme.md. One blue accent, grays, risk colors only as signals. Flat, square corners, light and dark. */
+  :root { --bg:#FFFFFF; --card:#F4F5F7; --ink:#111418; --ink-2:#3D434C; --muted:#62686F; --line:#E3E5E8;
+          --accent:#2F5BFF; --accent-soft:#EBEFFF;
           --red:#C4314B; --red-soft:#F8E6E9; --amber:#A86400; --amber-soft:#F7EEDF; --green:#2E7D4F; --green-soft:#E4F1E9;
+          --accent-ink:#1A2F80; --on-solid:#FFFFFF; --dim:#B4B9BF;
           --sans:Geist, system-ui, -apple-system, sans-serif; --mono:"Geist Mono", ui-monospace, Menlo, monospace; }
+  /* Dark: follows the system, or data-theme on <html>. Print stays light. */
+  @media (prefers-color-scheme:dark) { :root:not([data-theme="light"]) { --bg:#141516; --card:#1C1D1F; --ink:#ECEEF1; --ink-2:#B6BCC6; --muted:#868C95; --line:#2C2E31; --accent:#8AA4FF; --accent-soft:#1B2340; --accent-ink:#DBE3FF; --on-solid:#141516; --dim:#4A4E54; --red:#F2788C; --red-soft:#3A1E25; --amber:#E3A64B; --amber-soft:#33270F; --green:#62C48E; --green-soft:#16291E; color-scheme:dark; } }
+  :root[data-theme="dark"] { --bg:#141516; --card:#1C1D1F; --ink:#ECEEF1; --ink-2:#B6BCC6; --muted:#868C95; --line:#2C2E31; --accent:#8AA4FF; --accent-soft:#1B2340; --accent-ink:#DBE3FF; --on-solid:#141516; --dim:#4A4E54; --red:#F2788C; --red-soft:#3A1E25; --amber:#E3A64B; --amber-soft:#33270F; --green:#62C48E; --green-soft:#16291E; color-scheme:dark; }
   * { box-sizing:border-box; }
   body { margin:0; background:var(--bg); color:var(--ink); font:14px/1.4 var(--sans); }
   main { max-width:76rem; margin:0 auto; padding:0 1.25rem; }
@@ -23,16 +27,16 @@
   #canvas { position:relative; margin:8px 0 16px; }
   svg.wires { position:absolute; inset:0; overflow:visible; pointer-events:none; }
   .node { position:absolute; width:150px; transform:translateX(-50%); text-align:center; }
-  .tile { width:56px; height:56px; margin:0 auto 8px; border-radius:4px; display:grid; place-items:center; background:var(--card);
+  .tile { width:56px; height:56px; margin:0 auto 8px; border-radius:0; display:grid; place-items:center; background:var(--card);
           border:1px solid var(--line); position:relative; }
   .tile svg { width:26px; height:26px; stroke:var(--ink-2); }
   .source .tile { background:var(--ink); border-color:var(--ink); transform:rotate(45deg); }
-  .source .tile svg { stroke:#fff; transform:rotate(-45deg); }
+  .source .tile svg { stroke:var(--on-solid); transform:rotate(-45deg); }
   .asset .tile { background:var(--accent); border-color:var(--accent); }
-  .asset .tile svg { stroke:#fff; }
+  .asset .tile svg { stroke:var(--on-solid); }
   .impact .tile { background:var(--red-soft); border-color:var(--red); }
   .impact .tile svg { stroke:var(--red); }
-  .badge { position:absolute; top:-8px; right:-8px; min-width:18px; height:18px; border-radius:2px; background:var(--red); color:#fff;
+  .badge { position:absolute; top:-8px; right:-8px; min-width:18px; height:18px; border-radius:0; background:var(--red); color:var(--on-solid);
            font:500 11px/18px var(--mono); padding:0 4px; }
   .source .badge { transform:rotate(-45deg); }
   .start { position:absolute; width:40px; height:40px; margin:-20px 0 0 -20px; border-radius:50%; background:var(--card);
@@ -41,7 +45,7 @@
   .label, .type { display:table; margin:0 auto; padding:0 4px; background:var(--bg); }
   .label { font-weight:600; font-size:14px; letter-spacing:-.01em; }
   .type { color:var(--muted); font:400 10px var(--mono); letter-spacing:.08em; text-transform:uppercase; margin-top:2px; }
-  .finding { margin:5px auto 0; width:150px; border:1px dashed var(--red); border-radius:2px; background:var(--card); padding:4px 7px; text-align:left; }
+  .finding { margin:5px auto 0; width:150px; border:1px dashed var(--red); border-radius:0; background:var(--card); padding:4px 7px; text-align:left; }
   .finding small { display:block; color:var(--red); font:500 9px/1.2 var(--mono); letter-spacing:.08em; text-transform:uppercase; margin-bottom:1px; }
   .finding b { font-size:12px; font-weight:500; display:block; }
   .finding span { color:var(--muted); font:400 10px var(--mono); }
@@ -54,11 +58,11 @@
   .sev.medium { color:var(--amber); } .sev.low { color:var(--green); }
   .sev::before { content:""; width:6px; height:6px; background:currentColor; }
   .control { display:flex; margin:6px auto; max-width:100%; text-align:left; align-items:center; gap:5px; width:max-content;
-             background:var(--green-soft); color:var(--green); border:1px solid var(--green); border-radius:2px; padding:3px 7px; font:500 11px var(--sans); }
+             background:var(--green-soft); color:var(--green); border:1px solid var(--green); border-radius:0; padding:3px 7px; font:500 11px var(--sans); }
   .control.planned { border-style:dashed; background:var(--card); }
   .control svg { width:13px; height:13px; flex:none; stroke:currentColor; }
   .legend { display:flex; flex-wrap:wrap; gap:16px; padding:10px 0 16px; border-top:1px solid var(--line); color:var(--muted); font:400 11px var(--mono); letter-spacing:.04em; }
-  .legend i { display:inline-block; width:11px; height:11px; border-radius:2px; margin-right:6px; vertical-align:-1px; }
+  .legend i { display:inline-block; width:11px; height:11px; border-radius:0; margin-right:6px; vertical-align:-1px; }
   /* Several routes: the most likely in full, the others lighter; tabs replace the fan on narrow screens. */
   .dim .tile { width:44px; height:44px; margin-bottom:6px; }
   .dim .tile svg { width:20px; height:20px; stroke:var(--muted); }
@@ -67,13 +71,13 @@
   .edge .rel { white-space:normal; }
   .route { position:absolute; transform:translate(-50%,-100%); display:flex; gap:6px; align-items:center; white-space:nowrap;
            font:500 10px var(--mono); letter-spacing:.06em; text-transform:uppercase; }
-  .route b, .tab b { display:inline-grid; place-items:center; width:18px; height:18px; border-radius:2px; font-weight:500;
+  .route b, .tab b { display:inline-grid; place-items:center; width:18px; height:18px; border-radius:0; font-weight:500;
                      background:var(--card); color:var(--ink-2); border:1px solid var(--line); }
-  .route.top b, .tab[aria-selected="true"] b { background:var(--ink); color:#fff; border-color:var(--ink); }
+  .route.top b, .tab[aria-selected="true"] b { background:var(--ink); color:var(--on-solid); border-color:var(--ink); }
   .lik.high { color:var(--red); } .lik.medium { color:var(--amber); } .lik.low { color:var(--green); }
   [hidden] { display:none !important; }
   .tabs { display:flex; flex-wrap:wrap; gap:8px; padding:12px 0 0; }
-  .tab { display:flex; gap:6px; align-items:center; background:none; border:1px solid var(--line); border-radius:2px; padding:5px 8px;
+  .tab { display:flex; gap:6px; align-items:center; background:none; border:1px solid var(--line); border-radius:0; padding:5px 8px;
          font:500 10px var(--mono); letter-spacing:.06em; text-transform:uppercase; color:var(--ink-2); cursor:pointer; }
   .tab[aria-selected="true"] { border-color:var(--ink); }
   .bar { height:8px; background:var(--line); position:relative; }
@@ -85,15 +89,15 @@
   .panel .big em { font-style:normal; color:var(--accent); }
   .panel .why { margin:0; font-size:12.5px; color:var(--ink-2); line-height:1.5; }
   .rc { display:grid; grid-template-columns:22px 1fr; gap:2px 8px; align-items:center; }
-  .rc .n { grid-row:span 2; display:grid; place-items:center; width:20px; height:20px; border-radius:2px; border:1px solid var(--line); background:var(--card);
+  .rc .n { grid-row:span 2; display:grid; place-items:center; width:20px; height:20px; border-radius:0; border:1px solid var(--line); background:var(--card);
            font:500 11px var(--mono); color:var(--ink-2); }
-  .rc.top .n { background:var(--ink); color:#fff; border-color:var(--ink); }
-  .rc.total .n { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .rc.top .n { background:var(--ink); color:var(--on-solid); border-color:var(--ink); }
+  .rc.total .n { background:var(--accent); color:var(--on-solid); border-color:var(--accent); }
   .rc .nm { font-size:13px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .rc .vv { display:flex; gap:8px; align-items:center; font:500 10px var(--mono); letter-spacing:.06em; text-transform:uppercase; }
   .rc .vv .bar { flex:1; height:6px; }
   .rc .vv .arrow { color:var(--muted); }
-  .fixbox { background:var(--card); border-left:2px solid var(--accent); padding:8px 10px; font-size:12.5px; line-height:1.45; }
+  .fixbox { background:var(--accent-soft); color:var(--accent-ink); padding:8px 10px; font-size:12.5px; line-height:1.45; }
   .panel .legend { border-top:1px solid var(--line); padding:10px 0 0; gap:6px 16px; }
   /* Left rail: the score, routes, next fix and legend sit beside the diagram, read before it, and stay in view while scrolling. */
   .layout { display:grid; grid-template-columns:290px minmax(0,1fr); gap:32px; }
@@ -115,13 +119,14 @@
   .fl { margin:6px auto 0; width:170px; text-align:left; border-left:2px dashed var(--red); padding:1px 0 1px 7px; font-size:12px; line-height:1.3; }
   .fl small { display:block; color:var(--red); font:500 9px var(--mono); letter-spacing:.08em; text-transform:uppercase; }
   .chip-s { display:inline-flex; gap:4px; align-items:center; text-align:left; font:500 11px var(--sans); color:var(--green); border:1px solid var(--green);
-            background:var(--green-soft); border-radius:2px; padding:1px 5px; margin-bottom:4px; }
+            background:var(--green-soft); border-radius:0; padding:1px 5px; margin-bottom:4px; }
   .chip-s.planned { border-style:dashed; background:var(--card); }
   .chip-s svg { width:11px; height:11px; stroke:currentColor; }
   .hub .fl, .hub .fl-note { margin-left:calc(50% - 28px); width:160px; } .fl-note { display:block; margin-top:6px; padding:0; text-align:left; }
   .lane-hit { position:absolute; cursor:pointer; }
-  .rc { cursor:pointer; padding:4px 6px; margin:0 -6px; border-radius:2px; } .rc.total { cursor:default; } .rc.sel { background:var(--accent-soft); }
+  .rc { cursor:pointer; padding:4px 6px; margin:0 -6px; border-radius:0; } .rc.total { cursor:default; } .rc.sel { background:var(--accent-soft); }
   .layout:not(.one) .legend .z { display:none; } /* the zones already say who attacks and what we protect */
+  .n { font:500 11px var(--mono); color:var(--accent); margin-right:10px; letter-spacing:.04em; }
 </style></head><body>
 
 <script type="application/json" id="data">
@@ -165,7 +170,7 @@
 
 <main>
 <header><div class="eyebrow" id="eyebrow"></div><h1 id="title"></h1><p class="scenario" id="scenario"></p></header>
-<section class="section"><h2 id="section">— Attack path</h2>
+<section class="section"><h2 id="section"><span class="n">01</span>Attack path</h2>
 <div class="layout"><aside class="panel" id="score"></aside>
 <div class="stage"><div class="tabs" id="tabs" role="tablist" hidden></div><div id="canvas"></div></div></div>
 <template id="legend"><div class="legend">
@@ -228,7 +233,7 @@ document.title = `${d.id} · ${d.title}`;
 $("eyebrow").textContent = ['Risk', d.id, many ? 'Attack paths' : 'Attack path'].join(' · ');
 $("title").innerHTML = esc(d.title) + (d.inherent ? `<span class="accent">${esc(lv(d.inherent))} today${d.residual ? `, ${esc(d.residual.level)} after fixes` : ''}.</span>` : '');
 $("scenario").textContent = d.scenario || "";
-if (many) $("section").textContent = `— Attack paths · ${routes.length} ways in, most likely first`;
+if (many) $("section").innerHTML = `<span class="n">01</span>Attack paths · ${routes.length} ways in, most likely first`;
 
 const findingHtml = (f) => `<div class="finding" title="${esc(f.source)}"><small>${esc(f.kind)}</small><b>${esc(f.title)}</b></div>`;
 const nodeHtml = (nd, fs, x, y, dim) => `<div class="node ${esc(nd.role || 'step')}${dim ? ' dim' : ''}" style="left:${x}px;top:${y}px">
@@ -238,7 +243,7 @@ const chipHtml = (c) => c ? `<div class="control ${c.status === 'planned' ? 'pla
 const startHtml = (x, y) => `<div class="start" title="Start" style="left:${x}px;top:${y}px"><svg viewBox="0 0 24 24"><path d="M9 7v10l8-5Z"/></svg></div>`;
 const wiresSvg = (W, H, wires) => `<svg class="wires" width="${W}" height="${H}"><defs>
   <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10Z" fill="var(--ink)"/></marker>
-  <marker id="arrow-dim" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10Z" fill="#9AA0A6"/></marker>
+  <marker id="arrow-dim" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10Z" style="fill:var(--dim)"/></marker>
   </defs>${wires}</svg>`;
 
 // One path: one row when each step gets 190px or more; else a snake of up to 4 per row; one column on phones.
@@ -331,7 +336,7 @@ function drawFan(canvas) {
   const lab = (e, x, yy, dim, al, full, tag = '') => `<div class="edge${dim ? ' dim' : ''}" style="left:${x}px;top:${yy - 6}px;transform:translate(${al === 'r' ? '-100%' : al === 'l' ? '0' : '-50%'},-100%);text-align:${al === 'r' ? 'right' : al === 'l' ? 'left' : 'center'}">${tag}${chip(e.control, full)}<div class="rel">${esc(e.label)}</div></div>`;
   const onHub = (e, x0, x1) => lab({ label: e.label }, (x0 + x1) / 2, mid, false, 'c', true)
     + (e.control ? `<div class="edge" style="left:${(x0 + x1) / 2}px;top:${mid + 12}px;transform:translate(-50%,0)">${chip(e.control, true)}</div>` : '');
-  const wire = (path, dim) => `<path d="${path}" fill="none" stroke="${dim ? '#B4B9BF' : 'var(--ink)'}" stroke-width="${dim ? 1.2 : 1.6}" marker-end="url(#arrow${dim ? '-dim' : ''})"/>`;
+  const wire = (path, dim) => `<path d="${path}" fill="none" stroke="${dim ? 'var(--dim)' : 'var(--ink)'}" stroke-width="${dim ? 1.2 : 1.6}" marker-end="url(#arrow${dim ? '-dim' : ''})"/>`;
   let html = startHtml(44, mid), wires = `<path d="M66 ${mid} L${X(0) - 40} ${mid}" stroke="var(--ink)" stroke-width="1.5" fill="none" marker-end="url(#arrow)"/>`;
   const join = X(p + 1) - 40; // where the lanes meet: the first shared step, else the asset
   routes.map((_, i) => i).sort((a, b) => (a === pick) - (b === pick)).forEach((i) => { // the route in focus is drawn last, on top

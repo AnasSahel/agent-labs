@@ -16,7 +16,7 @@ Turn a topic ("we need an access control policy") into one policy in `grc/polici
    - A policy on the topic: this run is a **review** of it, same id, next version.
    - Else it is **new**: next id (`POL-001`, `POL-002`…).
 
-   Then list the **duties** the policy must cover: the controls of `frameworks/iso27001.md` that the topic owns (access control: A.5.15 to A.5.18, A.8.2, A.8.3, A.8.5), and for each framework in scope the clauses of `frameworks/<id>.md` mapped to them, plus their extras on the topic. Look them up in this skill's [frameworks/](frameworks/), never from memory; a framework without a file: its clause from memory, marked "clause to confirm". Add the **risks** in `grc/risk-register.md` whose controls fall in those refs. Done when the user has seen the topic, new or review, and the list of duties and risks.
+   Then list the **duties** the policy must cover: the controls of `frameworks/iso27001.md` that the topic owns (access control: A.5.15 to A.5.18, A.8.2, A.8.3, A.8.5), and for each framework in scope the clauses of `frameworks/<id>.md` mapped to them, plus their extras on the topic. Look them up in this skill's [frameworks/](frameworks/), never from memory; a framework without a file: its clause from memory, marked "clause to confirm". Add the **risks** in `grc/risk-register.md` whose controls fall in those refs. Show them in one short block in your first message, above Q1; the grill starts after it. Done when the user has seen the topic, new or review, and the list of duties and risks.
 
 2. **Grill.** Call the Skill tool with `grc-grill`:
    - intensity: `hard`
@@ -37,7 +37,7 @@ Turn a topic ("we need an access control policy") into one policy in `grc/polici
 
 5. **Write.** Save `grc/policies/<id>-<slug>.md` from the template, `status: draft`, and its row in `grc/policies/index.md` (create it from the template). Then render each format picked:
    - `md`, `csv` (the rules table), `json`: write them yourself, plain.
-   - `html`, `pdf`, `docx`, `pptx`: follow `theme.md` of the `risk-assessment` skill (read it from that skill's folder; without it: electric blue `#2F5BFF` the only accent, grays, Geist, flat, light only). Call the Skill tool with `pdf`, `docx` or `pptx` with the policy and the theme as source. Layouts in **Formats**.
+   - `html`, `pdf`, `docx`, `pptx`: follow `theme.md` of the `risk-assessment` skill (read it from that skill's folder; without it: electric blue `#2F5BFF` the only accent, white background, grays, Geist, flat, square corners; html follows the system light/dark setting, files (pdf, pptx, xlsx, docx) stay light). Call the Skill tool with `pdf`, `docx` or `pptx` with the policy and the theme as source. Layouts in **Formats**.
 
    Done when the policy, the index row and every requested file are listed with their path.
 
@@ -45,7 +45,7 @@ Turn a topic ("we need an access control policy") into one policy in `grc/polici
 
 ## Approve
 
-When the user reports the approval ("the board approved it on 12 November"): set `status: approved`, `approved` (date, approver, their words quoted), `next review` (approval date + review cycle), and update the index row. Log it in `grc/traces/<YYYY-MM-DD>-policies.md`: `| Policy | Version | Approver | Date | Words |`. Never mark a policy approved on your own. A policy past its next review date is `review due` in the index; committee-report and risk-register read it.
+When the user reports the approval ("the board approved it on 12 November"): set `status: approved`, `approved` (date, approver, their words quoted), `next review` (approval date + review cycle), and update the index row. Then render again every copy already written (docx, pdf, html, pptx) so none still says `draft`. Log it in `grc/traces/<YYYY-MM-DD>-policies.md`: `| Policy | Version | Approver | Date | Words |`. Never mark a policy approved on your own. A policy past its next review date is `review due` in the index; committee-report and risk-register read it.
 
 ## Formats
 
@@ -53,7 +53,7 @@ The Newsroom layout of `theme.md`: eyebrow `POLICY · <ID> · v<version> · <sta
 
 - **docx / pdf / html**: executive summary, Scope, Roles, Rules (numbered, each with its trace in Geist Mono under it, muted), Exceptions, Review, then the appendices: coverage map (rules × frameworks), version history, approval. A4 for pdf and docx. Status `draft` as a square tag next to the eyebrow until approved.
 - **pptx**: the Split deck of `theme.md`, four slides, for the approver: title; executive summary (title = what changes for people); coverage (title `<n> duties, <k> covered`, right: the coverage map); approval (title = the ask, `Approve POL-003 today.`, right: gaps and conflicts the approver accepts by signing).
-- **xlsx**: sheets `Rules` (id, rule, owner, ISO 27001, one column per framework, risks), `Coverage`, `Decisions` (the grill trace).
+- **xlsx**: sheets `Rules` (id, rule, owner, ISO 27001, one column per framework, risks), `Coverage`, `Decisions` (the grill trace). Empty cells are `None`, never `""`: openpyxl saves `""` as an empty inline string and Excel then calls the whole file corrupt.
 
 ## Templates
 

@@ -47,8 +47,10 @@ Turn risks already in `grc/risk-register.md` into one **chain**: what the attack
 
 5. **Write.**
    - Add or update the row in the **Chains** table of `grc/risk-register.md` (create the table from the template under the risks table when missing; ids `C-001`, `C-002`…).
-   - Write `grc/chains/<id>-<slug>.md` from the report template, then each format picked, as `risk-assessment` renders its own: text formats plain, visual formats in `theme.md` via the `pdf`, `pptx`, `xlsx` or `docx` skill, with a screenshot of the filled `chain.html` as the picture.
+   - Write `grc/chains/<id>-<slug>.md` from the report template, then each format picked, as `risk-assessment` renders its own: text formats plain, visual formats in `theme.md` via the `pdf`, `pptx`, `xlsx` or `docx` skill, with a screenshot of the filled `chain.html` as the picture. In xlsx, empty cells are `None`, never `""` (Excel calls the file corrupt).
    - Log the answers in `grc/traces/<id>-<date>.md` (the grill's trace).
+   - Never edit a risk row yourself: a change to a linked risk (due date, owner, status) goes through the Skill tool with `risk-register`, so it gets its row in the register log.
+   - An assumed step left in the chain: end with one line offering to assess it (`Assess the missing step (mailbox → staff account) with risk-assessment?`).
 
    Done when the register row exists and every requested file is listed with its path.
 

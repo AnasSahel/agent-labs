@@ -1,6 +1,6 @@
 ---
 name: raci-builder
-description: Build a RACI matrix for a security process or the whole security programme (who is Responsible, Accountable, Consulted, Informed), with each activity tied to an ISO 27001, NIS2, DORA or GDPR duty, then check it for missing or double accountability, conflicts of interest, empty seats and outsourced accountability, after grilling the user on who answers for what. Use when the user wants a RACI, a responsibility matrix, roles and responsibilities, to know who owns or signs off a security activity, to prepare an audit on ISO 27001 5.3 or A.5.2, or to check segregation of duties.
+description: Build a RACI matrix for a security process or the whole security programme (who is Responsible, Accountable, Consulted, Informed), with each activity tied to an ISO 27001, NIS2, DORA or GDPR duty, then check it for missing or double accountability, conflicts of interest, empty seats and outsourced accountability, after grilling the user on who answers for what. Use when the user wants a RACI, a responsibility matrix, roles and responsibilities, to know who owns, signs off, approves or is accountable for a security activity ("who signs off a production change?"), even when the files already answer it, to prepare an audit on ISO 27001 5.3 or A.5.2, or to check segregation of duties.
 metadata:
   author: Anas Sahel
   version: 1.0.0 # x-release-please-version
@@ -49,7 +49,7 @@ The letters, in plain words (say them this way to the user):
 4. **Write.** Save `grc/raci/<slug>.md` from the template and add new roles and people to `grc/roles.md` (create it from the template). Then render each format picked:
    - `md`, `csv`, `json`: write them yourself next to the matrix, plain.
    - `html`: copy [raci.html](raci.html) fresh from this skill's folder to `grc/raci/<slug>.html` and fill only its JSON; the page draws itself.
-   - `pdf`, `pptx`, `xlsx`, `docx`: call the Skill tool with `pdf`, `pptx`, `xlsx` or `docx`, with the matrix and `theme.md` of the `risk-assessment` skill as source (read it from that skill's folder; without it: electric blue `#2F5BFF` the only accent, grays, Geist, flat, light only). Layouts in **Formats**.
+   - `pdf`, `pptx`, `xlsx`, `docx`: call the Skill tool with `pdf`, `pptx`, `xlsx` or `docx`, with the matrix and `theme.md` of the `risk-assessment` skill as source (read it from that skill's folder; without it: electric blue `#2F5BFF` the only accent, white background, grays, Geist, flat, square corners; html follows the system light/dark setting, files (pdf, pptx, xlsx, docx) stay light). Layouts in **Formats**.
    - Jira: one issue per finding still open and per empty seat, owner = the A; without a connector, say so and hand over the CSV.
 
    Every format opens with the **executive summary**. Done when the matrix file exists and every requested file is listed with its path.
@@ -61,7 +61,7 @@ The letters, in plain words (say them this way to the user):
 The Newsroom layout of `theme.md`: eyebrow `RACI · <SCOPE> · v<n> · <date>`, headline `<n> activities, <k> roles` with the verdict in accent (`2 conflicts to fix.` or `Ready to sign.`), the executive summary right after.
 
 - **html / pdf**: sections Executive summary, Matrix, Findings, Roles, Decisions. A4 landscape for pdf.
-- **xlsx**: sheets `Summary` (eyebrow, headline, executive summary, counts), `RACI` (the matrix as real cells: A accent fill with white text, R ink text bold, C and I muted; frozen first column and header; a `Duty` column with the refs; a `Findings` column in red), `Roles` (role, person, deputy, A count, R count), `Findings` (`# | Check | Row | Role | Clause | Fix or exception | Ends`), `Decisions` (the grill trace).
+- **xlsx**: sheets `Summary` (eyebrow, headline, executive summary, counts), `RACI` (the matrix as real cells: A accent fill with white text, R ink text bold, C and I muted; frozen first column and header; a `Duty` column with the refs; a `Findings` column in red), `Roles` (role, person, deputy, A count, R count), `Findings` (`# | Check | Row | Role | Clause | Fix or exception | Ends`), `Decisions` (the grill trace). Empty cells are `None`, never `""`: openpyxl saves `""` as an empty inline string and Excel then calls the whole file corrupt.
 - **pptx**: the Split deck of `theme.md`, five slides: title; executive summary; the matrix (right panel, as a real table, groups collapsed to one row when it does not fit); findings (`<k> things to fix`); decisions (the ask, e.g. `Sign the matrix and name 2 deputies.`).
 - **docx**: the html sections as a memo, for an approver who signs on paper.
 
