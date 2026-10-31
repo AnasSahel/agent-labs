@@ -6,7 +6,7 @@ A step-by-step plan to install the 12 GRC skills and test every skill, every mod
 - **Time**: about 4 to 5 hours for everything; Phase 0 and the smoke run take 20 minutes.
 - **Company**: Northwind Payroll, a fictional payroll SaaS and payment institution ([fixtures/context.md](fixtures/context.md)). ISO 27001, NIS2, DORA and GDPR in scope.
 - **Automated evals**: 24 cases in `skills/grc/evals/` (PR #50), judged on the first turn of each skill. The **Eval** column below names the case that covers the same ground: for those tests, spend your time on what an eval can't judge (the drawings, how the grill feels, the rendered xlsx, pptx and docx files, and work across sessions).
-- **Before you start**: merge PR #50 first (or test on its branch, `eval/grc-skills`). Checks marked **(#50)** test behaviour that PR adds: they fail on today's main.
+- Checks marked **(#50)** test the fixes the evals found (merged in PR #50): if one fails, the fix didn't hold outside the eval sandbox.
 
 ## How the test runs
 
