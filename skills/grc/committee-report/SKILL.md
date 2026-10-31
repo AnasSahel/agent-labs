@@ -1,6 +1,6 @@
 ---
 name: committee-report
-description: Turn the risk register into a report for a security, risk or audit committee or a board: posture in one sentence, portfolio heat map with what moved since the last report, risks above appetite, treatment progress and the decisions to take, after a short grill; then record what the committee decided. Use when the user prepares a committee, board, COMEX, steering or audit committee meeting, wants a quarterly or monthly risk report for management, or comes back with the committee's decisions.
+description: "Turn the risk register into a report for a security, risk or audit committee or a board: posture in one sentence, portfolio heat map with what moved since the last report, risks above appetite, treatment progress and the decisions to take, after a short grill; then record what the committee decided. Use when the user prepares a committee, board, COMEX, steering or audit committee meeting, wants a quarterly or monthly risk report for management, or comes back with the committee's decisions."
 metadata:
   author: Anas Sahel
   version: 1.0.0 # x-release-please-version
