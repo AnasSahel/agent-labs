@@ -1,0 +1,14 @@
+schema_version: "1.1"
+name: grill-resume
+description: "Resumes an in-progress trace: keeps Q1-Q2, never re-asks them, continues at Q3."
+tags: [grc-grill]
+context:
+  scaffold_script: scaffold.sh
+execution:
+  max_turns: 25
+  timeout_seconds: 600
+  allowed_tools: [Bash, Write, Edit, Read, Glob, Grep, Skill]
+  prompt: |
+    /grc:grc-grill Let's continue grilling me on the backup policy scope.
+graders:
+  - {"name": "resumes-at-q3", "type": "llm", "weight": 2, "focus": "last_message", "criteria": "An in-progress trace (grc/traces/2026-10-31-backup-scope.md) already settled Q1 (scope: AWS production and Microsoft 365) and Q2 (owner: Karim B.). PASS only if the reply says in one line what was already settled, does not ask again about scope or owner, and asks the next question numbered `Q3/5` with a `Recommended:` answer citing a specific clause."}

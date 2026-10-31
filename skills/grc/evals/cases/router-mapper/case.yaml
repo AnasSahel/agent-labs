@@ -1,0 +1,15 @@
+schema_version: "1.1"
+name: router-mapper
+description: "Routes a clause lookup to framework-mapper."
+tags: [grc-router]
+context:
+  scaffold_script: scaffold.sh
+execution:
+  max_turns: 20
+  timeout_seconds: 600
+  allowed_tools: [Bash, Write, Edit, Read, Glob, Grep, Skill]
+  prompt: |
+    /grc:grc-router Which ISO 27001 controls meet DORA Art. 19?
+graders:
+  - {"name": "calls-framework-mapper", "type": "tool_used", "tool": "Skill", "input_match": "\"skill\"\\s*:\\s*\"(grc:)?framework-mapper\"", "arm": "both"}
+  - {"name": "no-gap-analysis", "type": "tool_used", "tool": "Skill", "input_match": "\"skill\"\\s*:\\s*\"(grc:)?gap-analysis\"", "min": 0, "max": 0, "arm": "both"}
