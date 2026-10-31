@@ -105,6 +105,7 @@ The **Split** layout: the point on the left, the evidence on the right. Referenc
 **Grid** (every slide but the title):
 - Left column: x 0.67 in, width 3.9 in. Eyebrow (Geist Mono 10pt, accent, uppercase, `0.08em`), then the **action title** (Geist 600, 30pt, tracking −2%, ink), a full sentence that states the point. Below it, 1 to 3 takeaways in Geist 14pt `ink-2`, each above a 1px `line` rule.
 - Divider: one vertical 1px `line` at x 5.0 in, from y 0.6 to 6.6 in.
+- **Every rule and divider is a line, 0.75pt (= 1px on screen), in `line`** (`ink` only where a strong rule is asked). Set the width explicitly: never a filled rectangle, a shape outline or the tool's default line width, which all come out thicker than the page.
 - Right panel: x 5.5 in to 12.67 in (0.5 in clear of the divider), vertically centred. The evidence only.
 - Footer: y 7.0 in, Geist Mono 9pt muted, uppercase: `<organisation> · Risk review` left, `<n> / 6` right.
 - No shadows, no rounded shapes, no clip art, no emoji. Corners square.
