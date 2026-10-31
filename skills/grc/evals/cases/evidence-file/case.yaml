@@ -1,0 +1,17 @@
+schema_version: "1.1"
+name: evidence-file
+description: "Files a piece of evidence against the controls it proves, with a hash and an expiry, no grilling."
+tags: [audit-evidence]
+context:
+  scaffold_script: scaffold.sh
+execution:
+  max_turns: 20
+  timeout_seconds: 600
+  allowed_tools: [Bash, Write, Edit, Read, Glob, Grep, Skill]
+  prompt: |
+    /grc:audit-evidence File inbox/mfa-conditional-access-export.txt as audit evidence.
+graders:
+  - {"name": "no-grc-grill", "type": "tool_used", "tool": "Skill", "input_match": "\"skill\"\\s*:\\s*\"(grc:)?grc-grill\"", "min": 0, "max": 0, "arm": "both"}
+  - {"name": "index-has-a85", "type": "regex", "pattern": "A\\.8\\.5", "target": {"source": "file", "path": "grc/evidence/index.md"}}
+  - {"name": "index-has-hash", "type": "regex", "pattern": "[0-9a-f]{64}", "target": {"source": "file", "path": "grc/evidence/index.md"}}
+  - {"name": "filed", "type": "llm", "weight": 2, "focus": "trace", "criteria": "PASS only if the reply says the MFA export was filed against ISO 27001 A.8.5 (secure authentication; A.5.17 also acceptable alongside), with an expiry or validity date, and shows the coverage headline or map."}

@@ -19,7 +19,7 @@ Turn "can we use this vendor?" into one **verdict** a manager can sign: approve,
    - **Medium**: internal data or user login only.
    - **Low**: none of the above.
 
-   Done when the tier and its reason fit one line (`High: holds customer personal data, payroll stops for 3 days without it`).
+   Facts still open: tier on what you know and mark it `provisional`. Done when the tier and its reason fit one line (`High: holds customer personal data, payroll stops for 3 days without it`), said before the first question.
 
 3. **Grill.** Call the Skill tool with `grc-grill`:
    - intensity: `light`
@@ -27,6 +27,8 @@ Turn "can we use this vendor?" into one **verdict** a manager can sign: approve,
    - docs: `grc/context.md`, `grc/vendors/`, `grc/policies/`, the documents the user gave
    - framework: the frameworks in scope; the supplier controls are ISO 27001 A.5.19 to A.5.23, and each other framework's clauses are the rows of its file in [frameworks/](frameworks/) that hold those refs (NIS2 supply chain, DORA ICT third parties, GDPR processors), plus its Extras (DORA register of information, GDPR processor contract)
    - output default: `html`
+
+   A missing document is not a question: list the ones the tier requires once, as a request above Q1, and score them `missing` until they arrive. Q1 goes to an open tier fact, the owner or the decision date.
 
    Done when it hands back every field and the formats.
 

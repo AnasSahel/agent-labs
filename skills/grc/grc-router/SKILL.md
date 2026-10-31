@@ -37,7 +37,7 @@ Send each GRC request to the one skill that **owns** it, in the right order when
 
    Done when every part of the request has one owner.
 
-3. **Say** in one or two lines which skill runs, why, and for a chain the order (`gap-analysis, then risk-assessment for each gap above appetite, then committee-report`). Done when the user sees the plan before the first call.
+3. **Say** in one or two lines which skill runs, why, and for a chain the order (`gap-analysis, then risk-assessment for each gap above appetite, then committee-report`). Write it as text **before** the first Skill call, in that message: never call first and explain after. Done when the user sees the plan before the first call.
 
 4. **Call** the Skill tool with the owner, passing the request in the user's words plus what you read in step 1 that bears on it. For a chain, call the next step only once the last one hands back, and pass along its outputs (gap ids, risk ids, report path). When an owner is not installed, say which skill is missing and stop that branch; never do its work yourself. Done when every owner in the plan has run or is reported missing.
 
@@ -53,8 +53,8 @@ Off the main line: `vendor-risk` feeds `risk-register` with supplier risks; `att
 
 ## Where do I start
 
-When the user asks where they stand or what to do, without a task, answer from `grc/` in three lines, then offer the next step and wait:
+When the user asks where they stand or what to do, without a task, answer from `grc/` in three lines, then offer **one** next step, never a sequence, and wait:
 - **Nothing yet**: start with `gap-analysis` on the frameworks they name (default ISO 27001:2022).
 - **Gaps, no risks**: `risk-assessment` on the biggest gaps.
-- **Risks**: the `risk-register` review flags (overdue, stale, above appetite), then `committee-report` when a meeting is due.
+- **Risks**: the `risk-register` review flags (overdue, stale, above appetite); `committee-report` instead only when a meeting is due and the user says so.
 - **Audit coming**: `audit-evidence` on the controls in scope.

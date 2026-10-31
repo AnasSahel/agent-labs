@@ -1,0 +1,15 @@
+schema_version: "1.1"
+name: grill-standalone
+description: "Standalone grill: one cited question within budget, trace written before the first question."
+tags: [grc-grill]
+context:
+  scaffold_script: scaffold.sh
+execution:
+  max_turns: 25
+  timeout_seconds: 600
+  allowed_tools: [Bash, Write, Edit, Read, Glob, Grep, Skill]
+  prompt: |
+    /grc:grc-grill Grill me on whether we should accept the residual risk on R-002 instead of buying security keys for the admins.
+graders:
+  - {"name": "one-cited-question", "type": "llm", "weight": 2, "focus": "last_message", "criteria": "The user wants to be grilled on accepting a risk. It asks exactly one interview question, numbered `Q1/<budget>` (budget 10 for hard or 5 for light), followed by a `Recommended:` answer whose reason cites a specific clause (for example `ISO 27001 A.5.24`, `NIS2 Art. 21(2)(b)`, `DORA Art. 17`, `GDPR Art. 33`), not only a framework name. It does not ask for the sector, the frameworks in scope or the risk appetite: grc/context.md already states them (payments fintech in France; ISO 27001, NIS2, DORA, GDPR; residual at most medium unless the CISO Sarah M. accepts in writing). It also says in one line what intensity it inferred."}
+  - {"name": "trace-in-progress", "type": "regex", "pattern": "status:\\s*in progress", "target": "trace"}

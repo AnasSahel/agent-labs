@@ -1,0 +1,14 @@
+schema_version: "1.1"
+name: chain-find
+description: "Finds a chain through register risks (needs/gives) and grills light with a cited question."
+tags: [attack-chain]
+context:
+  scaffold_script: scaffold.sh
+execution:
+  max_turns: 30
+  timeout_seconds: 600
+  allowed_tools: [Bash, Write, Edit, Read, Glob, Grep, Skill]
+  prompt: |
+    /grc:attack-chain Look for attack chains across our risks.
+graders:
+  - {"name": "chain-found", "type": "llm", "weight": 2, "focus": "trace", "criteria": "The register holds R-002 (admin phishing into AWS production), R-003 (payroll provider link into HR, fake hire provisioned) and R-004 (former dev GitHub write to payment code). PASS only if the agent proposes at least one chain of 2 to 4 of these risks where what the attacker gains in one is the way into the next, says what it ends at, and then either asks a grill question numbered `Q1/5` with a `Recommended:` answer citing a clause, or presents the scored chain. It must not invent risk ids that are not in the register."}

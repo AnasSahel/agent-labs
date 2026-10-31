@@ -1,0 +1,15 @@
+schema_version: "1.1"
+name: committee
+description: "Reads the register and grills light on audience/decisions, flagging risks above appetite."
+tags: [committee-report]
+context:
+  scaffold_script: scaffold.sh
+execution:
+  max_turns: 30
+  timeout_seconds: 600
+  allowed_tools: [Bash, Write, Edit, Read, Glob, Grep, Skill]
+  prompt: |
+    /grc:committee-report Prepare the risk committee report for our 15 November 2026 meeting.
+graders:
+  - {"name": "calls-grc-grill", "type": "tool_used", "tool": "Skill", "input_match": "\"skill\"\\s*:\\s*\"(grc:)?grc-grill\"", "arm": "both"}
+  - {"name": "question-on-decisions", "type": "llm", "weight": 2, "focus": "trace", "criteria": "PASS only if the transcript shows the agent read the register (R-001..R-004), names or counts the risks above appetite (R-002, R-003, R-004), and asks a light grill question numbered `Q1/5` with a `Recommended:` answer citing a clause, about the audience, period or decisions to ask for. It does not ask for the meeting date (given: 15 November 2026)."}

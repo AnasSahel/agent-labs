@@ -1,0 +1,15 @@
+schema_version: "1.1"
+name: router-attack-chain
+description: "Routes 'how does an attacker get from X to Y' to attack-chain."
+tags: [grc-router]
+context:
+  scaffold_script: scaffold.sh
+execution:
+  max_turns: 20
+  timeout_seconds: 600
+  allowed_tools: [Bash, Write, Edit, Read, Glob, Grep, Skill]
+  prompt: |
+    /grc:grc-router Could an attacker who phishes one of our admins end up changing our payment code?
+graders:
+  - {"name": "calls-attack-chain", "type": "tool_used", "tool": "Skill", "input_match": "\"skill\"\\s*:\\s*\"(grc:)?attack-chain\"", "arm": "both"}
+  - {"name": "no-risk-assessment", "type": "tool_used", "tool": "Skill", "input_match": "\"skill\"\\s*:\\s*\"(grc:)?risk-assessment\"", "min": 0, "max": 0, "arm": "both"}

@@ -1,0 +1,15 @@
+schema_version: "1.1"
+name: risk-new
+description: "A new risk goes to grc-grill (hard) and the first question is cited, never a fact the docs hold."
+tags: [risk-assessment]
+context:
+  scaffold_script: scaffold.sh
+execution:
+  max_turns: 30
+  timeout_seconds: 600
+  allowed_tools: [Bash, Write, Edit, Read, Glob, Grep, Skill]
+  prompt: |
+    /grc:risk-assessment Our support team shares one Zendesk admin login. Assess that risk.
+graders:
+  - {"name": "calls-grc-grill", "type": "tool_used", "tool": "Skill", "input_match": "\"skill\"\\s*:\\s*\"(grc:)?grc-grill\"", "arm": "both"}
+  - {"name": "first-question", "type": "llm", "weight": 2, "focus": "last_message", "criteria": "The agent frames a risk about a shared Zendesk admin account and starts grilling. It asks exactly one interview question, numbered `Q1/10` (the question budget is 10), followed by a `Recommended:` answer whose reason cites a specific clause (for example `ISO 27001 A.5.24`, `NIS2 Art. 21(2)(b)`, `DORA Art. 17`, `GDPR Art. 33`), not only a framework name. It does not ask for the sector, the frameworks in scope or the risk appetite: grc/context.md already states them (payments fintech in France; ISO 27001, NIS2, DORA, GDPR; residual at most medium unless the CISO Sarah M. accepts in writing)."}

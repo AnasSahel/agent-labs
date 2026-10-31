@@ -1,0 +1,14 @@
+schema_version: "1.1"
+name: gap-nis2
+description: "Builds the checklist from the files and reaches its light grill with a cited question."
+tags: [gap-analysis]
+context:
+  scaffold_script: scaffold.sh
+execution:
+  max_turns: 45
+  timeout_seconds: 600
+  allowed_tools: [Bash, Write, Edit, Read, Glob, Grep, Skill]
+  prompt: |
+    /grc:gap-analysis Run a gap analysis against NIS2 for us.
+graders:
+  - {"name": "progress-or-question", "type": "llm", "weight": 2, "focus": "trace", "criteria": "PASS only if the agent works from the framework files (frameworks/nis2.md and iso27001.md) and either reaches a light grill question numbered `Q1/5` with a `Recommended:` answer citing a specific clause, or delivers coverage results. It must not ask for the frameworks in scope or the sector, which grc/context.md states."}
