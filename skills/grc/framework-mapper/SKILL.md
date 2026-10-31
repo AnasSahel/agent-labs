@@ -1,6 +1,6 @@
 ---
 name: framework-mapper
-description: Map security controls and compliance clauses across ISO 27001 and the frameworks mapped to it (NIS2, DORA, GDPR, AI Act, CRA, ISO 27701, ISO 22301, ISO 42001, SOC 2, PCI DSS, HDS, NIST CSF, CIS, ANSSI hygiene) from fixed mapping files, never from memory, without grilling. Use when the user asks which clauses a control covers, what ISO 27001 controls meet a clause of another framework (a NIS2 or DORA article, a SOC 2 criterion, a PCI DSS requirement), wants a crosswalk or coverage matrix between frameworks, or wants to know which clauses the controls in their risk register touch and which they leave untouched.
+description: Answer any question about what a security or privacy framework requires, from fixed mapping files and never from memory, even when you think you know the answer, since only the files are traceable. Use for any question that names or needs an article, clause or control of ISO 27001, NIS2, DORA, GDPR, AI Act, CRA, ISO 27701, ISO 22301, ISO 42001, SOC 2, PCI DSS, HDS, NIST CSF, CIS or ANSSI hygiene; which framework applies or wins when two overlap (NIS2 or DORA for a bank or payment institution, for incident reporting or risk management); which clauses a control covers or which controls meet a clause; a crosswalk or coverage matrix; or which clauses the risk register touches. No grilling.
 metadata:
   author: Anas Sahel
   version: 1.0.0 # x-release-please-version

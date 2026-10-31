@@ -26,9 +26,9 @@ Send each GRC request to the one skill that **owns** it, in the right order when
 
 ## Steps
 
-**Plan first.** Your first output is the plan as text. The first Skill call comes after it, never before, and never as the only thing in your first message. Example:
+**Plan first.** Your first output is the plan as reply text the user sees, never only in your thinking. With **one owner**, say it in one line and call it. With a **chain** (two skills or more), end your message on the plan and `Go?`, make no Skill call, and wait: the first call comes in your next turn, after the user says go (or changes the plan). Example:
 
-> Audit prep for ISO 27001: `gap-analysis` first (no gap analysis since 2025), then `audit-evidence` on the controls it marks in place. Starting with gap-analysis.
+> Audit prep for ISO 27001: `gap-analysis` first (no gap analysis since 2025), then `audit-evidence` on the controls it marks in place. Go?
 
 1. **Read.** Look at `grc/`: `context.md` (sector, frameworks in scope, appetite), `risk-register.md`, and the newest files in `risks/`, `policies/`, `evidence/`, `reports/`, `traces/`. Note any trace still `status: in progress`. Done when you know what exists and what is missing.
 
@@ -42,7 +42,7 @@ Send each GRC request to the one skill that **owns** it, in the right order when
 
    Done when every part of the request has one owner.
 
-3. **Say** in one or two lines which skill runs, why, and for a chain the order (`gap-analysis, then risk-assessment for each gap above appetite, then committee-report`). Write it as text **before** the first Skill call, in that message: never call first and explain after. Done when the user sees the plan before the first call.
+3. **Say** in one or two lines which skill runs, why, and for a chain the order (`gap-analysis, then risk-assessment for each gap above appetite, then committee-report`). Write it as text **before** the first Skill call: never call first and explain after. For a chain, stop after the plan and wait for go. Done when the user has seen the plan (and, for a chain, said go) before the first call.
 
 4. **Call** the Skill tool with the owner, passing the request in the user's words plus what you read in step 1 that bears on it. For a chain, call the next step only once the last one hands back, and pass along its outputs (gap ids, risk ids, report path). When an owner is not installed, say which skill is missing and stop that branch; never do its work yourself. Done when every owner in the plan has run or is reported missing.
 
