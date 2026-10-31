@@ -8,7 +8,9 @@ status: draft, to review by a GRC practitioner
 
 # AI Act
 
-Rules by risk class: prohibited practices, high-risk systems (Annex III uses and safety components), transparency duties, general-purpose AI models. Duties differ for providers and deployers, and apply in phases (prohibitions since February 2025, GPAI since August 2025, high-risk from August 2026 or later): check the current dates before citing a deadline. Mostly not security, so most of it is in Extras; ISO 42001 carries it better.
+Rules by risk class: prohibited practices, high-risk systems (Annex III uses and safety components), transparency duties, general-purpose AI models. Duties differ for providers and deployers, and apply in phases (prohibitions since February 2025, GPAI since August 2025, high-risk from August 2026 or later): check the current dates before citing a deadline. From the text (Art. 113): prohibitions and AI literacy from 2 February 2025, GPAI and penalties from 2 August 2025, most of the rest from 2 August 2026, Art. 6(1) high-risk products from 2 August 2027. Later EU amendments may move these. Mostly not security, so most of it is in Extras; ISO 42001 carries it better.
+
+Checked line by line against the EUR-Lex text on 2026-10-30.
 
 ## Mapping
 
@@ -42,10 +44,10 @@ Duties the pivot does not carry. **gap-analysis** checks them on their own; a ri
 | Art. 13, Art. 14 | Instructions for use for deployers, and effective human oversight | AI-specific |
 | Art. 15 | Declared accuracy levels and resilience to errors and AI-specific attacks | AI-specific |
 | Art. 17 | QMS covering regulatory compliance, data management and post-market monitoring | Broader than security |
-| Art. 26 | Deployers keep logs at least 6 months, inform workers, and affected persons where required | AI-specific |
+| Art. 26(6), Art. 26(7), Art. 26(11) | Deployers keep logs at least 6 months, inform workers and their representatives before workplace use, and tell affected persons when a high-risk system makes or helps make decisions about them | AI-specific |
 | Art. 27 | Fundamental rights impact assessment for certain deployers of high-risk AI | AI-specific |
-| Art. 43, Art. 47, Art. 49 | Conformity assessment, EU declaration of conformity, CE marking, registration in the EU database | Product compliance |
+| Art. 43, Art. 47, Art. 48, Art. 49 | Conformity assessment, EU declaration of conformity, CE marking, registration in the EU database | Product compliance |
 | Art. 50 | Tell people they are talking to an AI, label deepfakes and AI-generated content | Transparency duty |
 | Art. 53, Art. 55 | General-purpose AI models: documentation, copyright policy, training content summary; systemic-risk models: evaluations, incident reporting, cybersecurity | GPAI-specific |
 | Art. 72 | Post-market monitoring plan for high-risk AI | Product monitoring |
-| Art. 73 | Serious incident report within 15 days, shorter for widespread or fatal cases | ISO sets no deadline |
+| Art. 73(2), Art. 73(3), Art. 73(4) | Serious incident report within 15 days of awareness; 2 days for a widespread infringement or critical infrastructure disruption; 10 days for a death | ISO sets no deadline |

@@ -10,6 +10,8 @@ status: draft, to review by a GRC practitioner
 
 18 controls, 153 safeguards in three implementation groups (IG1 basic hygiene, IG2, IG3). Cited at control level (`CIS 5`); safeguards (`CIS 5.3`) only after checking the text, else "clause to confirm".
 
+Checked against cisecurity.org on 2026-10-30: the 18 control names, the 153 safeguards and the 56 IG1 safeguards match. Safeguard wording sits in the v8.1 PDF behind a download form, so it is not checked here.
+
 ## Mapping
 
 One row per clause. **Fit** `full`: the ISO 27001 refs meet the clause. `partial`: they help, and the rest is in Extras.
