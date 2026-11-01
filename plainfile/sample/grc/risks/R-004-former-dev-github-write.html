@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>R-004 Ex-Developer Repo Access</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+  /* Theme: skills/grc/risk-assessment/theme.md. Newsroom layout, one blue accent, flat, light only. */
+  :root { --accent:#2F5BFF; --accent-soft:#E6ECFF; --bg:#F1F2F3; --surface:#FAFAFA; --surface-2:#E7E8EA;
+          --ink:#111418; --ink-2:#3D434C; --muted:#6F757E; --line:#D9DBDE;
+          --high:#C4314B; --high-soft:#F8E6E9; --medium:#A86400; --medium-soft:#F7EEDF; --low:#2E7D4F; --low-soft:#E4F1E9;
+          --sans:Geist, system-ui, -apple-system, sans-serif; --mono:"Geist Mono", ui-monospace, Menlo, monospace; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.6 var(--sans); }
+  main { max-width:76rem; margin:0 auto; padding:0 1.25rem 64px; }
+  @media (min-width:40rem) { main { padding:0 2rem 64px; } }
+  header { padding:56px 0 40px; }
+  .eyebrow { font:400 11px var(--mono); letter-spacing:.08em; text-transform:uppercase; color:var(--accent); margin-bottom:18px; }
+  h1 { margin:0 0 20px; font-size:clamp(30px,4.6vw,52px); line-height:1.08; font-weight:600; letter-spacing:-.02em; max-width:22em; text-wrap:balance; }
+  h1 .accent { display:block; color:var(--accent); }
+  .intro { margin:0; color:var(--ink-2); max-width:40rem; }
+  .meta { display:flex; flex-wrap:wrap; gap:6px 24px; margin-top:20px; font:400 12px var(--mono); color:var(--muted); letter-spacing:.04em; }
+  .meta b { color:var(--ink); font-weight:500; }
+  section { margin-top:40px; border-top:1px solid var(--ink); }
+  section > h2 { margin:0 0 20px; padding:12px 0; border-bottom:1px solid var(--line); font-size:12px; font-weight:600; }
+  p, ul { max-width:44rem; color:var(--ink-2); } ul { padding-left:20px; } li { margin-bottom:6px; } li b { color:var(--ink); }
+  .tag { display:inline-block; border-radius:2px; padding:1px 6px; font:500 12px var(--mono); }
+  .high { color:var(--high); background:var(--high-soft); } .medium { color:var(--medium); background:var(--medium-soft); } .low { color:var(--low); background:var(--low-soft); }
+  .scroll { overflow-x:auto; }
+  table { border-collapse:collapse; width:100%; min-width:720px; font-size:14px; background:var(--surface); }
+  th, td { text-align:left; padding:9px 12px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { background:var(--surface-2); font-weight:600; font-size:12px; border-bottom:1px solid var(--ink); }
+  td.ref { font:400 13px var(--mono); white-space:nowrap; }
+  .score { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:32px; align-items:start; }
+  @media (max-width:640px) { .score { grid-template-columns:1fr; } }
+  .grid { display:grid; grid-template-columns:28px repeat(4,44px); gap:3px; font:400 11px var(--mono); color:var(--muted); }
+  .grid span { display:grid; place-items:center; height:36px; }
+  .grid .c { font-size:18px; color:var(--ink); border-radius:2px; }
+  .path { background:var(--surface); border:1px solid var(--line); padding:16px; overflow-x:auto; }
+  a { color:var(--accent); }
+  .summary { display:grid; grid-template-columns:11rem minmax(0,1fr); gap:0; max-width:40rem; margin-top:28px; border-top:1px solid var(--line); }
+  .summary dt { font:400 11px var(--mono); letter-spacing:.08em; text-transform:uppercase; color:var(--muted); padding:12px 0; border-bottom:1px solid var(--line); }
+  .summary dd { margin:0; padding:10px 0; color:var(--ink-2); border-bottom:1px solid var(--line); }
+  @media (max-width:560px) { .summary { grid-template-columns:1fr; } .summary dt { border-bottom:0; padding-bottom:0; } }
+</style></head><body>
+<main>
+<header>
+  <div class="eyebrow">Risk · R-004 · Assessed 2026-10-30</div>
+  <h1>Ex-developer can still change payment code<span class="accent">High today, medium after fixes.</span></h1>
+  <div class="meta"><span>Owner <b>CTO</b></span><span>Status <b>open</b></span><span>Due <b>2026-10-30</b> · <b>2026-11-13</b> · <b>2026-11-30</b></span><span>Frameworks <b>ISO 27001 · NIS2 · DORA · GDPR</b></span></div>
+</header>
+
+<section><h2>— Executive summary</h2>
+<dl class="summary">
+  <dt>What could happen</dt><dd>Someone using a former developer's still-active GitHub account changes the payment code. It reaches production with no second approval and quietly diverts or stops payments. Critical: lost money, a reportable incident, licence and customer trust at stake.</dd>
+  <dt>Why now</dt><dd>The account was found still active with write access. No rule removes access when people leave, and nothing requires a second approval.</dd>
+  <dt>Where we stand</dt><dd><span class="tag high">G4·V3 high</span> today, above appetite → <span class="tag medium">G4·V1 medium</span> after fixes, within appetite.</dd>
+  <dt>What we need</dt><dd>The CTO removes the account today, then ships 6 fixes by 2026-11-30. Mostly settings changes; security key cost not yet estimated.</dd>
+</dl>
+</section>
+
+<section><h2>— Scenario</h2>
+<ul>
+  <li><b>Risk source</b>: the former developer, or anyone who takes over their account (stolen password, SMS code, old token or SSH key).</li>
+  <li><b>Feared event</b>: the payment service is altered: payments diverted to an attacker's account, or stopped.</li>
+  <li><b>Asset</b>: the payment service and its code repository.</li>
+  <li><b>Why it works</b>: the account was never removed (access-control policy v2.1 has no leaver rule; reviews run every 6 months). SMS is allowed as a second factor. A push reaches production with no second approval.</li>
+  <li><b>Business value</b>: the service moves customer money and holds customer payment data. A diverting change is a major ICT incident (DORA Art. 19), a significant incident (NIS2 Art. 23), and a personal data breach when customer data is touched (GDPR Art. 33).</li>
+</ul>
+</section>
+
+<section><h2>— Attack path</h2>
+<p>Interactive version: <a href="R-004-attack-path.html">R-004-attack-path.html</a></p>
+<img src="R-004-attack-path.png" alt="Attack path: former developer, old GitHub account, payment code repo, release pipeline, payment service, payments diverted" style="width:100%;height:auto;display:block;border:1px solid var(--line)">
+<details style="margin-top:12px"><summary class="meta" style="cursor:pointer">Diagram source (Mermaid)</summary>
+<div class="path"><pre class="mermaid">
+%%{init: {"theme":"base","themeVariables":{"fontFamily":"Geist, system-ui","primaryColor":"#FAFAFA","primaryBorderColor":"#D9DBDE","lineColor":"#111418"}}}%%
+flowchart LR
+  S{{"<b>Former developer</b><br/>Risk source"}} -- "logs in, never removed · high" --> N1("<b>Old GitHub account</b><br/>Still-active identity")
+  N1 -- "pushes changed code · high" --> N2("<b>Payment code repo</b><br/>Source code, write access")
+  N2 -- "released, nobody approves · high" --> N3("<b>Release pipeline</b><br/>Build and deploy")
+  N3 -- "runs in production · high" --> A[("<b>Payment service</b><br/>Business asset")]
+  A -- "diverts or stops payments · high" --> F("<b>Payments diverted</b><br/>Impact · G4")
+  W1["⚠ No leaver access removal rule · access-control.md v2.1"] -.- N1
+  W2["⚠ Access reviewed only every 6 months · access-control.md v2.1"] -.- N1
+  W3["⚠ SMS allowed as second factor · access-control.md v2.1"] -.- N1
+  W4["⚠ No second approval before release · grill Q1"] -.- N2
+  K1["🛡 Account removed, keys revoked · A.5.18 · planned"] -.-x N1
+  K2["🛡 Second approval required · A.8.32 · planned"] -.-x N3
+  K3["🛡 Alert on repo changes · A.8.16 · planned"] -.-x A
+  classDef source fill:#111418,stroke:#111418,color:#fff
+  classDef hop fill:#FAFAFA,stroke:#D9DBDE,color:#111418
+  classDef asset fill:#2F5BFF,stroke:#2F5BFF,color:#fff
+  classDef impact fill:#F8E6E9,stroke:#C4314B,color:#111418
+  classDef weak fill:#FAFAFA,stroke:#C4314B,stroke-dasharray:3 3,color:#C4314B
+  classDef control fill:#E4F1E9,stroke:#2E7D4F,color:#2E7D4F
+  class S source
+  class N1,N2,N3 hop
+  class A asset
+  class F impact
+  class W1,W2,W3,W4 weak
+  class K1,K2,K3 control
+</pre></div>
+</details>
+</section>
+
+<section><h2>— Score</h2>
+<div class="score">
+  <div class="scroll"><table style="min-width:420px">
+    <tr><th></th><th>Severity</th><th>Likelihood</th><th>Level</th></tr>
+    <tr><td>Inherent</td><td>G4 critical</td><td>V3 likely</td><td><span class="tag high">G4·V3 high</span> above appetite</td></tr>
+    <tr><td>Residual</td><td>G4 critical</td><td>V1 unlikely</td><td><span class="tag medium">G4·V1 medium</span> within appetite</td></tr>
+  </table>
+  <p>Severity stays G4: if the code is changed, the damage is the same. The controls cut the likelihood: the account goes, and no single push reaches production.</p></div>
+  <div aria-label="Score grid: inherent G4 V3, residual G4 V1">
+    <div class="grid">
+      <span></span><span>V1</span><span>V2</span><span>V3</span><span>V4</span>
+      <span>G4</span><span class="c medium">○</span><span class="c high">←</span><span class="c high">●</span><span class="c high"></span>
+      <span>G3</span><span class="c medium"></span><span class="c medium"></span><span class="c high"></span><span class="c high"></span>
+      <span>G2</span><span class="c low"></span><span class="c low"></span><span class="c medium"></span><span class="c medium"></span>
+      <span>G1</span><span class="c low"></span><span class="c low"></span><span class="c medium"></span><span class="c medium"></span>
+    </div>
+    <div class="meta" style="margin-top:8px"><span>● today</span><span>○ after fixes</span></div>
+  </div>
+</div>
+</section>
+
+<section><h2>— Treatment</h2>
+<p><b>Reduce.</b> The inherent level is high and the appetite caps residual risk at medium. Control 1 costs nothing and closes the way in today.</p>
+<div class="scroll"><table>
+  <tr><th>#</th><th>Control</th><th>Due</th><th>ISO 27001</th><th>NIS2</th><th>DORA</th><th>GDPR</th></tr>
+  <tr><td>1</td><td>Remove the account, revoke its tokens, SSH and deploy keys, audit its pushes since departure</td><td class="ref">2026-10-30</td><td class="ref">A.5.18, A.8.15</td><td class="ref">21(2)(i)</td><td class="ref">9(4)(c)</td><td class="ref">32(1)(b)</td></tr>
+  <tr><td>2</td><td>Leaver process: an HR departure removes GitHub access the same day, through SSO</td><td class="ref">2026-11-30</td><td class="ref">A.5.16, A.6.5</td><td class="ref">21(2)(i)</td><td class="ref">9(4)(c)</td><td class="ref">32(1)(b)</td></tr>
+  <tr><td>3</td><td>Payment repo: second approval required, no bypass, owners named per folder</td><td class="ref">2026-11-13</td><td class="ref">A.8.4, A.8.32</td><td class="ref">21(2)(e)</td><td class="ref">9(4)(e)</td><td class="ref">25(1), 32</td></tr>
+  <tr><td>4</td><td>Security key or authenticator app for GitHub, no SMS</td><td class="ref">2026-11-30</td><td class="ref">A.8.5</td><td class="ref">21(2)(j)</td><td class="ref">9(4)(d)</td><td class="ref">32(1)(b)</td></tr>
+  <tr><td>5</td><td>Code-access review every quarter (today: every 6 months)</td><td class="ref">2026-11-30</td><td class="ref">A.5.18</td><td class="ref">21(2)(i)</td><td class="ref">9(4)(c)</td><td class="ref">32(1)(d)</td></tr>
+  <tr><td>6</td><td>Alert on pushes and setting changes to the payment repo</td><td class="ref">2026-11-13</td><td class="ref">A.8.15, A.8.16</td><td class="ref">21(2)(b)</td><td class="ref">10</td><td class="ref">33</td></tr>
+</table></div>
+<p>Already in place: MFA for all staff (SMS allowed) and a 6-monthly privileged-account review (access-control policy v2.1). Neither stopped this account.</p>
+</section>
+
+<section><h2>— Decisions</h2>
+<p>Trace: <a href="../traces/2026-10-30-r-004-former-dev-github-write.md">2026-10-30-r-004-former-dev-github-write.md</a>. Calls made without the user:</p>
+<ul>
+  <li>Residual score G4·V1 medium.</li>
+  <li>All 6 controls kept: the user chose reduce without dropping any.</li>
+  <li>Scenario and path kept as drawn; the user corrected nothing.</li>
+  <li>Leaver process (2), security key (4) and quarterly review (5) in the table only, not on the path.</li>
+  <li>DORA Art. 9(4)(d) and 9(4)(e) citations to confirm against the final text.</li>
+</ul>
+</section>
+</main>
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({ startOnLoad: true, theme: "base", fontFamily: "Geist, system-ui" });
+</script>
+</body></html>

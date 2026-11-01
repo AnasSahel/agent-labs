@@ -1,0 +1,15 @@
+{
+  "name": "plainfile",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A read-only GRC dashboard over a git repo of markdown files. The grc/ folder stays the database.",
+  "type": "module",
+  "bin": { "plainfile": "src/cli.js" },
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "start": "node src/cli.js serve",
+    "build": "node src/cli.js build",
+    "test": "node --test test/*.test.js"
+  },
+  "license": "UNLICENSED"
+}
