@@ -8,92 +8,87 @@ metadata:
   credits: Build phase of Anthropic's AI-native SDLC playbook (https://claude.com/resources/articles/the-ai-native-sdlc-playbook)
 ---
 
-Turn an approved **spec** (`specs/<id>-<slug>.md`, from the factory-design skill) into code, in two halves with one gate between them. Nothing is implemented without an accepted plan.
+Turn an approved **spec** (`specs/<id>-<slug>.md`, from factory-design) into code, in two halves with one gate between them. Nothing is implemented without an accepted plan.
 
-1. **Plan**: read the spec and the code without changing either, and write the **plan**, `specs/<id>-<slug>/plan.md`: the files that change, the order of the work, the risks, and the tests that prove the change. A good plan is one a developer who never saw this conversation could implement alone.
-2. **Gate**: the user accepts the plan, and the tech lead too when the change is higher risk.
-3. **Build**: implement the plan in one pass, tests included, on the same branch. When the code has to depart from the plan, the plan changes in the same commit, so the merged code still matches it.
+1. **Plan**: read the spec and the code, change neither, and write `specs/<id>-<slug>/plan.md`: files, order, risks, and the test that proves each criterion. A developer who never saw this conversation could implement it alone.
+2. **Gate**: the user accepts the plan, and the tech lead too for a higher-risk change.
+3. **Build**: implement the plan in one pass, tests included. A departure from the plan updates it in the same commit.
 
-Everything happens on one branch, `<id>-<slug>`, and reaches the default branch only through its pull request: never push to the default branch.
+All work is on one branch, `<id>-<slug>`, and reaches the default branch only through its pull request. You write the plan and implement it; once you believe it's done, the `verifier` in `agents/` checks it as a fresh subagent, so its verdict isn't shaped by the code's assumptions.
 
-You write the plan and you implement it: the plan's author keeps it true. Once you believe the work is done, the `verifier` in this skill's `agents/` folder checks it: start it as a fresh subagent with its file as its instructions, so its verdict isn't shaped by the assumptions behind the code.
-
-The skill works with any **tracker**. It needs three operations: read an issue with its comments, comment, and set labels (or the tracker's own fields). And with any **code host**:
+The **tracker** needs three operations: read an issue with its comments, comment, and set labels (or the tracker's own fields). With no tool for it in this session, say so and stop.
 
 | Tracker or host | Tool |
 |---|---|
-| GitHub | `gh` CLI, with `--repo <owner/name>`: issues, and a draft pull request |
-| GitLab | `glab` CLI: issues, and a draft merge request |
-| Linear, Plane, Jira… | its MCP server or CLI, when one is connected |
-| Files | the intent file is the issue: its state is its front matter `status`, never a label; comment by appending `## Comment` with the template's body under it, its own heading dropped (edit that section in place). Once the branch exists, write and read the intent on the branch: its state reaches the default branch with the pull request |
+| GitHub | `gh` CLI with `--repo <owner/name>`: issues, draft pull request |
+| GitLab | `glab` CLI: issues, draft merge request |
+| Linear, Plane, Jira… | its MCP server or CLI, when connected |
+| Files | the intent file is the issue: its state is its front matter `status`, never a label; comment by appending `## Comment` (template body, own heading dropped; edit in place). Once the branch exists, read and write the intent there: its state reaches the default branch with the pull request |
 | No remote | the branch is the delivery: no push, no pull request |
-
-When the tracker has no tool in this session, say so and stop.
 
 ## Models
 
-Each step runs on the model that fits its cost of error. Defaults: the plan (Part 1) and the `verifier` on `opus`; the code and tests (Part 2) on `sonnet`. A session on a weaker model at Part 1 starts a fresh subagent on `opus` to draft the plan, and one on `opus` at Part 2 may hand the implementation to a `sonnet` subagent. A repo overrides one in its `AGENTS.md` or `CLAUDE.md` with `factory: model <step> <opus | sonnet | haiku>`; read those lines at Load and pass the model when starting a subagent. Say in the reply when a step ran on a weaker model than its default.
+Defaults: the plan and the `verifier` on `opus`, the code and tests on `sonnet`. A weaker session at Part 1 drafts the plan in an `opus` subagent; an `opus` session at Part 2 may hand the code to a `sonnet` subagent. A repo overrides with `factory: model <step> <opus | sonnet | haiku>` in its `AGENTS.md` or `CLAUDE.md`. Say when a step ran below its default.
 
-## When it plans, when it builds
+## States
 
 ```
 designed ──Part 1: plan──▶ needs-plan ──gate──▶ planned ──Part 2: build──▶ built
                          (plan mode, read-only)             (code + tests)    ↘ blocked
 ```
 
-Each run starts from the issue's state:
-
 | State | This run |
 |---|---|
-| `designed` | Part 1: steps 1 to 3 |
-| `needs-plan` | the gate, step 3: read the comments and the pull request's review for a decision |
-| `planned`, `building`, `blocked` | Part 2: steps 4 to 6 (read every comment since the last plan or build comment) |
+| `designed` | Part 1, steps 1 to 3 |
+| `needs-plan` | the gate (step 3): read the comments and the pull request's review for a decision |
+| `planned`, `building`, `blocked` | Part 2, steps 4 to 6, reading every comment since the last plan or build comment |
 
-In the conversation, one run does both parts: Part 2 starts as soon as the plan is accepted. Unattended, a run stops at `needs-plan`; the run after the plan is accepted builds it. Any other state: say where it stands and stop, e.g. "42 is at `needs-design`: run factory-design first". An issue at `split` is built part by part: name the parts and stop.
+In the conversation one run does both parts. Unattended, it stops at `needs-plan` and the next run builds. Any other state: say where it stands and stop ("42 is at `needs-design`: run factory-design first"). At `split`, name the parts and stop.
 
 ## Part 1 · Plan
 
-1. **Load.** Find the tracker (named in the request → the repo's `AGENTS.md`, `CLAUDE.md` or README → an `intent/` folder → none) and the code host (the repo's remote). Read the issue and its comments, the spec and its frames, the intent it came from, the repo's `AGENTS.md` or `CLAUDE.md`, and how the project builds, tests and lints (README, scripts, CI config). Read the settings there: the **tech lead** (`factory-design: tech lead <who>`; unnamed, the user). Done when you know the state, the criteria, the constraints, and the commands, or that a command is missing.
+1. **Load.** Find the tracker (the request → `AGENTS.md`, `CLAUDE.md` or README → an `intent/` folder → none) and the code host (the remote). Read the issue and comments, the spec and its frames, the intent, `AGENTS.md` or `CLAUDE.md`, and how the project builds, tests and lints. Read the **tech lead** (`factory-design: tech lead <who>`; unnamed, the user). Done when you know the state, criteria, constraints and commands, or that a command is missing.
 
-2. **Draft the plan, in plan mode.** Enter the harness's plan mode now when it has one (Claude Code: `EnterPlanMode`): it keeps this part read-only. Without one, or unattended, change no file, by rule. When the code the spec touches is too large to read comfortably in one context, hand an explorer subagent (the harness's built-in one) the spec's structure and get back the map of the files involved; you still write the plan. From the spec's approach, structure, data and build order, and the code as it is today, write:
-   - **Files**: each path that changes or is added, what changes, and the criteria and constraints it serves.
-   - **Order**: every criterion, the foundation first, each with its files and its tests. Follow the spec's build order; a different one says why.
-   - **Tests**: for each criterion and each constraint, the test that proves it, its type (unit, integration, end to end) and the public entry point it goes through (a page, a route, a command, an exported function). Every number in a criterion is tested on both sides of its limit. A bug fix starts with a test that reproduces the bug.
-   - **Risks**: what could break while building or shipping it (a migration, a changed interface, data already stored, a slow query, a dependency), each with how the plan keeps it safe. A risk is described by its effect, never as a way to attack the project.
-   - **Commands**: build, test, lint. When the project has none yet (no stack, no test runner), propose the smallest setup as the plan's first step: it's the user's call at the gate.
+2. **Draft the plan.** Enter plan mode when the harness has it (`EnterPlanMode`); otherwise, and unattended, change no file. When the code is too large for one context, have the built-in explorer subagent map the files; you still write the plan. Write:
+   - **Files**: each path changed or added, what changes, the criteria and constraints it serves.
+   - **Order**: every criterion, foundation first, with its files and tests. Follow the spec's build order; a different one says why.
+   - **Tests**: per criterion and constraint, the test, its type and the public entry point it goes through (page, route, command, exported function). Test every number on both sides of its limit. A bug fix starts with a test that reproduces it.
+   - **Risks**: what could break while building or shipping (migration, changed interface, stored data, slow query, dependency), each with how the plan keeps it safe. Describe effects, never ways to attack the project.
+   - **Commands**: build, test, lint. With none, make the smallest setup the plan's first step, for the user to decide at the gate.
    - **Assumptions**: each unknown with the plainest default.
 
-   When the user is in the conversation, interview them on what the spec and the code can't answer: at most 3 questions per round, each with a recommended answer, and fold the answers in. Unattended, ask nothing: every unknown is an assumption. When the spec and the code contradict each other, say so in the plan, with your recommendation. Done when every criterion and constraint has its place in the order and its test, and the plan names no file you haven't read or placed.
+   In the conversation, ask only what the spec and code can't answer: at most 3 questions per round, each with a recommended answer. Unattended, ask nothing. If the spec and the code contradict, say so with your recommendation. Done when every criterion and constraint has a place in the order and a test, and no file is named that you haven't read or placed.
 
-3. **Gate, then publish.** In the **fast lane** (factory-run found a size `S`, non-risky change) the plan is still written and published, but it needs no acceptance: set the state `planned` and go on to Part 2. A plan that turns out to need a migration or a public interface change leaves the fast lane and waits for the gate below. Who accepts: the user, and the tech lead too when the change is higher risk: as the repo's `AGENTS.md` or `CLAUDE.md` classifies risk when it does (the organization's call); otherwise when the spec has a `high` finding or the plan has a migration or changes a public interface (an API, a file format, a command's options). On the tracker or in the pull request's review, a decision counts only from someone who accepts.
+3. **Gate, then publish.** In the **fast lane** (factory-run found a size `S`, non-risky change) publish the plan without acceptance, set `planned` and go to Part 2; a migration or public-interface change leaves the fast lane and takes the gate below.
 
-   - **In the conversation**: show the plan in one message: the order, the tests, the risks, the assumptions, and the setup to choose when there is one; in plan mode, that's `ExitPlanMode`, and its approval is the gate. "yes" accepts the plan with every recommendation. On a change, revise from step 2 and show it again; on reject, write the reason under the plan's Assumptions as the user's words and revise. Once accepted, publish it with who and when in its front matter, set the state `planned`, and go on to Part 2. When the tech lead must accept too and isn't in the conversation, publish it at `needs-plan` and stop.
-   - **Unattended**: publish the plan, set the state `needs-plan`, and stop: the gate runs when they answer.
-   - **At `needs-plan`** (a later run): read the decisions. Accepted by everyone who must: write who and when in the plan's front matter, commit it on the branch, set the state `planned`, and go on to Part 2. A change or a reject: revise from step 2, and publish again.
+   The user accepts, and the tech lead too when the change is higher risk: as the repo's `AGENTS.md` or `CLAUDE.md` classifies it, otherwise when the spec has a `high` finding or the plan has a migration or changes a public interface (API, file format, command options). A decision counts only from someone who accepts.
+   - **In the conversation**: show the order, tests, risks, assumptions and any setup to choose, in one message (in plan mode, `ExitPlanMode` is the gate). "yes" accepts every recommendation. A change: revise from step 2. A reject: write the reason under Assumptions as the user's words and revise. Once accepted, publish with who and when in the front matter, set `planned`, go to Part 2. If the tech lead must accept and isn't here, publish at `needs-plan` and stop.
+   - **Unattended**: publish, set `needs-plan`, stop.
+   - **At `needs-plan`**: read the decisions. All accepted: record who and when, commit, set `planned`, go to Part 2. Otherwise revise from step 2 and publish again.
 
-   **Publish** means: create the branch `<id>-<slug>` from the default branch in its own worktree (`git worktree add`); write `specs/<id>-<slug>/plan.md` with the template in references/templates.md and commit it alone, as the branch's first commit: `Plan · <title>` (with files, the intent's state and comment come in the next commit). Push the branch when there's a remote and open a draft pull request (merge request on GitLab) titled after the issue, with the plan comment as its body: the plan is reviewed there, line by line. Comment on the issue with the plan comment and the pull request's link, editing it in place when it exists.
+   **Publish**: create branch `<id>-<slug>` from the default branch in its own worktree (`git worktree add`); write `specs/<id>-<slug>/plan.md` from `plan-template` and commit it alone, first on the branch, as `Plan · <title>` (with files, the intent's state and comment come in the next commit). Push when there's a remote and open a draft pull request (merge request on GitLab) titled after the issue, the plan comment as its body. Comment on the issue with the plan comment and the link, editing in place.
 
-   Done when the plan is the branch's first commit, and the issue is `planned` or waits at `needs-plan` with the plan comment.
+   Done when the plan is the branch's first commit and the issue is `planned` or at `needs-plan` with the plan comment.
 
 ## Part 2 · Build
 
-Starts only from an accepted plan: the state is `planned`, `building` or `blocked`.
+Starts only from `planned`, `building` or `blocked`.
 
-4. **Build.** Set the state `building`, so no other session starts the same issue. Work in the branch's worktree (add it again when it's gone), and skip each step whose commit is already on the branch. Follow the plan's order, one commit per criterion, named after it: `AC<n> · <name>`.
-   - Write each criterion's tests with its code, and run them: each must fail for the expected reason before the code exists, and pass after.
-   - A bug fix: commit the failing test that reproduces it on its own first, then make it pass without editing that test: other tests may join its file, but its own lines stay as committed (check with `git diff <that commit>`).
-   - When a test fails, fix the code, not the test. A test that is wrong is a departure.
+4. **Build.** Set `building`, so no other session takes the issue. Work in the branch's worktree (re-add it if gone) and skip steps whose commit exists. Follow the plan's order, one commit per criterion: `AC<n> · <name>`.
+   - Write each criterion's tests with its code. Each fails for the expected reason before the code and passes after.
+   - Bug fix: commit the reproducing failing test alone first, then make it pass without editing its lines (check `git diff <that commit>`).
+   - A failing test means fix the code. A wrong test is a departure.
    - Keep every constraint of the spec, with its test.
-   - Use what the project already has. A new dependency the plan doesn't name is a departure; read secrets from environment variables and list their names in the project's example env file.
-   - A criterion that changes a screen, when the spec has a mockup (`specs/<id>-<slug>/frames.html` or `frames.png`) and a headless browser is at hand: start the app, screenshot each state the frames show, compare it with the mockup, and adjust. 2 or 3 rounds is normal, 3 at most. Commit the last screenshots under `specs/<id>-<slug>/screens/`; a gap left after 3 rounds goes under the pull request's "Not covered by tests".
-   - When the same correction comes up twice (a convention the code expects, a command that needs a flag, a mistake you had to undo), it belongs in the repo's agent instructions, `AGENTS.md` or `CLAUDE.md` (whichever it has; `AGENTS.md` when it has neither), so the next session starts with it: propose the line under the pull request's "For AGENTS.md or CLAUDE.md". Propose there too, when that file lacks them, the build, test and lint commands each with a sample of healthy output, and the definition of done: all three pass and their output is shown. Never edit that file yourself.
-   - A **departure** (a file, an order, a test or a dependency the plan didn't say) updates `plan.md` in the same commit, with a line under Departures: what changed and why. A departure that changes a criterion, a constraint, or what the gate accepted is a question: go to step 6.
+   - Use what the project has. A dependency the plan doesn't name is a departure. Read secrets from environment variables and list their names in the example env file.
+   - For a screen with a mockup (`specs/<id>-<slug>/frames.html` or `.png`) and a headless browser: start the app, screenshot each state, compare, adjust, at most 3 rounds. Commit the last screenshots to `specs/<id>-<slug>/screens/`; a gap left goes under "Not covered by tests".
+   - A correction needed twice (a convention, a command flag, a mistake undone) belongs in `AGENTS.md` or `CLAUDE.md` (`AGENTS.md` when neither exists): propose the line under the pull request's "For AGENTS.md or CLAUDE.md", with the build, test and lint commands (each with sample healthy output) and the definition of done (all three pass, output shown) when missing. Never edit that file yourself.
+   - A **departure** (a file, order, test or dependency the plan didn't say) updates `plan.md` in the same commit with a line under Departures: what and why. One that changes a criterion, a constraint or what the gate accepted is a question: go to step 6.
 
    Done when every criterion has its commit.
 
-5. **Done.** Run the build, the full test suite and the lint, and show their output: the work is done only when all three pass. Then hand the `verifier` the spec, the plan, the worktree and the commands, how to start the app included. It runs once. For each failed check, fix the code (with a failing test first when one can show the problem) and run the three commands again; don't run the verifier a second time. A failure you can't fix without changing what the gate accepted goes to step 6. Then push the branch when there's a remote and replace the draft pull request's body with the PR template in references/templates.md; it stays a draft until it's verified. Comment on the issue with the build comment, editing it in place when it exists, and set the state `built`. On a public repo, the branch, the commits and the pull request name behaviours, never a finding (no `F<n>`, no finding text): the spec's constraints are already plain requirements. Done when the issue is `built` with its build comment pointing to the pull request or the branch.
+5. **Done.** Run build, the full tests and lint, and show the output: all three must pass. Then hand the `verifier` the spec, plan, worktree and commands (how to start the app included). It runs once. Fix each failed check (with a failing test first when one can show it), rerun the three commands, and don't rerun the verifier. A failure you can't fix without changing what the gate accepted goes to step 6. Then push, replace the draft pull request's body with `pr-template` (it stays a draft until verified), comment on the issue with `build-comment` (edit in place) and set `built`. On a public repo, branch, commits and pull request name behaviours, never a finding (no `F<n>`, no finding text). Done when the issue is `built` with its comment pointing to the pull request or branch.
 
-6. **Blocked.** When a question only a person can answer comes up (a departure from what was accepted, a criterion no test can check, 3 failed tries at the same step), commit the steps that pass, push the branch when there's a remote, comment on the issue with the blocked comment, and set the state `blocked`. Once answered, running the skill again resumes at the first step without a commit. Done when the issue is `blocked` with the question on it.
+6. **Blocked.** When only a person can answer (a departure from what was accepted, a criterion no test can check, 3 failed tries at one step), commit what passes, push, comment with `blocked-comment`, and set `blocked`. Running the skill again resumes at the first step without a commit. Done when the issue is `blocked` with the question on it.
 
 Reply with the links (issue, plan, pull request or branch) and where it stands: `needs-plan` and who must accept, `built` with the commands' results and what the tests can't cover, or `blocked` with the question.
 
