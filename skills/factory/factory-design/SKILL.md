@@ -53,7 +53,7 @@ Each step runs on the model that fits its cost of error. Defaults: the spec (thi
 
 7. **Split.** Look for 2 to 4 groups of criteria that each give users something that works on its own. Propose a split when the change is size `L`, or when the change has a `high` finding and a group carries none, so it could ship with less scrutiny. For each part, in build order (safest first): title, problem in one sentence, size, its criteria and findings by ID, the parts it comes after. A criterion that spans parts is reworded so each part tests its share alone, written in full and marked `(reworded)`. Done when every criterion and finding has a part, or there's no split.
 
-8. **Publish.** Write `specs/<id>-<slug>.md`, with the intent's id and slug, using the template below. With a code host, create the branch `spec/<id>-<slug>` from the default branch in its own worktree (`git worktree add`), commit the spec with the mockup and its image there, push, and open a **draft** pull request titled `Spec · <title>`, its body the comment template and the issue's reference without a closing keyword (`Refs #42`, never `Closes #42`). With no code host, commit them on the default branch. Comment on the issue with the comment template and the pull request's link, criteria in full, the mockup's image when there is one, editing that comment in place when it exists, and label it `needs-design`.
+8. **Publish.** Write `specs/<id>-<slug>.md`, with the intent's id and slug, using the template in references/templates.md. With a code host, create the branch `spec/<id>-<slug>` from the default branch in its own worktree (`git worktree add`), commit the spec with the mockup and its image there, push, and open a **draft** pull request titled `Spec · <title>`, its body the comment template and the issue's reference without a closing keyword (`Refs #42`, never `Closes #42`). With no code host, commit them on the default branch. Comment on the issue with the comment template and the pull request's link, criteria in full, the mockup's image when there is one, editing that comment in place when it exists, and label it `needs-design`.
 
    **Public repo or tracker** (or unknown): no finding ever reaches it. The committed spec, the pull request and the comment keep the constraints as plain requirements, with no `For` column, but drop the Findings section and the questions, and say "Review notes kept privately."; write the findings to the private path the repo's `AGENTS.md` or `CLAUDE.md` names, otherwise `~/.claude/factory-design/<repo>/<id>-<slug>.md`, and say where in the reply.
 
@@ -65,108 +65,6 @@ Each step runs on the model that fits its cost of error. Defaults: the spec (thi
 
 Reply with the links (issue, spec pull request or spec, each part) and where it stands: `designed`, `split`, or `needs-design` with what waits, and for whom.
 
-<spec-template>
+## Templates
 
----
-issue: <tracker reference>
-intent: <path of the intent, when there is one>
-title: <title>
-size: <S | M | L>
-status: <needs-design | designed>
----
-
-# <title>
-
-## Problem and users
-
-## Goals · Non-goals
-
-<size M or bigger>
-
-## Acceptance criteria
-
-**AC1 · <name>**
-- Given <context>
-- When <action>
-- Then <observable result>
-
-## Approach
-
-**Chosen**: <option>. <why, in one or two sentences>
-
-| Option | How | Cost | Risk |
-|---|---|---|---|
-
-## Structure
-
-| Path | Holds | Criteria |
-|---|---|---|
-
-## Data
-
-## Build order
-
-1. **AC<n> · <name>**: <why it comes here>
-
-## Frames
-
-Mockup: [frames.html](<id>-<slug>/frames.html) <and its image, when rendered>
-
-<the ui-designer's text frames, or the flowchart; drop the section when there's neither>
-
-## Constraints
-
-| ID | For | Constraint | Where | Test |
-|---|---|---|---|---|
-| C1 | F1 | <safe behaviour, one line> | <file or module> | <how a test checks it> |
-
-A constraint you recommend in a question is listed too, its ID marked `(proposed, Q<n>)` until the question is settled.
-
-## Findings
-
-| ID | From | Finding | Level | Answer | Status |
-|---|---|---|---|---|---|
-| F1 | security | <effect, never an attack> | <level> | C1 | open |
-
-Status is `open` (a constraint answers it, waiting for code), `needs-decision` (waits for its owner), `mitigated` (a test proves its constraint), `accepted` (by its owner, with the date, or "below threshold") or `dropped` (the scope changed). A finding partly answered carries both, e.g. `open (C1) · needs-decision (Q2)`. "No finding." when there's none.
-
-## Questions
-
-<one per decision: **Q1 · @owner** (and the tech lead, for a high finding): the question, the findings it settles, your recommended answer; "None." when nothing waits>
-
-## Assumptions
-
-## Proposed split
-
-<when step 7 proposes one>
-
-| Part | Title | Criteria | Findings | Size | After |
-|---|---|---|---|---|---|
-
-## Open questions
-
-</spec-template>
-
-<comment-template>
-
-## Spec
-
-**Criteria** <n> · **Constraints** <n> · **Questions** <n> · **Spec** <link or path>
-
-<details>
-<summary>Criteria (<n>)</summary>
-
-**AC1 · <name>**
-- Given <context>
-- When <action>
-- Then <observable result>
-
-</details>
-
-<when there's a mockup:> ![Frames](<link to frames.png>) · [mockup](<link to frames.html>)
-
-<when questions wait:> **Waiting for** <each owner, mentioned in the tracker's way>: Q1, Q2…
-
-<when a split is proposed:> **Split proposed** into <n> parts: <part titles>.
-
-</comment-template>
+Read [references/templates.md](references/templates.md) when a step writes one: `spec-template`, `comment-template`.

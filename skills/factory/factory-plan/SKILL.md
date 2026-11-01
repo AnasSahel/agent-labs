@@ -44,7 +44,7 @@ The go needs a **code host**: the repo's remote, with a tool that opens pull req
 
 6. **Publish the issue.** Create each issue with its kind, priority and size: the tracker's native field when it has one (Linear's priority, for instance), labels `kind:<kind>`, `priority:<priority>`, `size:<size>` otherwise. With a code host, add `needs-go`: the issue waits for its intent's merge. Reuse existing labels; create only the missing ones, so existing ones keep their colors. Done when each issue exists and you have its id.
 
-7. **Propose the intent.** Write `intent/<id>-<slug>.md` with the repo's own `intent/TEMPLATE.md` when it has one (the organization's template: fill only its sections and fields, plus `status` with files and `## Decisions` at the end when there's a trace), otherwise the template below, and, when factory-brainstorm ran, its trace next to it as `intent/<id>-<slug>.decisions.md`, linked from the intent's `## Decisions`. Name it this way:
+7. **Propose the intent.** Write `intent/<id>-<slug>.md` with the repo's own `intent/TEMPLATE.md` when it has one (the organization's template: fill only its sections and fields, plus `status` with files and `## Decisions` at the end when there's a trace), otherwise the template in references/templates.md, and, when factory-brainstorm ran, its trace next to it as `intent/<id>-<slug>.decisions.md`, linked from the intent's `## Decisions`. Name it this way:
    - `<id>`: the issue's id as the tracker shows it, without `#`: `42` on GitHub, `ENG-42` on Linear or Jira, `WEB-42` on Plane. For files, the next free 3-digit number in `intent/` (`007`).
    - `<slug>`: from the title, lowercase, accents dropped (`é` → `e`), punctuation dropped, filler words dropped (articles, prepositions, auxiliaries: a, the, of, is, when, le, de, est…), at most 5 words joined by `-`. "Notes are lost when the page is reloaded" → `notes-lost-page-reloaded`.
 
@@ -63,50 +63,6 @@ A later run on an issue whose intent pull request exists reads the decision from
 - **closed without merge**: a no. Close the issue with the reason from the pull request, when there's one.
 - **open, nothing new**: it waits for the user's merge; say so.
 
-<intent-template>
+## Templates
 
----
-issue: <tracker reference>
-title: <title>
-source: <source>
-kind: <kind>
-priority: <priority>
-size: <size>
-status: <files only: open; with no code host, needs-go | open>
----
-
-# <title>
-
-## Problem
-
-<who is affected, which systems are involved, what goes wrong>
-
-## Why now
-
-<value or cost of waiting>
-
-## Success looks like
-
-<what the affected people can do once it's solved, observable>
-
-## Out of scope
-
-<what this intent doesn't cover>
-
-## Constraints
-
-<what any solution must respect: deadline, budget, rules, systems it can't change; "None known" when there are none>
-
-## Open questions
-
-<what's still unknown, for the spec to answer; "None" when there are none>
-
-## Evidence
-
-<logs, links, screenshots; the original proposal when the request came as a solution>
-
-## Decisions
-
-<link to intent/<id>-<slug>.decisions.md, when factory-brainstorm ran; otherwise drop this section>
-
-</intent-template>
+Read [references/templates.md](references/templates.md) when a step writes one: `intent-template`.

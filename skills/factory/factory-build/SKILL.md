@@ -1,6 +1,6 @@
 ---
 name: factory-build
-description: Build phase. Turn an approved spec into code in two halves: first a plan (plan.md, the files that change, the order, the risks and the tests that prove each criterion), drafted in plan mode without touching the code and accepted by the user (and the tech lead for a high-risk change); then the code and its tests, in one pass on a branch, done only when build, tests and lint pass and a verifier agent, in a fresh context, has run the app against the spec, with a pull request when the repo has a code host. Works with any tracker (GitHub, Linear, Plane, a folder in the repo…) and any code host (GitHub, GitLab, none). Use when the user asks to plan or build an issue, a spec or an intent, or to implement a designed feature.
+description: "Build phase. Turn an approved spec into code in two halves: first a plan (plan.md, the files that change, the order, the risks and the tests that prove each criterion), drafted in plan mode without touching the code and accepted by the user (and the tech lead for a high-risk change); then the code and its tests, in one pass on a branch, done only when build, tests and lint pass and a verifier agent, in a fresh context, has run the app against the spec, with a pull request when the repo has a code host. Works with any tracker (GitHub, Linear, Plane, a folder in the repo…) and any code host (GitHub, GitLab, none). Use when the user asks to plan or build an issue, a spec or an intent, or to implement a designed feature."
 metadata:
   author: Anas Sahel
   version: 1.0.0 # x-release-please-version
@@ -71,7 +71,7 @@ In the conversation, one run does both parts: Part 2 starts as soon as the plan 
    - **Unattended**: publish the plan, set the state `needs-plan`, and stop: the gate runs when they answer.
    - **At `needs-plan`** (a later run): read the decisions. Accepted by everyone who must: write who and when in the plan's front matter, commit it on the branch, set the state `planned`, and go on to Part 2. A change or a reject: revise from step 2, and publish again.
 
-   **Publish** means: create the branch `<id>-<slug>` from the default branch in its own worktree (`git worktree add`); write `specs/<id>-<slug>/plan.md` with the template below and commit it alone, as the branch's first commit: `Plan · <title>` (with files, the intent's state and comment come in the next commit). Push the branch when there's a remote and open a draft pull request (merge request on GitLab) titled after the issue, with the plan comment as its body: the plan is reviewed there, line by line. Comment on the issue with the plan comment and the pull request's link, editing it in place when it exists.
+   **Publish** means: create the branch `<id>-<slug>` from the default branch in its own worktree (`git worktree add`); write `specs/<id>-<slug>/plan.md` with the template in references/templates.md and commit it alone, as the branch's first commit: `Plan · <title>` (with files, the intent's state and comment come in the next commit). Push the branch when there's a remote and open a draft pull request (merge request on GitLab) titled after the issue, with the plan comment as its body: the plan is reviewed there, line by line. Comment on the issue with the plan comment and the pull request's link, editing it in place when it exists.
 
    Done when the plan is the branch's first commit, and the issue is `planned` or waits at `needs-plan` with the plan comment.
 
@@ -91,129 +91,12 @@ Starts only from an accepted plan: the state is `planned`, `building` or `blocke
 
    Done when every criterion has its commit.
 
-5. **Done.** Run the build, the full test suite and the lint, and show their output: the work is done only when all three pass. Then hand the `verifier` the spec, the plan, the worktree and the commands, how to start the app included. It runs once. For each failed check, fix the code (with a failing test first when one can show the problem) and run the three commands again; don't run the verifier a second time. A failure you can't fix without changing what the gate accepted goes to step 6. Then push the branch when there's a remote and replace the draft pull request's body with the PR template below; it stays a draft until it's verified. Comment on the issue with the build comment, editing it in place when it exists, and set the state `built`. On a public repo, the branch, the commits and the pull request name behaviours, never a finding (no `F<n>`, no finding text): the spec's constraints are already plain requirements. Done when the issue is `built` with its build comment pointing to the pull request or the branch.
+5. **Done.** Run the build, the full test suite and the lint, and show their output: the work is done only when all three pass. Then hand the `verifier` the spec, the plan, the worktree and the commands, how to start the app included. It runs once. For each failed check, fix the code (with a failing test first when one can show the problem) and run the three commands again; don't run the verifier a second time. A failure you can't fix without changing what the gate accepted goes to step 6. Then push the branch when there's a remote and replace the draft pull request's body with the PR template in references/templates.md; it stays a draft until it's verified. Comment on the issue with the build comment, editing it in place when it exists, and set the state `built`. On a public repo, the branch, the commits and the pull request name behaviours, never a finding (no `F<n>`, no finding text): the spec's constraints are already plain requirements. Done when the issue is `built` with its build comment pointing to the pull request or the branch.
 
 6. **Blocked.** When a question only a person can answer comes up (a departure from what was accepted, a criterion no test can check, 3 failed tries at the same step), commit the steps that pass, push the branch when there's a remote, comment on the issue with the blocked comment, and set the state `blocked`. Once answered, running the skill again resumes at the first step without a commit. Done when the issue is `blocked` with the question on it.
 
 Reply with the links (issue, plan, pull request or branch) and where it stands: `needs-plan` and who must accept, `built` with the commands' results and what the tests can't cover, or `blocked` with the question.
 
-<plan-template>
+## Templates
 
----
-issue: <tracker reference>
-spec: specs/<id>-<slug>.md
-status: <needs-plan | planned>
-accepted: <who, date; for a higher-risk change, the tech lead too>
----
-
-# Plan · <title>
-
-**Approach**: <the spec's chosen option, in one or two sentences>
-
-## Files
-
-| Path | Change | For |
-|---|---|---|
-| <path> | <add, change, remove: what> | AC1, C2 |
-
-## Order
-
-1. **AC1 · <name>**: <files> · tests: <test names>
-
-## Tests
-
-| For | Test | Type | Entry point |
-|---|---|---|---|
-| AC1 | <test name: case> | <unit, integration, end to end> | <page, route, command, function> |
-
-## Risks
-
-| Risk | Effect | Kept safe by |
-|---|---|---|
-
-"None." when there's none.
-
-## Commands
-
-- Build: `<command>`
-- Test: `<command>`
-- Lint: `<command>`
-
-## Assumptions
-
-## Departures
-
-<written while building: each change to this plan, and why; "None." until then>
-
-</plan-template>
-
-<plan-comment>
-
-## Plan
-
-**Steps** <n> · **Tests** <n> · **Risks** <n> · **Plan** <link or path>
-
-<details>
-<summary>Order (<n>)</summary>
-
-1. **AC1 · <name>**: <files>
-
-</details>
-
-**Waiting for** <who accepts, mentioned in the tracker's way>: reply "yes", or what to change.
-
-</plan-comment>
-
-<pr-template>
-
-Closes <issue reference>. Spec: <link> · Plan: <link>
-
-## Criteria
-
-- [x] **AC1 · <name>** · `<test file>`
-
-## Check it
-
-```
-<the build, test and lint commands, and their summary lines>
-```
-
-## Departures from the plan
-
-<each line from the plan's Departures, or "None.">
-
-## Not covered by tests
-
-<what no automated test can check, or "Nothing.">
-
-## Verifier
-
-**Verdict** <pass | fail> · **Checks** <n> · **App** <started | not started: why>
-
-<each failed check: what it saw, and the commit that fixed it>
-
-## For AGENTS.md or CLAUDE.md
-
-<each line proposed in step 4, or drop the section>
-
-</pr-template>
-
-<build-comment>
-
-## Build
-
-**Criteria** <n> · **Branch** `<branch>` · **Pull request** <link, or "none (no remote)"> · **Departures** <n>
-
-</build-comment>
-
-<blocked-comment>
-
-## Blocked in Build
-
-**Stopped at** <AC<n> · <name>, or "setup"> · **Branch** `<branch>`
-
-<the question, with your recommended answer>
-
-Answer here, then run the skill again.
-
-</blocked-comment>
+Read [references/templates.md](references/templates.md) when a step writes one: `plan-template`, `plan-comment`, `pr-template`, `build-comment`, `blocked-comment`.
