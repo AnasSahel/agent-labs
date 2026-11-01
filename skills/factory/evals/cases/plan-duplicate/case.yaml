@@ -1,0 +1,14 @@
+schema_version: "1.1"
+name: plan-duplicate
+description: "A request matching an open intent is a duplicate: comment on it, create nothing."
+tags: [factory-plan]
+context:
+  scaffold_script: scaffold.sh
+execution:
+  max_turns: 30
+  timeout_seconds: 900
+  allowed_tools: [Bash, Write, Edit, Read, Glob, Grep, Skill]
+  prompt: |
+    /factory:factory-plan Our users keep losing what they typed whenever they refresh the page. Please handle it.
+graders:
+  - {"name": "duplicate", "type": "llm", "weight": 2, "focus": "last_message", "criteria": "intent/001-notes-lost-page-reload.md is the same problem (notes lost on reload) and is open. PASS only if the agent says this is a duplicate of 001 and creates no new intent file."}

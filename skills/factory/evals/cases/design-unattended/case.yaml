@@ -1,0 +1,15 @@
+schema_version: "1.1"
+name: design-unattended
+description: "With an approved intent, design asks no question before the gate and writes the spec with assumptions."
+tags: [factory-design]
+context:
+  scaffold_script: scaffold.sh
+execution:
+  max_turns: 80
+  timeout_seconds: 900
+  allowed_tools: [Bash, Write, Edit, Read, Glob, Grep, Skill]
+  prompt: |
+    /factory:factory-design Design 004.
+graders:
+  - {"name": "no-questions-before-gate", "type": "llm", "weight": 3, "focus": "trace", "criteria": "PASS only if the agent asks the user no question before presenting the spec, and the spec lists acceptance criteria as Given/When/Then plus at least one assumption."}
+  - {"name": "calls-factory-design", "type": "tool_used", "tool": "Skill", "input_match": "\"skill\"\\s*:\\s*\"(factory:)?factory-design\"", "arm": "both"}

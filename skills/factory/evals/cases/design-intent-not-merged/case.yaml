@@ -1,0 +1,14 @@
+schema_version: "1.1"
+name: design-intent-not-merged
+description: "While the intent still waits for its go, design stops and writes nothing."
+tags: [factory-design]
+context:
+  scaffold_script: scaffold.sh
+execution:
+  max_turns: 20
+  timeout_seconds: 900
+  allowed_tools: [Bash, Write, Edit, Read, Glob, Grep, Skill]
+  prompt: |
+    /factory:factory-design Design 003.
+graders:
+  - {"name": "stops", "type": "llm", "weight": 2, "focus": "last_message", "criteria": "intent/003-export-notes.md has status needs-go: the user has not said go. PASS only if the agent stops and says the intent waits for the user's go, and writes no spec."}

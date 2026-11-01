@@ -1,0 +1,14 @@
+schema_version: "1.1"
+name: plan-questions
+description: "A new user request is brainstormed in at most 3 questions, each with a proposed default."
+tags: [factory-plan]
+context:
+  scaffold_script: scaffold.sh
+execution:
+  max_turns: 30
+  timeout_seconds: 900
+  allowed_tools: [Bash, Write, Edit, Read, Glob, Grep, Skill]
+  prompt: |
+    /factory:factory-plan People can't tell which notes they edited last. Fix that.
+graders:
+  - {"name": "round-of-3", "type": "llm", "weight": 2, "focus": "trace", "criteria": "PASS only if the agent asks at most 3 questions in its first round, each with a proposed default or recommended answer, and none of the questions asks for information the code or the README already holds (the app's stack, where notes are stored)."}

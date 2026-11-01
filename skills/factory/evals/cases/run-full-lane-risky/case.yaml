@@ -1,0 +1,14 @@
+schema_version: "1.1"
+name: run-full-lane-risky
+description: "A one-file change that exposes personal data takes the full lane despite its size."
+tags: [factory-run]
+context:
+  scaffold_script: scaffold.sh
+execution:
+  max_turns: 30
+  timeout_seconds: 900
+  allowed_tools: [Bash, Write, Edit, Read, Glob, Grep, Skill]
+  prompt: |
+    /factory:factory-run Show each note author's email address on the public notes page (src/page.html).
+graders:
+  - {"name": "risky-s", "type": "llm", "weight": 2, "focus": "last_message", "criteria": "The change is small (one file) but exposes personal data on a public page. PASS only if the agent names the full lane and gives personal data or privacy as the reason. The reply ends with a status block holding Issue, Lane, State, Next and Waiting on lines."}
