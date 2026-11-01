@@ -1,0 +1,15 @@
+schema_version: "1.1"
+name: run-where-is-it
+description: "On 'where does 007 stand', reads the state and answers with the status block, running nothing."
+tags: [factory-run]
+context:
+  scaffold_script: scaffold.sh
+execution:
+  max_turns: 20
+  timeout_seconds: 900
+  allowed_tools: [Bash, Write, Edit, Read, Glob, Grep, Skill]
+  prompt: |
+    /factory:factory-run Where does issue 007 stand?
+graders:
+  - {"name": "no-factory-build", "type": "tool_used", "tool": "Skill", "input_match": "\"skill\"\\s*:\\s*\"(factory:)?factory-build\"", "min": 0, "max": 0, "arm": "both"}
+  - {"name": "status-block", "type": "llm", "weight": 2, "focus": "last_message", "criteria": "intent/007-search-notes.md has status needs-design. PASS only if the reply says the issue is at needs-design and the next step is the design phase (factory-design). The reply ends with a status block holding Issue, Lane, State, Next and Waiting on lines."}
