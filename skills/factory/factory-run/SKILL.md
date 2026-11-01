@@ -47,7 +47,7 @@ Call each phase with the Skill tool. Never copy its content here.
 
 ## Models
 
-factory-run itself only routes, so it runs on `sonnet`. Each phase brings its own model (see its Models section); pass a repo's `factory: model <step> <model>` overrides to the phase you call. In the fast lane the build's code step stays on `sonnet`; the plan and the verifier stay on `opus`.
+factory-run itself only routes, so it runs on `sonnet`. Each phase brings its own model (see its Models section); pass a repo's `factory: model <step> <model>` overrides to the phase you call. `opus` is used only for the full lane's spec and plan; the fast lane runs on `sonnet` throughout.
 
 ## Rules
 

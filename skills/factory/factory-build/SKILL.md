@@ -28,7 +28,7 @@ The **tracker** needs three operations: read an issue with its comments, comment
 
 ## Models
 
-Defaults: the plan and the `verifier` on `opus`, the code and tests on `sonnet`. A weaker session at Part 1 drafts the plan in an `opus` subagent; an `opus` session at Part 2 may hand the code to a `sonnet` subagent. A repo overrides with `factory: model <step> <opus | sonnet | haiku>` in its `AGENTS.md` or `CLAUDE.md`. Say when a step ran below its default.
+Defaults: the plan on `opus`; the code, tests and `verifier` on `sonnet`. In the fast lane the plan is on `sonnet` too. A weaker session at Part 1 drafts the plan in an `opus` subagent; an `opus` session at Part 2 may hand the code to a `sonnet` subagent. A repo overrides with `factory: model <step> <opus | sonnet | haiku>` in its `AGENTS.md` or `CLAUDE.md`. Say when a step ran below its default.
 
 ## States
 

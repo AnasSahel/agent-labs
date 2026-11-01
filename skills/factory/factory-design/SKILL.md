@@ -25,7 +25,7 @@ The approval needs a **code host**: the remote, with a tool that opens pull requ
 
 ## Models
 
-Defaults: the spec and the `security`, `risk` and `privacy` reviewers on `opus`; `ui-designer` and `rule-reviewer` on `sonnet`. A repo overrides with `factory: model <step> <opus | sonnet | haiku>` in its `AGENTS.md` or `CLAUDE.md`; pass the model when starting a subagent. Say when a step ran below its default.
+Defaults: the spec on `opus`; every agent on `sonnet`. A `high` finding's check round may be rerun by that reviewer on `opus`. In the fast lane the spec is written by a `sonnet` subagent. A repo overrides with `factory: model <step> <opus | sonnet | haiku>` in its `AGENTS.md` or `CLAUDE.md`; pass the model when starting a subagent. Say when a step ran below its default.
 
 ## Steps
 
