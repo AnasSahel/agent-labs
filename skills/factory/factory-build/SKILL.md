@@ -30,6 +30,10 @@ The skill works with any **tracker**. It needs three operations: read an issue w
 
 When the tracker has no tool in this session, say so and stop.
 
+## Models
+
+Each step runs on the model that fits its cost of error. Defaults: the plan (Part 1) and the `verifier` on `opus`; the code and tests (Part 2) on `sonnet`. A session on a weaker model at Part 1 starts a fresh subagent on `opus` to draft the plan, and one on `opus` at Part 2 may hand the implementation to a `sonnet` subagent. A repo overrides one in its `AGENTS.md` or `CLAUDE.md` with `factory: model <step> <opus | sonnet | haiku>`; read those lines at Load and pass the model when starting a subagent. Say in the reply when a step ran on a weaker model than its default.
+
 ## When it plans, when it builds
 
 ```

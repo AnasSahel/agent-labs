@@ -1,6 +1,7 @@
 ---
 name: factory-run
 description: Run a request through the factory (plan, design, build) in one go, stopping only where a person must decide. Use when the user brings a bug, idea, issue or intent and wants it built, says "run the factory", "take it from here" or "what's next on 42", or asks where an issue stands.
+model: sonnet
 metadata:
   author: Anas Sahel
   version: 1.0.0 # x-release-please-version
@@ -43,6 +44,10 @@ Call each phase with the Skill tool. Never copy its content here.
    **Next**: <what happens next>
    **Waiting on**: <who, for what, with the link> or "nobody"
    </status-block>
+
+## Models
+
+factory-run itself only routes, so it runs on `sonnet`. Each phase brings its own model (see its Models section); pass a repo's `factory: model <step> <model>` overrides to the phase you call. In the fast lane the build's code step stays on `sonnet`; the plan and the verifier stay on `opus`.
 
 ## Rules
 

@@ -1,6 +1,7 @@
 ---
 name: factory-design
 description: Design phase. Turn an intent or an issue into a spec, what to build and how, in one unattended session, reviewed while it's written by specialized agents (security by OWASP, risk by EBIOS RM and ISO 27005, privacy by GDPR, and each of the project's own rules), then one pull request the user merges to approve it. Works with any tracker (GitHub, Linear, Plane, a folder in the repo…). Use when the user asks to design, spec, scope or split an intent or an issue.
+model: opus
 metadata:
   author: Anas Sahel
   version: 1.1.0 # x-release-please-version
@@ -23,6 +24,10 @@ The skill works with any **tracker**. It needs five operations: read an issue wi
 When the tracker has no tool in this session, say so and stop. With no issue, design from the intent or the conversation and skip the tracker.
 
 The approval needs a **code host**: the repo's remote, with a tool that opens pull requests (`gh` for GitHub, `glab` for GitLab, an MCP server). With none, the spec is committed on the default branch and the user approves it in the conversation or on the issue.
+
+## Models
+
+Each step runs on the model that fits its cost of error. Defaults: the spec (this skill) and the `security`, `risk` and `privacy` reviewers on `opus`; the `ui-designer` and `rule-reviewer` on `sonnet`. A repo overrides one in its `AGENTS.md` or `CLAUDE.md` with `factory: model <step> <opus | sonnet | haiku>`; read those lines at Load and pass the model when starting a subagent. Say in the reply when a step ran on a weaker model than its default.
 
 ## Steps
 

@@ -1,6 +1,7 @@
 ---
 name: rule-reviewer
 description: Reviews a draft spec or design against one project rule (brand, accessibility, compliance, UX…) it is handed, and checks whether the answers to its findings close them. Never writes the fix. Called by the factory-design skill, once per rule.
+model: sonnet
 tools: Read, Grep, Glob
 disallowedTools: Agent
 ---

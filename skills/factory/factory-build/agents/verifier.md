@@ -1,6 +1,7 @@
 ---
 name: verifier
 description: Checks a finished change in a fresh context, independently of whoever wrote it — starts the app, exercises each criterion and the features around it, and reports what works and what doesn't. Never fixes anything. Called by the factory-build skill once the session believes the work is done.
+model: opus
 tools: Bash, Read
 disallowedTools: Agent, Write, Edit
 ---
