@@ -24,6 +24,17 @@ npm test
 
 Options: `--port`, `--host`, `PLAINFILE_FRAMEWORKS=<dir>` (defaults to the `frameworks/` folder next to it in agent-labs).
 
+## The hosted product
+
+`npm run saas` (or the Dockerfile) serves the same screens as a multi-tenant app:
+
+- **Sign in with GitHub** through a GitHub App. The user's token is sealed in an encrypted, httpOnly cookie; nothing is stored server-side.
+- **Repo picker** lists the repos where the Plainfile app is installed and the user has access, so GitHub's own permissions decide who sees what.
+- **Workspace** at `/w/<owner>/<repo>` reads the repo's `grc/` folder through the GitHub API (read-only, `Contents: Read`). A repo with several `grc/` folders shows a picker.
+- **Demo** at `/demo` runs on the sample data, no sign-in.
+
+Setup: copy `.env.example`, create the GitHub App it describes, then `docker build -f plainfile/Dockerfile -t plainfile .` from the repo root. The same image is the self-hosted install for enterprise customers.
+
 ## How it reads the files
 
 - **Levels** are recomputed from the G·V score with the one rule from `theme.md` (high when G3+ with V3+, or G4 with V2+; low when both ≤ 2; medium otherwise), never trusted from the text.
@@ -37,8 +48,8 @@ The format is the one the GRC skills in `skills/grc/` write, so Claude does the 
 
 ## Next
 
-1. Edits as pull requests (approve = PR review), with GitHub App / GitLab OAuth sign-in.
+1. Edits as pull requests (approve = PR review); GitLab and GitHub Enterprise sources.
 2. Policies, evidence and controls (statement of applicability) screens.
-3. Docker image for self-hosted and air-gapped installs.
+3. Roles per workspace, SSO, audit export.
 
 Sample data in `sample/grc` is fictional (see `sample/README.md`).

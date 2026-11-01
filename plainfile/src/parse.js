@@ -1,6 +1,6 @@
 // Reads a grc/ folder of markdown files into plain objects. No dependencies.
 // The files stay the source of truth: this module only reads them.
-import { readFile, readdir, stat } from 'node:fs/promises';
+import { readFile, readdir } from 'node:fs/promises';
 import { join, basename } from 'node:path';
 
 const LEVELS = ['low', 'medium', 'high'];
@@ -212,10 +212,6 @@ export function parseFramework(md, id) {
 
 // ---------- the whole folder ----------
 
-async function readIf(path) {
-  try { return await readFile(path, 'utf8'); } catch { return null; }
-}
-
 export async function loadFrameworks(dir) {
   const out = {};
   let files = [];
@@ -227,36 +223,33 @@ export async function loadFrameworks(dir) {
   return out;
 }
 
-export async function loadGrc(grcDir) {
-  const contextMd = await readIf(join(grcDir, 'context.md'));
-  const registerMd = await readIf(join(grcDir, 'risk-register.md'));
+/** Loads the whole grc/ folder from a source (see source.js): a local folder or a GitHub repo. */
+export async function loadGrc(source) {
+  const [contextMd, registerMd] = await Promise.all([source.read('context.md'), source.read('risk-register.md')]);
   if (contextMd === null && registerMd === null) {
-    throw new Error(`No grc/ data found in ${grcDir}: expected context.md or risk-register.md`);
+    throw new Error(`No grc/ data found in ${source.label}: expected context.md or risk-register.md`);
   }
   const context = parseContext(contextMd || '');
   const register = parseRegister(registerMd || '');
 
-  const riskDir = join(grcDir, 'risks');
-  let riskFiles = [];
-  try { riskFiles = await readdir(riskDir); } catch { /* no risks folder yet */ }
+  const riskFiles = await source.list('risks');
   const details = {};
-  for (const f of riskFiles.filter((f) => f.endsWith('.md'))) {
-    const d = parseRiskFile(await readFile(join(riskDir, f), 'utf8'));
+  const mdFiles = riskFiles.filter((f) => f.endsWith('.md'));
+  const texts = await Promise.all(mdFiles.map((f) => source.read(`risks/${f}`)));
+  mdFiles.forEach((f, i) => {
+    const d = parseRiskFile(texts[i] || '');
     d.file = `risks/${f}`;
     const attack = riskFiles.find((x) => x === `${d.id}-attack-path.html`);
     d.attackPath = attack ? `risks/${attack}` : '';
     const report = riskFiles.find((x) => x === f.replace(/\.md$/, '.html'));
     d.report = report ? `risks/${report}` : '';
     details[d.id] = d;
-  }
+  });
 
   const risks = register.map((r) => ({ ...r, detail: details[r.id] || null }));
   // A risk file not yet in the register still shows up.
   for (const id of Object.keys(details)) if (!risks.some((r) => r.id === id)) risks.push({ id, scenario: details[id].title, owner: details[id].owner, status: details[id].status, due: details[id].due, controls: [], inherent: null, residual: null, detail: details[id] });
 
-  const count = async (sub) => { try { return (await readdir(join(grcDir, sub))).filter((f) => f.endsWith('.md')).length; } catch { return 0; } };
-  let mtime = null;
-  try { mtime = (await stat(join(grcDir, 'risk-register.md'))).mtime; } catch { /* ignore */ }
-
-  return { context, risks, counts: { policies: await count('policies'), evidence: await count('evidence'), traces: await count('traces') }, mtime };
+  const count = async (sub) => (await source.list(sub)).filter((f) => f.endsWith('.md')).length;
+  return { context, risks, counts: { policies: await count('policies'), evidence: await count('evidence'), traces: await count('traces') } };
 }

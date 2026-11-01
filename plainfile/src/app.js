@@ -1,9 +1,7 @@
-// Routes -> HTML. Shared by the dev server and the static build.
-import { resolve, join, sep, extname } from 'node:path';
-import { readFile } from 'node:fs/promises';
+// Routes -> HTML for one workspace. Shared by the local server, the static build and the SaaS.
+import { resolve, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadGrc, loadFrameworks } from './parse.js';
-import { repoInfo, fileHistory } from './git.js';
 import * as view from './render.js';
 
 const here = fileURLToPath(new URL('.', import.meta.url));
@@ -14,14 +12,18 @@ export function frameworksDir() {
   return process.env.PLAINFILE_FRAMEWORKS || resolve(here, '../../frameworks');
 }
 
-export async function createApp(grcDir) {
-  const root = resolve(grcDir);
+/** Pages link with root paths ("/risks"); a workspace mounted under a prefix rewrites them. */
+export function withBase(html, base) {
+  if (!base) return html;
+  return html.replace(/\b(href|src)="\/(?!\/|style\.css|auth\/|app\b)/g, `$1="${base}/`);
+}
+
+export async function createApp() {
   const frameworks = await loadFrameworks(frameworksDir());
 
-  async function page(pathname, query = {}) {
+  async function page(source, pathname, query = {}) {
     // Files are the database: read them fresh on every request.
-    const data = await loadGrc(root);
-    const repo = await repoInfo(root);
+    const [data, repo] = await Promise.all([loadGrc(source), source.info()]);
     const base = { data, repo };
     const parts = pathname.split('/').filter(Boolean).map(decodeURIComponent);
 
@@ -35,7 +37,7 @@ export async function createApp(grcDir) {
       const r = data.risks.find((x) => x.id === parts[1]);
       if (!r) return { status: 404, title: 'Not found', active: 'risks', body: view.notFoundPage(parts[1]), ...base };
       const file = r.detail?.file || 'risk-register.md';
-      const history = await fileHistory(root, file);
+      const history = await source.history(file);
       return { title: r.id, active: 'risks', crumbs: `<a href="/risks">Risks</a> / <b>${view.esc(r.id)}</b> · grc/${view.esc(file)}`, body: view.riskPage(data, r, history, repo), ...base };
     }
     if (parts[0] === 'frameworks' && parts.length === 1) {
@@ -48,24 +50,24 @@ export async function createApp(grcDir) {
     return { status: 404, title: 'Not found', active: '', body: view.notFoundPage(pathname), ...base };
   }
 
-  async function render(pathname, query) {
-    const p = await page(pathname, query);
-    return { status: p.status || 200, html: view.layout(p) };
+  /** opts.base: URL prefix of the workspace; opts.account: html for the top bar (signed-in user). */
+  async function render(source, pathname, query, opts = {}) {
+    const p = await page(source, pathname, query);
+    return { status: p.status || 200, html: withBase(view.layout({ ...p, account: opts.account || '' }), opts.base || '') };
   }
 
   /** A raw file from the grc/ folder (attack paths, reports, md). Never outside it. */
-  async function file(relPath) {
-    const full = resolve(join(root, relPath));
-    if (full !== root && !full.startsWith(root + sep)) return null;
-    if (!['.html', '.md', '.png', '.svg', '.csv', '.json', '.yaml', '.yml'].includes(extname(full))) return null;
-    try {
-      const body = await readFile(full);
-      return { body: extname(full) === '.html' ? withHeightPing(body.toString('utf8')) : body, type: TYPES[extname(full)] || 'text/plain; charset=utf-8' };
-    } catch { return null; }
+  async function file(source, relPath) {
+    if (!ALLOWED.includes(extname(relPath))) return null;
+    const body = await source.readBytes(relPath);
+    if (body === null) return null;
+    return { body: extname(relPath) === '.html' ? withHeightPing(body.toString('utf8')) : body, type: TYPES[extname(relPath)] || 'text/plain; charset=utf-8' };
   }
 
-  return { render, file, root, frameworks };
+  return { render, file, frameworks };
 }
+
+const ALLOWED = ['.html', '.md', '.png', '.svg', '.csv', '.json', '.yaml', '.yml'];
 
 export const TYPES = {
   '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.md': 'text/plain; charset=utf-8',

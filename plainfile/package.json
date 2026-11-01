@@ -9,6 +9,7 @@
   "scripts": {
     "start": "node src/cli.js serve",
     "build": "node src/cli.js build",
+    "saas": "node src/cli.js saas",
     "test": "node --test test/*.test.js"
   },
   "license": "UNLICENSED"

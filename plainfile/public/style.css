@@ -170,3 +170,31 @@ td a:hover { color: var(--accent); }
   .inshort > div, .kv { grid-template-columns: 1fr; gap: 2px; }
   .attack { height: 480px; }
 }
+
+/* SaaS pages */
+.top.bare { padding: 14px 32px; }
+.top.bare .brand { padding: 0; }
+.grow { flex: 1; }
+.page.narrow { margin: 0 auto; max-width: 64rem; padding-top: 48px; }
+.who { display: inline-flex; align-items: center; gap: 8px; font: 13px var(--mono); color: var(--ink-2); }
+.who img { border-radius: 50%; }
+.top form { margin: 0; }
+button.btn { font: inherit; font-size: 14px; color: var(--ink); cursor: pointer; }
+.btn.solid { background: var(--accent); border-color: var(--accent); color: var(--on-solid); }
+.btn.solid:hover { color: var(--on-solid); opacity: .9; }
+.btn.disabled { color: var(--muted); cursor: not-allowed; }
+.cta { display: flex; flex-wrap: wrap; gap: 12px; margin: -4px 0 12px; }
+.cta .btn { padding: 11px 18px; font-size: 15px; }
+.steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; }
+.steps h3 { font-size: 17px; font-weight: 600; letter-spacing: -.01em; margin: 6px 0 6px; }
+.steps p { margin: 0; color: var(--ink-2); }
+.alert { background: var(--high-soft); color: var(--high); padding: 10px 14px; max-width: 48rem; }
+.repo-list { display: flex; flex-direction: column; }
+.repo-row { display: flex; justify-content: space-between; gap: 16px; padding: 14px 4px; border-bottom: 1px solid var(--line); }
+.repo-row:hover { background: var(--accent-soft); }
+@media (max-width: 760px) {
+  .steps { grid-template-columns: 1fr; gap: 20px; }
+  .top.bare { padding: 10px 16px; }
+  .page.narrow { padding-top: 24px; }
+  .who { display: none; }
+}

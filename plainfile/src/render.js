@@ -32,7 +32,7 @@ const logo = `<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"
 
 // ---------- layout ----------
 
-export function layout({ title, active, data, repo, body, crumbs = '' }) {
+export function layout({ title, active, data, repo, body, crumbs = '', account = '' }) {
   const nav = [
     ['/', 'Portfolio', 'portfolio', ''],
     ['/risks', 'Risks', 'risks', data.risks.length],
@@ -71,6 +71,7 @@ export function layout({ title, active, data, repo, body, crumbs = '' }) {
       <div class="crumbs">${crumbs}</div>
       ${sync}
       ${repo.web ? `<a class="btn" href="${esc(repo.web)}" rel="noopener">View in ${/gitlab/.test(repo.web) ? 'GitLab' : 'GitHub'}</a>` : ''}
+      ${account}
     </header>
     <main class="page">${body}</main>
     <script>addEventListener('message',function(e){var h=e.data&&e.data.plainfileHeight;if(typeof h!=='number'||h<100||h>6000)return;document.querySelectorAll('iframe.attack').forEach(function(f){if(f.contentWindow===e.source)f.style.height=h+'px'})})</script>
@@ -320,4 +321,69 @@ ${section('02', fw.pivot ? 'Annex A controls' : 'Clauses', '', `<div class="scro
 
 export function notFoundPage(what) {
   return `<div class="eyebrow accent">NOT FOUND</div><h1>${esc(what)}<br><span class="accent">Nothing in the repo by that name.</span></h1><p><a href="/">Back to the portfolio</a></p>`;
+}
+
+// ---------- SaaS pages (no workspace sidebar) ----------
+
+export function shell({ title, body, account = '' }) {
+  return `<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${esc(title)}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header class="top bare"><a class="brand" href="/">${logo}<span>Plainfile</span></a><span class="grow"></span>${account}</header>
+<main class="page narrow">${body}</main>
+</body>
+</html>`;
+}
+
+export function accountBar(user) {
+  if (!user) return '';
+  return `<span class="who">${user.avatar ? `<img src="${esc(user.avatar)}&s=48" alt="" width="22" height="22">` : ''}${esc(user.login)}</span>
+<a class="btn" href="/app">Repos</a>
+<form method="post" action="/auth/logout"><button class="btn" type="submit">Sign out</button></form>`;
+}
+
+export function landingPage({ configured, error }) {
+  return shell({ title: 'Plainfile · GRC in plain files', body: `
+<div class="eyebrow accent">PLAINFILE · GRC AS CODE</div>
+<h1>Your risks, policies and evidence live in plain files.<br><span class="accent">Plainfile shows them to everyone who needs them.</span></h1>
+${error ? `<p class="alert">${esc(error)}</p>` : ''}
+<div class="cta">
+  ${configured ? '<a class="btn solid" href="/auth/login">Sign in with GitHub</a>' : '<span class="btn disabled" title="Set GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET">GitHub sign-in not configured</span>'}
+  <a class="btn" href="/demo">See the demo workspace</a>
+</div>
+${section('01', 'How it works', '', `<div class="steps">
+  <div><span class="eyebrow accent">01</span><h3>Your repo is the database</h3><p>The <code>grc/</code> folder of markdown files stays in your own GitHub repo. Nothing is copied into Plainfile.</p></div>
+  <div><span class="eyebrow accent">02</span><h3>Claude does the work</h3><p>The GRC skills write risks, attack paths, policies and decision traces into that folder, as commits.</p></div>
+  <div><span class="eyebrow accent">03</span><h3>Everyone sees the same truth</h3><p>CISOs, risk owners and auditors get the portfolio, the heat map and framework coverage, with git as the audit trail.</p></div>
+</div>`)}
+${section('02', 'What it reads', '', `<p class="lead">Plainfile only reads the repos you install it on, with your own GitHub permissions. Read-only today: edits as pull requests come next.</p>`)}` });
+}
+
+export function reposPage({ user, repos, installUrl }) {
+  const rows = repos.map((r) => `<a class="repo-row" href="/w/${esc(r.full_name)}"><span class="mono">${esc(r.full_name)}</span><span class="muted">${r.private ? 'private' : 'public'} · ${esc(r.default_branch)}</span></a>`).join('');
+  return shell({ title: 'Your repos · Plainfile', account: accountBar(user), body: `
+<div class="eyebrow accent">WORKSPACES · ${esc(user.login.toUpperCase())}</div>
+<h1>Pick the repo that holds your grc/ folder<br><span class="accent">${repos.length ? `${plural(repos.length, 'repo')} Plainfile can read.` : 'Install Plainfile on a repo to start.'}</span></h1>
+${section('01', 'Repos', installUrl ? `<a href="${esc(installUrl)}" rel="noopener">ADD A REPO ON GITHUB</a>` : '', repos.length ? `<div class="repo-list">${rows}</div>` : `<p class="lead">Plainfile is not installed on any repo you can see yet.</p>${installUrl ? `<a class="btn solid" href="${esc(installUrl)}" rel="noopener">Install on GitHub</a>` : ''}`)}` });
+}
+
+export function pickDirPage({ user, fullName, dirs }) {
+  return shell({ title: `${fullName} · Plainfile`, account: accountBar(user), body: `
+<div class="eyebrow accent">WORKSPACE · ${esc(fullName.toUpperCase())}</div>
+<h1>${dirs.length ? `${plural(dirs.length, 'grc/ folder')} in this repo` : 'No grc/ folder in this repo yet'}<br><span class="accent">${dirs.length ? 'Pick the one to open.' : 'Run the GRC skills to create one.'}</span></h1>
+${dirs.length ? `<div class="repo-list">${dirs.map((d) => `<a class="repo-row" href="/w/${esc(fullName)}/d/${encodeURIComponent(d)}/"><span class="mono">${esc(d)}/</span></a>`).join('')}</div>`
+    : '<p class="lead">Plainfile looks for a folder named <code>grc</code> holding <code>context.md</code> or <code>risk-register.md</code>. Install the skills with <code>npx skills add AnasSahel/agent-labs</code> and ask Claude to assess a risk.</p>'}
+<p><a class="accent" href="/app">← All repos</a></p>` });
+}
+
+export function errorPage({ user, title, message }) {
+  return shell({ title: `${title} · Plainfile`, account: accountBar(user), body: `<div class="eyebrow accent">ERROR</div><h1>${esc(title)}<br><span class="accent">${esc(message)}</span></h1><p><a class="accent" href="/app">← All repos</a></p>` });
 }
