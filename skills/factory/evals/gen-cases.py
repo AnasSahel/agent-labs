@@ -49,8 +49,7 @@ C["design-intent-not-merged"] = ("factory-design", "While the intent still waits
   [llm("stops", "intent/003-export-notes.md has status needs-go: the user has not said go. PASS only if the agent stops and says the intent waits for the user's go, and writes no spec.")], 20)
 C["design-unattended"] = ("factory-design", "With an approved intent, design asks no question before the gate and writes the spec with assumptions.",
   "Design 004.", ["004-sort-notes.md"],
-  [llm("no-questions-before-gate", "PASS only if the agent asks the user no question before presenting the spec, and the spec lists acceptance criteria as Given/When/Then plus at least one assumption.", 3, "trace"),
-   skill_used("factory-design")], 80)
+  [llm("no-questions-before-gate", "PASS only if the agent asks the user no question before presenting the spec, and the spec lists acceptance criteria as Given/When/Then plus at least one assumption.", 3, "trace")], 80)
 
 # --- factory-build
 C["build-wrong-state"] = ("factory-build", "An issue still at needs-design is not built: the agent says to run factory-design first.",

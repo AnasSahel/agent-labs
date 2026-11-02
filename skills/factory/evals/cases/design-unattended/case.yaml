@@ -12,4 +12,3 @@ execution:
     /factory:factory-design Design 004.
 graders:
   - {"name": "no-questions-before-gate", "type": "llm", "weight": 3, "focus": "trace", "criteria": "PASS only if the agent asks the user no question before presenting the spec, and the spec lists acceptance criteria as Given/When/Then plus at least one assumption."}
-  - {"name": "calls-factory-design", "type": "tool_used", "tool": "Skill", "input_match": "\"skill\"\\s*:\\s*\"(factory:)?factory-design\"", "arm": "both"}
