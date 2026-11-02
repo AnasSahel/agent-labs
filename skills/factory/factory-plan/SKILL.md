@@ -48,9 +48,9 @@ The go needs a **code host**: the repo's remote, with a tool that opens pull req
    - `<id>`: the issue's id without `#` (`42` GitHub, `ENG-42` Linear or Jira, `WEB-42` Plane); with files, the next free 3-digit number in `intent/` (`007`).
    - `<slug>`: the title lowercased, accents and punctuation dropped, filler words dropped (a, the, of, is, when, le, de, est…), at most 5 words joined by `-`: "Notes are lost when the page is reloaded" → `notes-lost-page-reloaded`.
 
-   With a code host, create branch `intent/<id>-<slug>` from the default branch in its own worktree (`git worktree add`), commit the intent and trace, push, open a pull request `Intent · <title>`, then remove the worktree. Its body: the problem's first sentence, the triage, "Merge = go · close = reject", and the issue reference without a closing keyword (`Refs #42`, never `Closes #42`), so merging doesn't close the issue. With none, commit on the default branch.
+   With a code host, create branch `intent/<id>-<slug>` from the default branch in its own worktree (`git worktree add`), commit the intent and trace, push, open a pull request `Intent · <title>`, then remove the worktree. Its body: the problem's first sentence, the intent file's link, the triage, "Merge = go · close = reject", and the issue reference without a closing keyword (`Refs #42`, never `Closes #42`), so merging doesn't close the issue. With none, commit on the default branch.
 
-   Except with files, replace the issue's body with the problem's first sentence and a link to the pull request (or the intent). Done when each intent's pull request is open (or the intent committed) and its issue links it (with files, the intent is the issue).
+   Except with files, replace the issue's body with the problem's first sentence and two links: the **intent** file (on the intent branch while its pull request is open, on the default branch once merged or committed) and the pull request. Done when each intent's pull request is open (or the intent committed) and its issue links it (with files, the intent is the issue).
 
 Reply with each issue's link and its intent's pull request (with files, the pull request once), waiting for the user's merge. With no code host: the intent's link (with files, its path once), or `needs-go` when it waits for the user.
 
