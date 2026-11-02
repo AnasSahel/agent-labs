@@ -17,7 +17,7 @@ Call each phase with the Skill tool. Never copy its content here.
 1. **Find the state.** With an issue or intent, read its state (`needs-go`, `needs-design`, `designed`, `needs-plan`, `planned`, `building`, `built`, `blocked`, `split`) from the tracker, or from `intent/` and `specs/` with files. With a new request, the state is `new`. Done when you can say which phase is next.
 
 2. **Pick the lane.** Size the change as factory-plan does (`S` one file, `M` a few files, `L` several areas or a migration), and look for anything that makes it risky: a migration, a public interface, personal data, auth, money, or a repo rule that says so.
-   - **Fast lane**: size `S` and nothing risky. No intent pull request, no plan gate: the issue is the intent, the plan is written and followed. The spec's pull request stays the gate.
+   - **Fast lane**: size `S` and nothing risky. No intent pull request, no review, no spec or plan gate: the issue is the intent, the spec and plan are written and recorded, and the run stops only at the code review.
    - **Full lane**: anything else. Every gate stays.
 
    Design's review can still raise a `high` finding: that moves the run to the full lane, and the plan gate comes back. Done when the lane is named with its reason in one line.
@@ -29,7 +29,7 @@ Call each phase with the Skill tool. Never copy its content here.
    | Phase ends at | Full lane | Fast lane |
    |---|---|---|
    | intent pull request open | **stop**: merge = go | skipped |
-   | `designed` (spec pull request open) | **stop**: merge = approve | **stop**: merge = approve |
+   | `designed` (spec pull request open) | **stop**: merge = approve | record the spec, go on |
    | `needs-plan` | **stop**: plan gate | accept the plan, go on |
    | `built` | **stop**: code review | **stop**: code review |
 
