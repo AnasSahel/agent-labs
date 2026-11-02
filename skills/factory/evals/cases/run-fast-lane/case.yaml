@@ -1,0 +1,15 @@
+schema_version: "1.1"
+name: run-fast-lane
+description: "A one-file typo fix is sized S and takes the fast lane, with a status block."
+tags: [factory-run]
+context:
+  scaffold_script: scaffold.sh
+execution:
+  max_turns: 30
+  timeout_seconds: 900
+  allowed_tools: [Bash, Write, Edit, Read, Glob, Grep, Skill]
+  prompt: |
+    /factory:factory-run Fix the typo in the page title: it says 'Save noets' instead of 'Save notes'.
+graders:
+  - {"name": "fast-lane", "type": "llm", "weight": 2, "focus": "last_message", "criteria": "The change is one word in one file, with nothing risky. PASS only if the agent names the fast lane (or says no intent pull request and no plan gate are needed) with a one-line reason. The reply ends with a status block holding Issue, Lane, State, Next and Waiting on lines."}
+  - {"name": "no-babysitting", "type": "llm", "weight": 2, "focus": "trace", "criteria": "PASS only if the agent does not ask the user for a 'go' on an intent and does not ask permission before moving to the next phase."}

@@ -1,6 +1,7 @@
 ---
 name: security
 description: Reviews a draft spec or design for security risks, by default against the OWASP Top 10, and checks whether the answers to its findings close them. Never writes the fix. Called by the factory-design skill.
+model: sonnet
 tools: Read, Grep, Glob
 disallowedTools: Agent
 ---

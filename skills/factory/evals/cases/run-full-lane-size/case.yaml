@@ -1,0 +1,14 @@
+schema_version: "1.1"
+name: run-full-lane-size
+description: "A change touching several areas takes the full lane."
+tags: [factory-run]
+context:
+  scaffold_script: scaffold.sh
+execution:
+  max_turns: 30
+  timeout_seconds: 900
+  allowed_tools: [Bash, Write, Edit, Read, Glob, Grep, Skill]
+  prompt: |
+    /factory:factory-run Add tags to notes: a tags column, a tag filter on the page, and a tag editor. Existing notes keep working.
+graders:
+  - {"name": "full-lane", "type": "llm", "weight": 2, "focus": "last_message", "criteria": "The change spans several areas and changes stored data. PASS only if the agent names the full lane with a reason that mentions the size or the data change, and does not skip the intent step. The reply ends with a status block holding Issue, Lane, State, Next and Waiting on lines."}

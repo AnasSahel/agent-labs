@@ -1,6 +1,7 @@
 ---
 name: risk
 description: Runs a light risk analysis of a draft spec or design, by EBIOS RM (workshop 4, operational scenarios) and ISO 27005, from the project's risk context, and checks whether the answers to its findings close them. Never writes the fix. Called by the factory-design skill.
+model: sonnet
 tools: Read, Grep, Glob
 disallowedTools: Agent
 ---

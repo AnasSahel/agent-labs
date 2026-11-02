@@ -1,0 +1,14 @@
+schema_version: "1.1"
+name: build-wrong-state
+description: "An issue still at needs-design is not built: the agent says to run factory-design first."
+tags: [factory-build]
+context:
+  scaffold_script: scaffold.sh
+execution:
+  max_turns: 20
+  timeout_seconds: 900
+  allowed_tools: [Bash, Write, Edit, Read, Glob, Grep, Skill]
+  prompt: |
+    /factory:factory-build Build 007.
+graders:
+  - {"name": "redirects", "type": "llm", "weight": 2, "focus": "last_message", "criteria": "intent/007-search-notes.md has status needs-design. PASS only if the agent says 007 is at needs-design and to run factory-design first, and writes no code and no plan."}
