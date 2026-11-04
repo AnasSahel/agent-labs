@@ -67,7 +67,10 @@ def get(path, params):
     url = f"{BASE_URL}{path}?{urllib.parse.urlencode(params)}"
     req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT, "Accept": "application/json"})
     last = None
-    for attempt in (1, 2):  # one retry
+    net_tries = 0  # connection errors get up to 3 attempts (resets are intermittent behind some proxies)
+    attempt = 0
+    while attempt < 2:  # one retry for 429 / 5xx
+        attempt += 1
         try:
             with urllib.request.urlopen(req, timeout=20) as r:
                 return json.loads(r.read().decode("utf-8"))
@@ -88,11 +91,13 @@ def get(path, params):
                 raise ApiError("Rate limited by the API (HTTP 429) even after one retry. Wait a minute and run again.")
             raise ApiError(f"API answered HTTP {e.code}.")
         except (urllib.error.URLError, TimeoutError, ConnectionError) as e:
-            if attempt == 1:
-                time.sleep(2)
-                last = f"network error ({e}), retried once"
+            net_tries += 1
+            if net_tries < 3:
+                time.sleep(2 * net_tries)
+                last = f"network error ({e}), retried"
+                attempt -= 1  # network retries don't use the 429/5xx retry
                 continue
-            raise ApiError(f"Cannot reach {SOURCE}: {e}. Check the network allowlist.")
+            raise ApiError(f"Cannot reach {SOURCE}: {e} (3 attempts). Check the network allowlist.")
         except json.JSONDecodeError:
             raise ApiError("The API returned something that is not JSON.")
     raise ApiError(last or "Unknown API failure.")
