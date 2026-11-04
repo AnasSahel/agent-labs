@@ -81,7 +81,7 @@ Present: ... · Apologies: ... · Absent: ...
 <date, place, expected agenda>
 </minutes-template>
 
-Drop `Follow-up from last meeting` when there is none. Never leave an empty section: delete it.
+Drop `Follow-up from last meeting` when there is none. Never leave an empty section: delete it. Same for `Apologies` and `Absent` when nobody was: never write them as `TBC`, only the notes can say someone was missing.
 
 ## Rules
 
