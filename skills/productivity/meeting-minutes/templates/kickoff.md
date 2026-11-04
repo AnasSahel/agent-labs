@@ -10,4 +10,4 @@
 - `## Risks and assumptions`: short list.
 - `## Ways of working`: rituals, tools, channels.
 
-**Rules:** a role or date nobody stated is `TBC`, not assumed. Out of scope is listed only if said.
+**Rules:** ask for a role or date nobody stated; remove it if skipped. Out of scope is listed only if said.
