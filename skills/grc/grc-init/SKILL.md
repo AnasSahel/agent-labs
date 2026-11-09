@@ -16,11 +16,20 @@ Give each company its own folder, `grc/<slug>/`, an [OKF](https://github.com/Goo
 
 ## Steps
 
-1. **Name.** Take the company name or SIREN from the request; ask for one when neither is there. Run `python3 scripts/new_company.py --list` from this skill's folder with `--root` set to the repo's `grc/`. If the company is already listed, say so, switch to it with `--use` and stop: never recreate. Done when the company is new and named.
+1. **Name.** Take the company name or SIREN from the request; ask for one when neither is there. List the folders in the repo's `grc/` (each has a `COMPANY.md`). If the company is already there, say so, point `grc/.active` at it and stop: never recreate. Done when the company is new and named.
 
-2. **Slug.** Show the folder name the script would derive (`Acme Bank` becomes `acme-bank`) and let the user change it. Done when the user has confirmed one slug.
+2. **Slug.** Derive the folder name: lowercase, accents dropped, anything other than letters and digits turned into one hyphen (`Société Acme & Fils` becomes `societe-acme-fils`). Show it and let the user change it. Done when the user has confirmed one slug.
 
-3. **Create.** Run `python3 scripts/new_company.py --name "<name>" --slug <slug> --root grc`. The first company becomes active on its own (`grc/.active`); add `--activate` when the user says to switch. On status `exists` or `error`, show the message and stop. Done when status is `created`.
+3. **Create.** Run, from the repo root, with `$SKILL` the folder of this skill:
+
+   ```sh
+   mkdir grc/<slug>                  # fails if it exists: stop and say so
+   cp -R "$SKILL"/templates/. grc/<slug>/
+   sed -i.bak "s|{{name}}|<name>|g; s|{{slug}}|<slug>|g; s|{{actor}}|grc-init/1.0.0|g; s|{{now}}|<UTC datetime>|g; s|{{day}}|<YYYY-MM-DD>|g" grc/<slug>/*.md && rm grc/<slug>/*.bak
+   [ -e grc/.active ] || echo <slug> > grc/.active
+   ```
+
+   In `<name>`, write `\&` for `&` and `\|` for `|`, and `'` for `"`. The first company becomes active on its own; write the slug to `grc/.active` when the user says to switch. Done when `grc/<slug>/` holds the 10 files and none contains `{{`.
 
 4. **Profile.** Call the Skill tool with `company-profiling` and the name or SIREN. When it is not installed, say so, leave `COMPANY.md` as a skeleton and go to step 6. Done when you hold the profile, or know it is unavailable.
 
