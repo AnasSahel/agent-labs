@@ -18,7 +18,7 @@ Give each company its own folder, `grc/<slug>/`, an [OKF](https://github.com/Goo
 
 ## Steps
 
-1. **Name.** Take the company name or SIREN from the request; ask for one when neither is there. List the folders in the repo's `grc/` (each has a `COMPANY.md`). If the company is already there, say so and offer a **refresh**: skip steps 2 and 3, and run steps 4 to 9 filling only what is still `not found` or `unknown`; never recreate or overwrite. Done when the company is new and named, or a refresh is chosen.
+1. **Name.** Take the company name or SIREN from the request; ask for one when neither is there. List the folders in the repo's `grc/` (each has a `COMPANY.md`). If the company is already there, say so and offer a **refresh**: skip steps 2 and 3, and run steps 4 to 10 filling only what is still `not found` or `unknown`; never recreate or overwrite. Done when the company is new and named, or a refresh is chosen.
 
 2. **Slug.** Derive the folder name: lowercase, accents dropped, anything other than letters and digits turned into one hyphen (`Société Acme & Fils` becomes `societe-acme-fils`). Show it and let the user change it. Done when the user has confirmed one slug.
 
@@ -60,11 +60,13 @@ Give each company its own folder, `grc/<slug>/`, an [OKF](https://github.com/Goo
 
    Where a sector law replaces another (DORA replaces the NIS2 risk and incident duties for financial entities, NIS2 Art. 4), say so in the row. Done when no regulation is `possible`, each row has its decided-by and would-change-if, and every `likely` or `unlikely` has a check that would settle it.
 
-9. **List the authorities.** From `authorities/france.md`, write one row in `AUTHORITIES.md` for each regulation that `applies` or is `likely`: the authority, the regulation, and what it expects. Copy rows from the file, never from memory; a regulation with no row there gets `none listed: add it to authorities/france.md`. Done when every such regulation has an authority row or that line.
+9. **Check the clients.** Read who the company sells to (customer segments and named clients in its own documents). For each segment, judge whether it holds NIS2 entities (an Annex I or II sector, or public administration) or DORA financial entities. Write a row in the `Indirect exposure through clients` table: the segment, why it is in scope, the duty it passes down by contract (NIS2 Art. 21(2)(d), 21(3); DORA Art. 28, 30), the evidence, a confidence. This is never a status for the company: a client's duty does not bind it by law, only through the contract. Add the question `Which named clients ask for security clauses?` and, when a named client is in scope, a lead in `CONTRACTS.md`. Done when each customer segment has a row or `no client segment found`.
 
-10. **Report.** Show `COMPANY.md`'s open questions, then ask once, format last, in one message: `Want a report of Acme? full report or the ID card (one page), and HTML (default), PDF, Word or PowerPoint?` and accept `none`. On an answer, call the Skill tool with `company-report`, passing the slug, the length and the format, so it does not ask again. Done when the user has the report or said none.
+10. **List the authorities.** From `authorities/france.md`, write one row in `AUTHORITIES.md` for each regulation that `applies` or is `likely`: the authority, the regulation, and what it expects. Copy rows from the file, never from memory; a regulation with no row there gets `none listed: add it to authorities/france.md`. Done when every such regulation has an authority row or that line.
 
-11. **Next.** Offer one next step: `Close the open questions with grc-grill?` Done when the user has it.
+11. **Report.** Show `COMPANY.md`'s open questions, then ask once, format last, in one message: `Want a report of Acme? full report or the ID card (one page), and HTML (default), PDF, Word or PowerPoint?` and accept `none`. On an answer, call the Skill tool with `company-report`, passing the slug, the length and the format, so it does not ask again. Done when the user has the report or said none.
+
+12. **Next.** Offer one next step: `Close the open questions with grc-grill?` Done when the user has it.
 
 ## Clean up
 
