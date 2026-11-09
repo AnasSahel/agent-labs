@@ -1,6 +1,6 @@
 ---
-name: watch-scout
-description: "Scout: search the news for fresh, real cyber incidents in a period the caller gives and return a sourced shortlist, without judging truth or severity. Reads and writes no files, keeps no state. Use when an agent or the user needs recent breaches, ransomware attacks or other security incidents found for a period (a watch, a newsletter, a weekly review, a threat-intel feed), in English, French or other languages, before any fact-check or write-up."
+name: cyber-scout
+description: "Cyber scout: search the news for fresh, real cyber incidents in a period the caller gives and return a sourced shortlist, without judging truth or severity. Reads and writes no files, keeps no state. Use when an agent or the user needs recent breaches, ransomware attacks or other security incidents found for a period (a watch, a newsletter, a weekly review, a threat-intel feed), in English, French or other languages, before any fact-check or write-up."
 metadata:
   author: Anas Sahel
   version: 1.0.0 # x-release-please-version
