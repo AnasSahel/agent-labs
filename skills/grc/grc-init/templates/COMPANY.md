@@ -45,7 +45,7 @@ Entities controlled by the company, from its own published documents. A list fro
 |---|---|---|---|---|---|---|
 | none found | | | | | | |
 
-`Regulated?` names a licence or sector that changes the scope (payment institution, insurer, health data host). That entity may need its own folder.
+`Regulated?` names a licence or sector that changes the scope (payment institution, insurer, health data host). Scope questions about that entity go in Open questions.
 
 # Open questions
 
