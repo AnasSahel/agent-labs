@@ -1,17 +1,17 @@
 ---
 name: cyber-scout
-description: "Cyber scout: search the news for fresh, real cyber incidents in a period the caller gives and return a sourced shortlist, without judging truth or severity. Reads and writes no files, keeps no state. Use when an agent or the user needs recent breaches, ransomware attacks or other security incidents found for a period (a watch, a newsletter, a weekly review, a threat-intel feed), in English, French or other languages, before any fact-check or write-up."
+description: "Cyber scout: search the news for fresh, real cyber incidents in a given period and return a sourced shortlist, without judging truth or severity. Reads and writes no files, keeps no state. Use when an agent or the user needs recent breaches, ransomware attacks or other security incidents found for a period (a watch, a newsletter, a weekly review, a threat-intel feed), in English, French or other languages, before any fact-check or write-up."
 arguments: period languages known focus hints max
 metadata:
   author: Anas Sahel
   version: 1.0.0 # x-release-please-version
 ---
 
-Find what happened, not what is true. The scout turns a **period** into a shortlist of real incidents, each with its sources and **who says what**. The caller passes in everything the scout needs.
+Find what happened, not what is true. The scout turns a **period** into a shortlist of real incidents, each with its sources and **who says what**.
 
 ## Input
 
-`period` is required (`from` and `to` dates): when missing, ask once, never guess it. Defaults: `languages` English, `max` 15. `known` is what the caller already has (URLs or victim names to skip). `focus` (sectors, regions, topics) and `hints` (outlets to check first) are optional.
+`period` is required (`from` and `to` dates): when missing, ask once, never guess it. Defaults: `languages` English, `max` 15. `known` lists URLs or victim names to skip. `focus` (sectors, regions, topics) and `hints` (outlets to check first) are optional.
 
 ## Steps
 
