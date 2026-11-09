@@ -1,0 +1,15 @@
+schema_version: "1.1"
+name: init-exists
+description: "An existing company folder is never recreated or overwritten."
+tags: [grc-init]
+context:
+  scaffold_script: scaffold.sh
+execution:
+  max_turns: 20
+  timeout_seconds: 600
+  allowed_tools: [Bash, Write, Edit, Read, Glob, Grep, Skill]
+  prompt: |
+    /grc:grc-init Set up Northwind Bank.
+graders:
+  - {"name": "client-text-kept", "type": "regex", "pattern": "Northwind Payments", "target": {"source": "file", "path": "grc/northwind-bank/COMPANY.md"}}
+  - {"name": "says-exists", "type": "llm", "weight": 2, "focus": "trace", "criteria": "PASS only if the reply says the Northwind Bank folder already exists and nothing was recreated or changed, and offers to refresh or report instead."}

@@ -24,8 +24,9 @@ Give each company its own folder, `grc/<slug>/`, an [OKF](https://github.com/Goo
 
    ```sh
    mkdir -p grc && mkdir grc/<slug>   # fails if the company exists: stop and say so
-   cp -R "$SKILL"/templates/. grc/<slug>/
-   sed -i.bak "s|{{name}}|<name>|g; s|{{slug}}|<slug>|g; s|{{actor}}|grc-init/1.0.0|g; s|{{now}}|<UTC datetime>|g; s|{{day}}|<YYYY-MM-DD>|g" grc/<slug>/*.md && rm grc/<slug>/*.bak
+   for f in "$SKILL"/templates/*.md; do
+     sed "s|{{name}}|<name>|g; s|{{slug}}|<slug>|g; s|{{actor}}|grc-init/1.0.0|g; s|{{now}}|<UTC datetime>|g; s|{{day}}|<YYYY-MM-DD>|g" "$f" > grc/<slug>/"$(basename "$f")"
+   done
    ```
 
    In `<name>`, write `\&` for `&` and `\|` for `|`, and `'` for `"`. Done when `grc/<slug>/` holds the 10 files and none contains `{{`.

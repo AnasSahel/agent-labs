@@ -1,0 +1,18 @@
+schema_version: "1.1"
+name: report-id-card
+description: "Writes the one-page ID card from the folder only, in the repo look."
+tags: [company-report]
+context:
+  scaffold_script: scaffold.sh
+execution:
+  max_turns: 30
+  timeout_seconds: 600
+  allowed_tools: [Bash, Write, Edit, Read, Glob, Grep, Skill]
+  prompt: |
+    /grc:company-report Make the ID card for Northwind Bank, HTML.
+graders:
+  - {"name": "id-card", "type": "file_exists", "path": "grc/northwind-bank/id-card.html"}
+  - {"name": "has-company", "type": "regex", "pattern": "Northwind", "target": {"source": "file", "path": "grc/northwind-bank/id-card.html"}}
+  - {"name": "no-example-leftover", "type": "regex", "pattern": "Acme", "target": {"source": "file", "path": "grc/northwind-bank/id-card.html"}, "match": "count:0"}
+  - {"name": "has-regulated-sub", "type": "regex", "pattern": "Northwind Payments", "target": {"source": "file", "path": "grc/northwind-bank/id-card.html"}}
+  - {"name": "faithful-one-page", "type": "llm", "weight": 2, "focus": "trace", "criteria": "PASS only if the written id-card.html shows only facts that are in the Northwind Bank folder (3 subsidiaries with Northwind Payments regulated, GDPR likely, DORA and NIS2 possible, authorities CNIL, ACPR, ANSSI), keeps `not found` for the balance sheet, does not invent a CISO, DPO or certification, and is a short one-page version (headline, In short, group, regulations, at most 3 questions), not the full report."}

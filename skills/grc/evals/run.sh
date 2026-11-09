@@ -13,7 +13,7 @@ for s in "$GRC_DIR"/*/SKILL.md; do cp -R "$(dirname "$s")" "$WRAP/skills/"; done
 cp -R "$GRC_DIR/evals" "$WRAP/evals"
 rm -rf "$WRAP/evals/results" "$WRAP/evals/run.sh" "$WRAP/evals/check-citations.py"
 # Scaffolds find the fixture through this absolute path.
-find "$WRAP/evals" -name scaffold.sh -exec sed -i '' "s|@FIXTURE@|$WRAP/evals/fixture|g" {} +
+find "$WRAP/evals" -name scaffold.sh -exec sed -i.bak "s|@FIXTURE@|$WRAP/evals/fixture|g" {} +
 OUT="$GRC_DIR/evals/results/$(date -u +%Y%m%dT%H%M%SZ)"
 mkdir -p "$OUT"
 claude plugin eval "$WRAP" \

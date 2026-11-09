@@ -91,8 +91,43 @@ C["evidence-file"] = ("audit-evidence", "Files a piece of evidence against the c
 C["evidence-unproven"] = ("audit-evidence", "Catches controls the register calls in place with no evidence behind them.", "Which of our controls can we actually prove for the ISO 27001 audit?",
   [not_skill("grc-grill"), llm("unproven", "There is no grc/evidence/ folder in the sample. R-001 is 'treated' with control A.8.20, so the register implies it is in place. PASS only if the reply says no evidence is filed yet (nothing is proven), flags controls the register relies on with no proof (A.8.20 at least, or the controls of treated risks), and proposes requests to control owners or a next step. It must not claim any control is evidenced.", focus="trace")], 20)
 
-for name, (skill, desc, prompt, graders, turns) in C.items():
+# --- grc-init and company-report (empty or company-only sandboxes, see SCAFFOLD below)
+SCAFFOLD = {}
+EMPTY = "#!/usr/bin/env bash\n# Empty sandbox: no grc/ yet\nset -euo pipefail\nmkdir -p ./grc\n"
+COMPANY = "#!/usr/bin/env bash\n# One filled company folder (evals/fixture/company/grc/northwind-bank)\nset -euo pipefail\ncp -R \"@FIXTURE@/company/grc\" ./grc\n"
+C["init-new"] = ("grc-init", "Sets up a new company folder: 10 OKF files, no placeholder left, COMPANY.md honest without a profile, then asks about the report in plain text.", "Set up Northwind Bank as a new client. The folder name northwind-bank is fine.",
+  [rx("company-type", r"^type: Company", path="grc/northwind-bank/COMPANY.md", flags="m"),
+   fe("regulations", "grc/northwind-bank/REGULATIONS.md"), fe("assets", "grc/northwind-bank/ASSETS.md"), fe("log", "grc/northwind-bank/log.md"),
+   rx("okf-version", r'okf_version: "0\.2"', path="grc/northwind-bank/index.md"),
+   {"name": "no-placeholder-left", "type": "regex", "pattern": r"\{\{", "target": {"source": "file", "path": "grc/northwind-bank/COMPANY.md"}, "match": "count:0"},
+   {"name": "no-selection-tool", "type": "tool_used", "tool": "AskUserQuestion", "min": 0, "max": 0, "arm": "both"},
+   llm("slug-then-report", "PASS only if, across the run, the agent confirmed the folder name `northwind-bank` (or created it and said so), never invented company facts (no headcount, turnover or address unless a source was fetched), and its last message asks, as plain text and in one message, whether the user wants a full report or the ID card (one page) and in which format (HTML default, PDF, Word or PowerPoint), or says it could not run the profiling and offers that next step.", focus="trace")], 30)
+C["init-exists"] = ("grc-init", "An existing company folder is never recreated or overwritten.", "Set up Northwind Bank.",
+  [rx("client-text-kept", r"Northwind Payments", path="grc/northwind-bank/COMPANY.md"),
+   llm("says-exists", "PASS only if the reply says the Northwind Bank folder already exists and nothing was recreated or changed, and offers to refresh or report instead.", focus="trace")], 20, "company")
+C["report-id-card"] = ("company-report", "Writes the one-page ID card from the folder only, in the repo look.", "Make the ID card for Northwind Bank, HTML.",
+  [fe("id-card", "grc/northwind-bank/id-card.html"),
+   rx("has-company", r"Northwind", path="grc/northwind-bank/id-card.html"),
+   {"name": "no-example-leftover", "type": "regex", "pattern": r"Acme", "target": {"source": "file", "path": "grc/northwind-bank/id-card.html"}, "match": "count:0"},
+   rx("has-regulated-sub", r"Northwind Payments", path="grc/northwind-bank/id-card.html"),
+   llm("faithful-one-page", "PASS only if the written id-card.html shows only facts that are in the Northwind Bank folder (3 subsidiaries with Northwind Payments regulated, GDPR likely, DORA and NIS2 possible, authorities CNIL, ACPR, ANSSI), keeps `not found` for the balance sheet, does not invent a CISO, DPO or certification, and is a short one-page version (headline, In short, group, regulations, at most 3 questions), not the full report.", focus="trace")], 30, "company")
+C["report-full"] = ("company-report", "Writes the full report with every section and every open question, no invented fact.", "Write the full report for Northwind Bank, HTML.",
+  [fe("report", "grc/northwind-bank/report.html"),
+   rx("group-section", r"Northwind IT Services", path="grc/northwind-bank/report.html"),
+   {"name": "no-example-leftover", "type": "regex", "pattern": r"Acme", "target": {"source": "file", "path": "grc/northwind-bank/report.html"}, "match": "count:0"},
+   llm("all-sections", "PASS only if report.html has the four sections (group structure, company facts with sources, regulations with authorities, open questions), the completeness bars for 8 files, every open question of COMPANY.md and REGULATIONS.md, and only facts that are in the folder (no invented CISO, DPO, certification or balance sheet).", focus="trace")], 30, "company")
+
+for name, v in C.items():
+    pass
+
+for name, v in C.items():
+    skill, desc, prompt, graders, turns = v[:5]
+    kind = v[5] if len(v) > 5 else None
     d = f"cases/{name}"
+    os.makedirs(d, exist_ok=True)
+    if name.startswith(("init-", "report-")):
+        open(f"{d}/scaffold.sh", "w").write(COMPANY if kind == "company" else EMPTY)
+        os.chmod(f"{d}/scaffold.sh", 0o755)
     lines = ['schema_version: "1.1"', f"name: {name}", f"description: {json.dumps(desc)}", f"tags: [{skill}]",
              "context:", "  scaffold_script: scaffold.sh", "execution:", f"  max_turns: {turns}", "  timeout_seconds: 600",
              "  allowed_tools: [Bash, Write, Edit, Read, Glob, Grep, Skill]", "  prompt: |", f"    /grc:{skill} {prompt}", "graders:"]
