@@ -35,9 +35,20 @@ sources: []
 
 # Group
 
-Group hints, each with its basis. None found.
+Parent company, if any: not found
+
+## Subsidiaries
+
+Entities controlled by the company, from its own published documents. A list from public data is never complete: it stays `to confirm` until the client signs it off.
+
+| Entity | Registration no. | Country | Relation (% held) | Activity | Regulated? | Source |
+|---|---|---|---|---|---|---|
+| none found | | | | | | |
+
+`Regulated?` names a licence or sector that changes the scope (payment institution, insurer, health data host). That entity may need its own folder.
 
 # Open questions
 
 1. Which legal entity is in scope (the group parent or a subsidiary)?
 2. Which countries does it operate in?
+3. Is the subsidiaries list complete? Which entities hold the IT, the data or a licence?
