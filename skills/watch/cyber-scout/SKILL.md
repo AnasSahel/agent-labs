@@ -6,7 +6,7 @@ metadata:
   version: 1.0.0 # x-release-please-version
 ---
 
-Find what happened, not what is true. The scout turns a **period** into a shortlist of real incidents, each with its sources and **who says what**. It is generic: the caller knows the environment (its pages, its history) and passes in everything the scout needs. It reads no files, writes no files, and keeps no state between runs.
+Find what happened, not what is true. The scout turns a **period** into a shortlist of real incidents, each with its sources and **who says what**. The caller passes in everything the scout needs.
 
 ## Input
 
