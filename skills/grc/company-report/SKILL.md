@@ -1,6 +1,6 @@
 ---
 name: company-report
-description: Turn one company folder in grc/ into a report a manager can read, with the group tree, company facts with sources, regulations with their authorities, completeness per file and the open questions. Use when the user asks for a report, summary, overview, brief or status of a company or client folder, asks "where do we stand on Acme", or wants to see the subsidiaries, regulations or open questions of a company.
+description: Turn one company folder in grc/ into a report a manager can read, as a full report or a one-page ID card, with the group tree, company facts with sources, regulations with their authorities, completeness per file and the open questions. Use when the user asks for a report, summary, overview, brief or status of a company or client folder, asks "where do we stand on Acme", or wants to see the subsidiaries, regulations or open questions of a company.
 metadata:
   author: Anas Sahel
   version: 1.0.0 # x-release-please-version
@@ -14,9 +14,9 @@ Read one `grc/<slug>/` folder (the [OKF](https://github.com/GoogleCloudPlatform/
 
 2. **Read** all 8 files and `index.md`: frontmatter (`status`, `confidence`, `sources`, `verified`) and body. Done when you hold every fact, its source and every open question.
 
-3. **Ask length and format**, last and in one line, unless the caller already passed them: `Full report or one page? HTML (default), PDF, Word or PowerPoint?` For PDF, Word or PowerPoint, write the HTML first, then call the matching skill (`pdf`, `docx`, `pptx`) on it. Done when length and format are known.
+3. **Ask length and format**, last and in one line, unless the caller already passed them: `Full report or the ID card (one page)? HTML (default), PDF, Word or PowerPoint?` For PDF, Word or PowerPoint, write the HTML first, then call the matching skill (`pdf`, `docx`, `pptx`) on it. Done when length and format are known.
 
-4. **Write** `grc/<slug>/report.html` (`one-page.html` for one page), from [examples/report.html](examples/report.html). Keep its CSS, section order and class names; replace every word of its fictional content. It overwrites only a previous `report.html`. Done when no Acme text is left.
+4. **Write** `grc/<slug>/report.html` (`id-card.html` for the ID card), from [examples/report.html](examples/report.html). Keep its CSS, section order and class names; replace every word of its fictional content. It overwrites only a previous `report.html`. Done when no Acme text is left.
 
 5. **Show** the file path and the three lines of the In short box. Offer one next step: `Close the open questions with grc-grill?` Done when the user has the path and the next step.
 
@@ -30,9 +30,9 @@ Read one `grc/<slug>/` folder (the [OKF](https://github.com/GoogleCloudPlatform/
 - **03 Regulations and authorities**: status, the reason with its article, confidence, authority, from `REGULATIONS.md` and `AUTHORITIES.md`. Keep the line `Indicative, from public data: not a legal opinion.`
 - **04 Open questions**: every question of every file, numbered once, grouped under its file's name.
 
-## One page
+## ID card
 
-For a manager who reads nothing else: the same page cut to fit one A4 sheet (print to PDF, no second page). Keep the eyebrow, the two-line headline, the In short box, the group tree, the regulations table and the three most important open questions, chosen by what blocks the most. Drop the company facts table, the completeness bars and the rest of the questions, and end with one line: `Full report: report.html`.
+The one-page version, for a manager who reads nothing else: the same page cut to fit one A4 sheet (print to PDF, no second page). Keep the eyebrow, the two-line headline, the In short box, the group tree, the regulations table and the three most important open questions, chosen by what blocks the most. Drop the company facts table, the completeness bars and the rest of the questions, and end with one line: `Full report: report.html`.
 
 ## Rules
 

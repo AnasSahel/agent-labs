@@ -47,7 +47,7 @@ Give each company its own folder, `grc/<slug>/`, an [OKF](https://github.com/Goo
 
    Done when every filled value has a footnote and every empty one a question.
 
-7. **Report.** Show `COMPANY.md`'s open questions, then ask once, format last, in one message: `Want a report of Acme? Full report or one page, and HTML (default), PDF, Word or PowerPoint?` and accept `none`. On an answer, call the Skill tool with `company-report`, passing the slug, the length and the format, so it does not ask again. Done when the user has the report or said none.
+7. **Report.** Show `COMPANY.md`'s open questions, then ask once, format last, in one message: `Want a report of Acme? full report or the ID card (one page), and HTML (default), PDF, Word or PowerPoint?` and accept `none`. On an answer, call the Skill tool with `company-report`, passing the slug, the length and the format, so it does not ask again. Done when the user has the report or said none.
 
 8. **Next.** Offer one next step: `Close the open questions with grc-grill?` Done when the user has it.
 
