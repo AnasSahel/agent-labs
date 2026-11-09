@@ -53,6 +53,7 @@ Give each company its own folder, `grc/<slug>/`, an [OKF](https://github.com/Goo
 
 ## Rules
 
+- Ask every question as plain chat text, never with a selection or multiple-choice tool: the user answers by typing, and can give an answer that is not in your list.
 - Never overwrite a file. A refresh fills only fields still `not found`, and leaves any file whose frontmatter has `verified` by a `human:<id>` untouched.
 - A human confirmation is written `verified: { by: human:<id>, at: <datetime> }`. It is what raises a fact from draft to human-reviewed.
 - One folder per company, never one per subsidiary: subsidiaries are rows in the `COMPANY.md` table.

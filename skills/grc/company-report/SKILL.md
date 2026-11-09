@@ -36,6 +36,7 @@ The one-page version, for a manager who reads nothing else: the same page cut to
 
 ## Rules
 
+- Ask every question as plain chat text, never with a selection or multiple-choice tool: the user answers by typing, and can give an answer that is not in your list.
 - Everything comes from the folder. A fact without a source in the file keeps `to confirm`.
 - The look is the repo's theme: one blue accent, flat and square, Geist and Geist Mono, light and dark by the system setting. Status colors only for status: red `regulated`, amber `to confirm`, green `likely`, gray otherwise.
 - Never italic, never shadows, never rounded corners.
