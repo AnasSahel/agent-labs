@@ -12,13 +12,13 @@ sources: []
 
 # Scope
 
-| Regulation | Status | Reason (with article) | Confidence |
-|---|---|---|---|
-| NIS2 | unknown | not assessed yet | low |
-| GDPR | unknown | not assessed yet | low |
-| DORA | unknown | not assessed yet | low |
+| Regulation | Status | Decided by | Confidence | Would change if |
+|---|---|---|---|---|
+| NIS2 | unknown | no fact yet | low | the activity and size are known |
+| GDPR | unknown | no fact yet | low | the activity is known |
+| DORA | unknown | no fact yet | low | the licence status is known |
 
-Status is `likely`, `possible`, `unlikely` or `unknown`. Never "subject to" or "compliant": this is a first read from public data, not a legal opinion.
+Status is `applies`, `likely`, `unlikely`, `does not apply` or `unknown`. `applies` needs a fact from an official register or the company's own documents. Confidence is `high` (register entry), `medium` (company statement) or `low` (inference). Never "possible", "subject to" or "compliant": this is a read from public data, not a legal opinion.
 
 # Open questions
 
