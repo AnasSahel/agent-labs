@@ -23,14 +23,14 @@ Give each company its own folder, `grc/<slug>/`, an [OKF](https://github.com/Goo
 3. **Create.** Run, from the repo root, with `$SKILL` the folder of this skill:
 
    ```sh
-   mkdir grc/<slug>                  # fails if it exists: stop and say so
+   mkdir -p grc && mkdir grc/<slug>   # fails if the company exists: stop and say so
    cp -R "$SKILL"/templates/. grc/<slug>/
    sed -i.bak "s|{{name}}|<name>|g; s|{{slug}}|<slug>|g; s|{{actor}}|grc-init/1.0.0|g; s|{{now}}|<UTC datetime>|g; s|{{day}}|<YYYY-MM-DD>|g" grc/<slug>/*.md && rm grc/<slug>/*.bak
    ```
 
    In `<name>`, write `\&` for `&` and `\|` for `|`, and `'` for `"`. Done when `grc/<slug>/` holds the 10 files and none contains `{{`.
 
-4. **Profile.** Call the Skill tool with `company-profiling` and the name or SIREN. When it is not installed, say so, continue with step 5 alone. Done when you hold the profile, or know it is unavailable.
+4. **Profile.** Call the Skill tool with `company-profiling` and the name or SIREN. When it is not installed, say so and continue with step 5 alone. Done when you hold the profile, or know it is unavailable.
 
 5. **Subsidiaries.** Look for the entities the company controls, in this order, and stop at the first source that gives a list:
    - the profile's group hints;
