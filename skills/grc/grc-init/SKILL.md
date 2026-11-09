@@ -1,6 +1,6 @@
 ---
 name: grc-init
-description: Set up a company folder in grc/ (an Open Knowledge Format bundle of 8 files), fill it from public data and decide which regulations apply (NIS2, DORA, GDPR) and to which authorities the company answers, checking licences in the official registers, so every other GRC skill starts from facts instead of questions. Use when the user starts GRC work for a company or client, onboards, initializes or sets up grc/, adds a new company, says "new client", "set up Acme", or gives a company name or SIREN with no other task, or when grc/ has no folder for the company being discussed.
+description: Set up a company folder in grc/ (an Open Knowledge Format bundle of 8 files), fill it from public data and decide which regulations apply (NIS2, DORA, GDPR) and to which authorities the company answers, checking licences in the official registers, so every other GRC skill starts from facts instead of questions. Use when the user starts GRC work for a company or client, onboards, initializes or sets up grc/, adds a new company, says "new client", "set up Acme", or gives a company name or SIREN with no other task, or when grc/ has no folder for the company being discussed, or to clean up, remove, reset or start over a company.
 metadata:
   author: Anas Sahel
   version: 1.0.0 # x-release-please-version
@@ -66,10 +66,20 @@ Give each company its own folder, `grc/<slug>/`, an [OKF](https://github.com/Goo
 
 11. **Next.** Offer one next step: `Close the open questions with grc-grill?` Done when the user has it.
 
+## Clean up
+
+When the user asks to clean up, remove, reset or start over a company, work only from what is on disk, so it works after a failed or half-done run:
+
+1. **Find** what was produced for the slug: the folder `grc/<slug>/` with every file in it (reports, ID cards, PDFs included), and any profile in `grc/profiles/` whose name contains the slug or the SIREN. Nothing else: never another company, `risk-register.md`, `risks/`, `policies/`, `evidence/` or `traces/`.
+2. **List** exactly those paths and ask once, in plain text: `Delete these N files for Acme? This cannot be undone.` Done when the user has said yes.
+3. **Delete** them with `rm -r`, then say what was removed. Nothing to find: say so and stop. Done when none of the listed paths exists.
+
+A clean-up never reads or depends on an earlier run's output, and a new `set up` afterwards starts from nothing.
+
 ## Rules
 
 - Ask every question as plain chat text, never with a selection or multiple-choice tool: the user answers by typing, and can give an answer that is not in your list.
-- Never overwrite a file. A refresh fills only fields still `not found`, and leaves any file whose frontmatter has `verified` by a `human:<id>` untouched.
+- Never overwrite a file, and never delete without the clean-up confirmation above. A refresh fills only fields still `not found`, and leaves any file whose frontmatter has `verified` by a `human:<id>` untouched.
 - A human confirmation is written `verified: { by: human:<id>, at: <datetime> }`. It is what raises a fact from draft to human-reviewed.
 - One folder per company, never one per subsidiary: subsidiaries are rows in the `COMPANY.md` table.
 - `ORGANIZATION.md` and `CERTIFICATIONS.md` get only what is public; the interview files stay skeletons.
