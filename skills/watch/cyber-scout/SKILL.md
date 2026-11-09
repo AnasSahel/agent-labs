@@ -1,6 +1,7 @@
 ---
 name: cyber-scout
 description: "Cyber scout: search the news for fresh, real cyber incidents in a period the caller gives and return a sourced shortlist, without judging truth or severity. Reads and writes no files, keeps no state. Use when an agent or the user needs recent breaches, ransomware attacks or other security incidents found for a period (a watch, a newsletter, a weekly review, a threat-intel feed), in English, French or other languages, before any fact-check or write-up."
+arguments: period languages known focus hints max
 metadata:
   author: Anas Sahel
   version: 1.0.0 # x-release-please-version
@@ -10,14 +11,7 @@ Find what happened, not what is true. The scout turns a **period** into a shortl
 
 ## Input
 
-The caller provides:
-
-- **period**: `from` and `to` dates. Required. When missing, ask once; never guess it.
-- **languages**: default English.
-- **known**: URLs or victim names to skip, because the caller already has them.
-- **focus**: sectors, regions or topics to prioritise. Optional.
-- **hints**: outlets to check first. Optional.
-- **max**: cap on kept incidents. Default 15.
+`period` is required (`from` and `to` dates): when missing, ask once, never guess it. Defaults: `languages` English, `max` 15. `known` is what the caller already has (URLs or victim names to skip). `focus` (sectors, regions, topics) and `hints` (outlets to check first) are optional.
 
 ## Steps
 
