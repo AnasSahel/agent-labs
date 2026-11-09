@@ -10,7 +10,9 @@ generated: { by: "{{actor}}", at: "{{now}}" }
 sources: []
 ---
 
-# Scope
+# Directly applies
+
+The law binds the company itself, because of what it is (activity, size, licence). Each row is one regulation.
 
 | Regulation | Status | Decided by | Confidence | Would change if |
 |---|---|---|---|---|
@@ -20,9 +22,9 @@ sources: []
 
 Status is `applies`, `likely`, `unlikely`, `does not apply` or `unknown`. `applies` needs a fact from an official register or the company's own documents. Confidence is `high` (register entry), `medium` (company statement) or `low` (inference). Never "possible", "subject to" or "compliant": this is a read from public data, not a legal opinion.
 
-# Indirect exposure through clients
+# Reaches you through others
 
-Not a legal status for the company: its clients are in scope and pass duties down by contract (NIS2 Art. 21(2)(d) and 21(3); DORA Art. 28 and 30).
+Indirect exposure. The law does not bind the company itself: its clients are in scope and pass duties down by contract (NIS2 Art. 21(2)(d) and 21(3); DORA Art. 28 and 30). It is a contract duty, never a legal status. A company can sit in both parts at once.
 
 | Client segment | Why it is in scope | Duty passed down | Evidence | Confidence |
 |---|---|---|---|---|
