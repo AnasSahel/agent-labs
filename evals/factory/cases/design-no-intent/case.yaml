@@ -1,0 +1,26 @@
+schema_version: '1.1'
+name: design-no-intent
+description: 'No issue and no intent: design still writes a spec, numbered from specs/, and its status is the state.'
+tags:
+- factory-design
+context:
+  scaffold_script: scaffold.sh
+execution:
+  max_turns: 80
+  timeout_seconds: 900
+  allowed_tools:
+  - Bash
+  - Write
+  - Edit
+  - Read
+  - Glob
+  - Grep
+  - Skill
+  - Agent
+  prompt: '/factory:factory-design Add a `notes count` command that prints how many notes there are. There''s no issue and no intent for this. I''m away: run it unattended and ask me nothing.
+
+    '
+graders:
+  - {"name": "spec-001-written", "type": "tool_used", "tool": "Write", "input_match": "specs/001-[a-z0-9-]+\\.md"}
+  - {"name": "spec-has-a-status", "type": "tool_used", "tool": "Write", "input_match": "specs/001-[a-z0-9-]+\\.md[\\s\\S]*status: (needs-design|designed)"}
+  - {"name": "designs-without-intent", "type": "llm", "weight": 2, "focus": "last_message", "criteria": "The repo has no tracker, no issue and no intent, and the user is away. PASS only if the reply gives the path of a spec written under specs/ whose name starts with 001, and says where it stands (designed, or needs-design with what waits). FAIL if it stops because an intent, an issue or a tracker is missing, or if it asks the user a question."}

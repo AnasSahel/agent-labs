@@ -39,6 +39,8 @@ Turn a worry ("what if our payroll supplier gets ransomware?") into one scored, 
 
    **One severity, a likelihood per route.** Severity belongs to the feared event, so every route shares it. Each route gets its own likelihood, today and after the fixes. The risk is as likely as its **easiest route** (the EBIOS RM rule for a strategic scenario and its operational scenarios): inherent likelihood = the highest route today, residual = the highest route after the fixes. Say it in plain words when the fixes leave another route open ("The login fix closes route 1, but the helpdesk call stays Possible, so the risk only drops to medium"), and name the **next best fix**: the one control that would lower the route that now sets the residual.
 
+   **Measures.** Write each control of the treatment as a **measure**, by the rules of [writing.md](writing.md): a verb and a concrete thing, one list in priority order (the fix that lowers the route setting the residual comes first), who does it and whether it is already in place taken from the docs or the user, never guessed, and within the limits of the products involved. A measure blocks a launch only when the owner said so in the grill.
+
    Score inherent, then residual with the treatment's controls in place. When residual is above the appetite in `grc/context.md` and the treatment is `accept`, the owner's acceptance must be in the trace as a `user` row, else ask for it. Done when both scores are set and the residual is within appetite or accepted.
 
 4. **Map.** Look clauses up in [frameworks/](frameworks/), never from memory. For each control in the treatment, give its ISO 27001 ref from `iso27001.md`, then for each framework in scope in `grc/context.md` (ISO 27001 alone when none), the clauses of `<id>.md` whose ISO 27001 column holds that ref. A framework in scope with no file: its clause from memory, marked "clause to confirm". Then list the **extras** of those files the feared event would trigger (a breach to notify within 72 hours, a contract clause), as their own lines under the treatment. Done when every control has its ISO 27001 ref, every in-scope framework a column, and every triggered extra a line.
@@ -67,6 +69,8 @@ Turn a worry ("what if our payroll supplier gets ransomware?") into one scored, 
    - `md`, `html`, `csv`, `json`: write them yourself next to the report; `html` shows the attack path by embedding the filled `<id>-attack-path.html` in an iframe (full width, 760px high, no border, with a link to open it), so it is the same drawing as the page; the Mermaid version stays in the md only. Every visual asset (html, pdf, pptx, xlsx, docx, images, the inline drawing) follows [theme.md](theme.md): one blue accent, white background, grays, Geist, flat, square corners; html follows the system light/dark setting, files (pdf, pptx, xlsx, docx) stay light. Text-only files (md, json, csv, yaml, Jira) stay plain.
    - `pdf`, `pptx`, `xlsx`: call the Skill tool with `pdf`, `pptx` or `xlsx`, with the report and [theme.md](theme.md) as the source; the attack path goes in as an image: a screenshot of the filled `grc/risks/<id>-attack-path.html`, so it keeps its icons and play button. Take it so it looks exactly like the page on a desktop: viewport **1600×1000** (narrower and the page falls back to tabs or a snake), device scale 2, light color scheme (Office files stay light), wait for the drawing, then capture only the `.layout` element (score rail and drawing, with 24px padding added), not the page header: the slide or page already carries the title. One screenshot serves every format, saved as `grc/risks/<id>-attack-path.png`. Without a browser, draw it with the target's shapes and put each node's icon in its tile, using the SVG paths from `attack-path.html`.
    - Jira: create one issue (title: the scenario, owner, due date, link to the report) through the Jira connector; without one, say so and hand over the CSV row.
+
+   Every sentence a person reads (summary, scenario, treatment, a message to send) follows [writing.md](writing.md). Look at each pptx, pdf and html before you list it: overlapping or cut text is fixed first.
 
    Every format opens with the **executive summary** (report template): the first section of the html, pdf and docx, the slide after the title in pptx, the top of the first sheet in xlsx. The xlsx follows the workbook in [theme.md](theme.md) sheet by sheet, heat map included. Empty cells are `None`, never `""`: openpyxl saves `""` as an empty inline string and Excel then calls the whole file corrupt.
 
@@ -158,6 +162,8 @@ The risk is as likely as its easiest route: <route>, <word (Vn)> today, <route>,
 
 ## Treatment
 <reduce | accept | transfer | avoid>, and why.
+
+In priority order, each control written as a measure (a verb and a thing).
 
 | Control | ISO 27001 | <one column per framework in scope> |
 |---|---|---|

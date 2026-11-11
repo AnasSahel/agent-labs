@@ -1,6 +1,6 @@
 ---
 name: factory-build
-description: Build phase. Turn an approved spec into code in two halves: first a plan (plan.md, the files that change, the order, the risks and the tests that prove each criterion), drafted in plan mode without touching the code and accepted by the user (and the tech lead for a high-risk change); then the code and its tests, in one pass on a branch, done only when build, tests and lint pass and a verifier agent, in a fresh context, has run the app against the spec, with a pull request when the repo has a code host. Works with any tracker (GitHub, Linear, Plane, a folder in the repo…) and any code host (GitHub, GitLab, none). Use when the user asks to plan or build an issue, a spec or an intent, or to implement a designed feature.
+description: "Build phase. Turn an approved spec into code in two halves: first a plan (plan.md, the files that change, the order, the risks and the tests that prove each criterion), drafted in plan mode without touching the code and accepted by the user (and the tech lead for a high-risk change); then the code and its tests, in one pass on a branch, done only when build, tests and lint pass and a verifier agent, in a fresh context, has run the app against the spec, with a pull request when the repo has a code host. Works with any tracker (GitHub, Linear, Plane, a folder in the repo…) and any code host (GitHub, GitLab, none). Use when the user asks to build or implement an issue or a spec that's already designed, or to write or accept its implementation plan. Not for filing a new request: that's factory-plan."
 metadata:
   author: Anas Sahel
   version: 1.0.0 # x-release-please-version
@@ -16,9 +16,9 @@ Turn an approved **spec** (`specs/<id>-<slug>.md`, from the factory-design skill
 
 Everything happens on one branch, `<id>-<slug>`, and reaches the default branch only through its pull request: never push to the default branch.
 
-You write the plan and you implement it: the plan's author keeps it true. Once you believe the work is done, the `verifier` in this skill's `agents/` folder checks it: start it as a fresh subagent with its file as its instructions, so its verdict isn't shaped by the assumptions behind the code.
+You write the plan and you implement it: the plan's author keeps it true. Once you believe the work is done, the `verifier` in this skill's `agents/` folder checks it: start it as a fresh subagent with its file as its instructions (and say it in the hand-off too, since the file's `tools` line isn't enforced there: it fixes nothing and edits no file), so its verdict isn't shaped by the assumptions behind the code.
 
-The skill works with any **tracker**. It needs three operations: read an issue with its comments, comment, and set labels (or the tracker's own fields). And with any **code host**:
+The skill works with any **tracker**. It needs three operations: read an issue with its comments, comment, and set labels (or the tracker's own fields). An issue carries one **state** at a time: setting a state removes the previous state's label (or `status`), and creates the label when the tracker doesn't have it yet. And with any **code host**:
 
 | Tracker or host | Tool |
 |---|---|
@@ -26,9 +26,10 @@ The skill works with any **tracker**. It needs three operations: read an issue w
 | GitLab | `glab` CLI: issues, and a draft merge request |
 | Linear, Plane, Jira… | its MCP server or CLI, when one is connected |
 | Files | the intent file is the issue: its state is its front matter `status`, never a label; comment by appending `## Comment` with the template's body under it, its own heading dropped (edit that section in place). Once the branch exists, write and read the intent on the branch: its state reaches the default branch with the pull request |
+| No issue | factory-design ran without one: the spec and the plan are the tracker. The state is the plan's front matter `status`, and the spec's `status: designed` until there's a plan; what would be a comment goes in the reply |
 | No remote | the branch is the delivery: no push, no pull request |
 
-When the tracker has no tool in this session, say so and stop.
+When the repo names a tracker that has no tool in this session, say so and stop.
 
 ## When it plans, when it builds
 
@@ -41,11 +42,15 @@ Each run starts from the issue's state:
 
 | State | This run |
 |---|---|
-| `designed` | Part 1: steps 1 to 3 |
+| `designed` (or `needs-design` once its spec is merged, see Self-heal) | Part 1: steps 1 to 3 |
 | `needs-plan` | the gate, step 3: read the comments and the pull request's review for a decision |
 | `planned`, `building`, `blocked` | Part 2: steps 4 to 6 (read every comment since the last plan or build comment) |
 
 In the conversation, one run does both parts: Part 2 starts as soon as the plan is accepted. Unattended, a run stops at `needs-plan`; the run after the plan is accepted builds it. Any other state: say where it stands and stop, e.g. "42 is at `needs-design`: run factory-design first". An issue at `split` is built part by part: name the parts and stop.
+
+**A part** (an issue linked to a `split` parent, from factory-design) has no spec file of its own: its spec is the parent's `specs/<parent id>-<slug>.md`, narrowed to the criteria, constraints and findings its row of the Proposed split lists. The branch, the plan (`specs/<part id>-<slug>/plan.md`) and the pull request are the part's own. Build a part only once every part it comes after is `built`; otherwise say which one waits and stop.
+
+**Self-heal**: an issue still at `needs-design` whose spec is on the default branch with `status: designed` was approved by its merge: set `designed` and carry on. With the spec's pull request still open, or `status: needs-design`, stop: it waits for the gate.
 
 ## Part 1 · Plan
 
@@ -87,9 +92,11 @@ Starts only from an accepted plan: the state is `planned`, `building` or `blocke
 
    Done when every criterion has its commit.
 
-5. **Done.** Run the build, the full test suite and the lint, and show their output: the work is done only when all three pass. Then hand the `verifier` the spec, the plan, the worktree and the commands, how to start the app included. It runs once. For each failed check, fix the code (with a failing test first when one can show the problem) and run the three commands again; don't run the verifier a second time. A failure you can't fix without changing what the gate accepted goes to step 6. Then push the branch when there's a remote and replace the draft pull request's body with the PR template below; it stays a draft until it's verified. Comment on the issue with the build comment, editing it in place when it exists, and set the state `built`. On a public repo, the branch, the commits and the pull request name behaviours, never a finding (no `F<n>`, no finding text): the spec's constraints are already plain requirements. Done when the issue is `built` with its build comment pointing to the pull request or the branch.
+5. **Done.** Run the build, the full test suite and the lint, and show their output: the work is done only when all three pass. Then hand the `verifier` the spec, the plan, the worktree and the commands, how to start the app included. For each failed check, fix the code (with a failing test first when one can show the problem), run the three commands again, then hand the `verifier` the same inputs and the failed checks again: repeat until its verdict is `pass`, at most 3 runs in all. `built` needs a `pass`; a verdict still `fail` after 3 runs, or a failure you can't fix without changing what the gate accepted, goes to step 6. Then push the branch when there's a remote, replace the draft pull request's body with the PR template below, and mark it ready for review (`gh pr ready`, `glab mr update --ready`): the verifier passed, so the user can review it. Comment on the issue with the build comment, editing it in place when it exists, and set the state `built`. On a public repo, the branch, the commits and the pull request name behaviours, never a finding (no `F<n>`, no finding text): the spec's constraints are already plain requirements. Done when the verifier passed, the pull request is ready for review, and the issue is `built` with its build comment pointing to the pull request or the branch.
 
 6. **Blocked.** When a question only a person can answer comes up (a departure from what was accepted, a criterion no test can check, 3 failed tries at the same step), commit the steps that pass, push the branch when there's a remote, comment on the issue with the blocked comment, and set the state `blocked`. Once answered, running the skill again resumes at the first step without a commit. Done when the issue is `blocked` with the question on it.
+
+Before replying, remove the worktree (`git worktree remove`): the branch keeps everything, and step 4 adds it again.
 
 Reply with the links (issue, plan, pull request or branch) and where it stands: `needs-plan` and who must accept, `built` with the commands' results and what the tests can't cover, or `blocked` with the question.
 
@@ -98,7 +105,7 @@ Reply with the links (issue, plan, pull request or branch) and where it stands: 
 ---
 issue: <tracker reference>
 spec: specs/<id>-<slug>.md
-status: <needs-plan | planned>
+status: <needs-plan | planned; with no issue, then building | built | blocked>
 accepted: <who, date; for a higher-risk change, the tech lead too>
 ---
 
@@ -186,7 +193,7 @@ Closes <issue reference>. Spec: <link> · Plan: <link>
 
 **Verdict** <pass | fail> · **Checks** <n> · **App** <started | not started: why>
 
-<each failed check: what it saw, and the commit that fixed it>
+<runs: <n>. Each failed check: what it saw, and the commit that fixed it>
 
 ## For AGENTS.md or CLAUDE.md
 
