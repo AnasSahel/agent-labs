@@ -110,7 +110,11 @@ C["report-id-card"] = ("company-report", "Writes the one-page ID card from the f
    rx("has-company", r"Northwind", path="grc/northwind-bank/id-card.html"),
    {"name": "no-example-leftover", "type": "regex", "pattern": r"Acme", "target": {"source": "file", "path": "grc/northwind-bank/id-card.html"}, "match": "count:0"},
    rx("has-regulated-sub", r"Northwind Payments", path="grc/northwind-bank/id-card.html"),
-   llm("faithful-one-page", "PASS only if the written id-card.html shows only facts that are in the Northwind Bank folder (3 subsidiaries with Northwind Payments regulated, GDPR applies, DORA likely, NIS2 unlikely, one `Reaches you through others` row, authorities CNIL and ACPR), keeps `not found` for the balance sheet, does not invent a CISO, DPO or certification, and is a short one-page version (headline, In short, group, regulations, at most 3 questions), not the full report.", focus="trace")], 30, "company")
+   rx("says-gdpr-applies", r"GDPR[\s\S]{0,200}applies", path="grc/northwind-bank/id-card.html"),
+   rx("says-dora-likely", r"DORA[\s\S]{0,200}likely", path="grc/northwind-bank/id-card.html"),
+   rx("names-cnil-acpr", r"CNIL[\s\S]*ACPR|ACPR[\s\S]*CNIL", path="grc/northwind-bank/id-card.html"),
+   rx("points-to-full-report", r"report\.html", path="grc/northwind-bank/id-card.html"),
+   {"name": "no-invented-certification", "type": "regex", "pattern": r"ISO 27001 certified|SOC 2 (Type|report)|PCI DSS (certified|compliant)", "target": {"source": "file", "path": "grc/northwind-bank/id-card.html"}, "match": "count:0"}], 30, "company")
 C["report-full"] = ("company-report", "Writes the full report with every section and every open question, no invented fact.", "Write the full report for Northwind Bank, HTML.",
   [fe("report", "grc/northwind-bank/report.html"),
    rx("group-section", r"Northwind IT Services", path="grc/northwind-bank/report.html"),

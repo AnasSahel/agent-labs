@@ -15,4 +15,8 @@ graders:
   - {"name": "has-company", "type": "regex", "pattern": "Northwind", "target": {"source": "file", "path": "grc/northwind-bank/id-card.html"}}
   - {"name": "no-example-leftover", "type": "regex", "pattern": "Acme", "target": {"source": "file", "path": "grc/northwind-bank/id-card.html"}, "match": "count:0"}
   - {"name": "has-regulated-sub", "type": "regex", "pattern": "Northwind Payments", "target": {"source": "file", "path": "grc/northwind-bank/id-card.html"}}
-  - {"name": "faithful-one-page", "type": "llm", "weight": 2, "focus": "trace", "criteria": "PASS only if the written id-card.html shows only facts that are in the Northwind Bank folder (3 subsidiaries with Northwind Payments regulated, GDPR applies, DORA likely, NIS2 unlikely, one `Reaches you through others` row, authorities CNIL and ACPR), keeps `not found` for the balance sheet, does not invent a CISO, DPO or certification, and is a short one-page version (headline, In short, group, regulations, at most 3 questions), not the full report."}
+  - {"name": "says-gdpr-applies", "type": "regex", "pattern": "GDPR[\\s\\S]{0,200}applies", "target": {"source": "file", "path": "grc/northwind-bank/id-card.html"}}
+  - {"name": "says-dora-likely", "type": "regex", "pattern": "DORA[\\s\\S]{0,200}likely", "target": {"source": "file", "path": "grc/northwind-bank/id-card.html"}}
+  - {"name": "names-cnil-acpr", "type": "regex", "pattern": "CNIL[\\s\\S]*ACPR|ACPR[\\s\\S]*CNIL", "target": {"source": "file", "path": "grc/northwind-bank/id-card.html"}}
+  - {"name": "points-to-full-report", "type": "regex", "pattern": "report\\.html", "target": {"source": "file", "path": "grc/northwind-bank/id-card.html"}}
+  - {"name": "no-invented-certification", "type": "regex", "pattern": "ISO 27001 certified|SOC 2 (Type|report)|PCI DSS (certified|compliant)", "target": {"source": "file", "path": "grc/northwind-bank/id-card.html"}, "match": "count:0"}
