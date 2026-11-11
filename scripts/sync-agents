@@ -1,6 +1,6 @@
 #!/bin/sh
-# Copy each agent and framework a skill lists (metadata.agents, metadata.frameworks in its SKILL.md)
-# from agents/ and frameworks/ into skills/[<group>/]<skill>/agents/ and .../frameworks/.
+# Copy each agent, framework and authority list a skill lists (metadata.agents, .frameworks, .authorities in its SKILL.md)
+# from agents/, frameworks/ and authorities/ into skills/[<group>/]<skill>/agents/, .../frameworks/ and .../authorities/.
 # agents/ and frameworks/ are the source: edit there, never in a skill's copy.
 # Usage: scripts/sync-agents          copy, and delete copies no longer listed
 #        scripts/sync-agents --check  change nothing; fail when a copy is missing, stale or extra
@@ -11,7 +11,7 @@ bad=0
 for md in skills/*/SKILL.md skills/*/*/SKILL.md; do
   [ -f "$md" ] || continue
   skill=${md%/SKILL.md}
-  for kind in agents frameworks; do
+  for kind in agents frameworks authorities; do
     list=$(sed -n "s/^  $kind: *\[\(.*\)\] *\$/\1/p" "$skill/SKILL.md" | tr ',' ' ')
     for a in $list; do
       src="$kind/$a.md"; dst="$skill/$kind/$a.md"

@@ -1,0 +1,22 @@
+schema_version: "1.1"
+name: report-id-card
+description: "Writes the one-page ID card from the folder only, in the repo look."
+tags: [company-report]
+context:
+  scaffold_script: scaffold.sh
+execution:
+  max_turns: 30
+  timeout_seconds: 600
+  allowed_tools: [Bash, Write, Edit, Read, Glob, Grep, Skill]
+  prompt: |
+    /grc:company-report Make the ID card for Northwind Bank, HTML.
+graders:
+  - {"name": "id-card", "type": "file_exists", "path": "grc/northwind-bank/id-card.html"}
+  - {"name": "has-company", "type": "regex", "pattern": "Northwind", "target": {"source": "file", "path": "grc/northwind-bank/id-card.html"}}
+  - {"name": "no-example-leftover", "type": "regex", "pattern": "Acme", "target": {"source": "file", "path": "grc/northwind-bank/id-card.html"}, "match": "count:0"}
+  - {"name": "has-regulated-sub", "type": "regex", "pattern": "Northwind Payments", "target": {"source": "file", "path": "grc/northwind-bank/id-card.html"}}
+  - {"name": "says-gdpr-applies", "type": "regex", "pattern": "GDPR[\\s\\S]{0,200}applies", "target": {"source": "file", "path": "grc/northwind-bank/id-card.html"}}
+  - {"name": "says-dora-likely", "type": "regex", "pattern": "DORA[\\s\\S]{0,200}likely", "target": {"source": "file", "path": "grc/northwind-bank/id-card.html"}}
+  - {"name": "names-cnil-acpr", "type": "regex", "pattern": "CNIL[\\s\\S]*ACPR|ACPR[\\s\\S]*CNIL", "target": {"source": "file", "path": "grc/northwind-bank/id-card.html"}}
+  - {"name": "points-to-full-report", "type": "regex", "pattern": "report\\.html", "target": {"source": "file", "path": "grc/northwind-bank/id-card.html"}}
+  - {"name": "no-invented-certification", "type": "regex", "pattern": "ISO 27001 certified|SOC 2 (Type|report)|PCI DSS (certified|compliant)", "target": {"source": "file", "path": "grc/northwind-bank/id-card.html"}, "match": "count:0"}
