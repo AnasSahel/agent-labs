@@ -23,6 +23,6 @@ execution:
 graders:
   - {"name": "plan-written", "type": "tool_used", "tool": "Write", "input_match": "specs/001-list-newest-first/plan\\.md"}
   - {"name": "plan-at-needs-plan", "type": "tool_used", "tool": "Write", "input_match": "specs/001-list-newest-first/plan\\.md[\\s\\S]*status: needs-plan"}
-  - {"name": "no-code-written", "type": "tool_used", "tool": "Write", "input_match": "src/(notes|cli)\\.js", "min": 0, "max": 0}
-  - {"name": "no-code-edited", "type": "tool_used", "tool": "Edit", "input_match": "src/(notes|cli)\\.js", "min": 0, "max": 0}
+  - {"name": "no-code-written", "type": "tool_used", "tool": "Write", "input_match": "\"file_path\"\\s*:\\s*\"[^\"]*src/(notes|cli)\\.js\"", "min": 0, "max": 0}
+  - {"name": "no-code-edited", "type": "tool_used", "tool": "Edit", "input_match": "\"file_path\"\\s*:\\s*\"[^\"]*src/(notes|cli)\\.js\"", "min": 0, "max": 0}
   - {"name": "plans-without-issue", "type": "llm", "weight": 2, "focus": "last_message", "criteria": "The spec has no issue and the repo has no tracker; the user is away. PASS only if the reply says a plan was written (specs/001-list-newest-first/plan.md) on a branch, that it stands at needs-plan, and who must accept it. FAIL if it stops because there is no issue or tracker, or if it says code was implemented."}
