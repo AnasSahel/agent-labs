@@ -1,6 +1,6 @@
 ---
 name: factory-build
-description: Build phase. Turn an approved spec into code in two halves: first a plan (plan.md, the files that change, the order, the risks and the tests that prove each criterion), drafted in plan mode without touching the code and accepted by the user (and the tech lead for a high-risk change); then the code and its tests, in one pass on a branch, done only when build, tests and lint pass and a verifier agent, in a fresh context, has run the app against the spec, with a pull request when the repo has a code host. Works with any tracker (GitHub, Linear, Plane, a folder in the repo…) and any code host (GitHub, GitLab, none). Use when the user asks to plan or build an issue, a spec or an intent, or to implement a designed feature.
+description: "Build phase. Turn an approved spec into code in two halves: first a plan (plan.md, the files that change, the order, the risks and the tests that prove each criterion), drafted in plan mode without touching the code and accepted by the user (and the tech lead for a high-risk change); then the code and its tests, in one pass on a branch, done only when build, tests and lint pass and a verifier agent, in a fresh context, has run the app against the spec, with a pull request when the repo has a code host. Works with any tracker (GitHub, Linear, Plane, a folder in the repo…) and any code host (GitHub, GitLab, none). Use when the user asks to plan or build an issue, a spec or an intent, or to implement a designed feature."
 metadata:
   author: Anas Sahel
   version: 1.0.0 # x-release-please-version
@@ -41,11 +41,15 @@ Each run starts from the issue's state:
 
 | State | This run |
 |---|---|
-| `designed` | Part 1: steps 1 to 3 |
+| `designed` (or `needs-design` once its spec is merged, see Self-heal) | Part 1: steps 1 to 3 |
 | `needs-plan` | the gate, step 3: read the comments and the pull request's review for a decision |
 | `planned`, `building`, `blocked` | Part 2: steps 4 to 6 (read every comment since the last plan or build comment) |
 
 In the conversation, one run does both parts: Part 2 starts as soon as the plan is accepted. Unattended, a run stops at `needs-plan`; the run after the plan is accepted builds it. Any other state: say where it stands and stop, e.g. "42 is at `needs-design`: run factory-design first". An issue at `split` is built part by part: name the parts and stop.
+
+**A part** (an issue linked to a `split` parent, from factory-design) has no spec file of its own: its spec is the parent's `specs/<parent id>-<slug>.md`, narrowed to the criteria, constraints and findings its row of the Proposed split lists. The branch, the plan (`specs/<part id>-<slug>/plan.md`) and the pull request are the part's own. Build a part only once every part it comes after is `built`; otherwise say which one waits and stop.
+
+**Self-heal**: an issue still at `needs-design` whose spec is on the default branch with `status: designed` was approved by its merge: set `designed` and carry on. With the spec's pull request still open, or `status: needs-design`, stop: it waits for the gate.
 
 ## Part 1 · Plan
 
@@ -87,7 +91,7 @@ Starts only from an accepted plan: the state is `planned`, `building` or `blocke
 
    Done when every criterion has its commit.
 
-5. **Done.** Run the build, the full test suite and the lint, and show their output: the work is done only when all three pass. Then hand the `verifier` the spec, the plan, the worktree and the commands, how to start the app included. It runs once. For each failed check, fix the code (with a failing test first when one can show the problem) and run the three commands again; don't run the verifier a second time. A failure you can't fix without changing what the gate accepted goes to step 6. Then push the branch when there's a remote and replace the draft pull request's body with the PR template below; it stays a draft until it's verified. Comment on the issue with the build comment, editing it in place when it exists, and set the state `built`. On a public repo, the branch, the commits and the pull request name behaviours, never a finding (no `F<n>`, no finding text): the spec's constraints are already plain requirements. Done when the issue is `built` with its build comment pointing to the pull request or the branch.
+5. **Done.** Run the build, the full test suite and the lint, and show their output: the work is done only when all three pass. Then hand the `verifier` the spec, the plan, the worktree and the commands, how to start the app included. For each failed check, fix the code (with a failing test first when one can show the problem), run the three commands again, then hand the `verifier` the same inputs and the failed checks again: repeat until its verdict is `pass`, at most 3 runs in all. `built` needs a `pass`; a verdict still `fail` after 3 runs, or a failure you can't fix without changing what the gate accepted, goes to step 6. Then push the branch when there's a remote, replace the draft pull request's body with the PR template below, and mark it ready for review (`gh pr ready`, `glab mr update --ready`): the verifier passed, so the user can review it. Comment on the issue with the build comment, editing it in place when it exists, and set the state `built`. On a public repo, the branch, the commits and the pull request name behaviours, never a finding (no `F<n>`, no finding text): the spec's constraints are already plain requirements. Done when the verifier passed, the pull request is ready for review, and the issue is `built` with its build comment pointing to the pull request or the branch.
 
 6. **Blocked.** When a question only a person can answer comes up (a departure from what was accepted, a criterion no test can check, 3 failed tries at the same step), commit the steps that pass, push the branch when there's a remote, comment on the issue with the blocked comment, and set the state `blocked`. Once answered, running the skill again resumes at the first step without a commit. Done when the issue is `blocked` with the question on it.
 
@@ -186,7 +190,7 @@ Closes <issue reference>. Spec: <link> · Plan: <link>
 
 **Verdict** <pass | fail> · **Checks** <n> · **App** <started | not started: why>
 
-<each failed check: what it saw, and the commit that fixed it>
+<runs: <n>. Each failed check: what it saw, and the commit that fixed it>
 
 ## For AGENTS.md or CLAUDE.md
 
