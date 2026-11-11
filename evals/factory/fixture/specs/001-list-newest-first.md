@@ -1,5 +1,5 @@
 ---
-issue: 001
+issue: "001"
 intent: intent/001-list-newest-first.md
 title: The list shows the oldest notes first
 size: S

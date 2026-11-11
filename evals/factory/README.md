@@ -23,4 +23,5 @@ evals/factory/run.sh --runs 3 -j 4 --max-cost-usd 40
 - Every design and build case runs unattended, so it ends at the first gate: one turn, nothing to answer.
 - File graders match the `Write` call (the plan lives in a worktree whose path isn't known ahead), so an agent that writes a file with a shell heredoc fails them: read the LLM grader's verdict before calling it a bug.
 - Not covered: state labels on GitHub (one state at a time, missing labels created) and pull requests, which need a real remote.
+- The cases that plan or build need a shell (git, worktrees), so they need the sandbox backend: macOS has it, Linux needs bubblewrap and socat. Without it, `ALLOW_TOOLS='Write Edit' evals/factory/run.sh --case 'trigger-*'` still runs the trigger cases.
 - Results go to `results/` (git-ignored). Runs use your own Claude login.
