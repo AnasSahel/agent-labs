@@ -59,5 +59,4 @@ Decided by Anas (2026-11-11):
 1. Types plus one example, always marked "example".
 2. DPRK stays only for payment and crypto exposure.
 
-Still open:
-1. Public sources to back this later (ANSSI CTI reports, CERT-FR). Not used in v1.
+Later improvement (not v1): back the actor lists with public reporting such as ANSSI threat overviews and CERT-FR alerts. Until then the list is general knowledge and says so.
