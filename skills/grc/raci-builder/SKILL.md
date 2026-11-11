@@ -17,6 +17,8 @@ The letters, in plain words (say them this way to the user):
 
 ## Steps
 
+**Company first.** List `grc/*/COMPANY.md`. With one folder, work in it and say which. With several, ask once in plain chat text which company, unless the request or the calling skill already names one, then read and write `grc/<slug>/` wherever this skill says `grc/`. With none, use `grc/` as written. Never keep an active company between runs.
+
 1. **Frame.** Pin the **scope**: one process (incident response, access, vulnerabilities, suppliers, continuity, personal data) or the whole programme (governance). Then read `grc/context.md` (sector, frameworks in scope, org chart when listed), `grc/roles.md`, `grc/raci/`, the owners in `grc/risk-register.md`, `grc/policies/` and the latest audit in `grc/evidence/`.
    - A matrix in `grc/raci/` for the same scope: this run **updates** it (same file, `version` + 1). An `in progress` trace for it: **resume** it, say so in one line, hand the trace to grc-grill.
    - Else draft it: take the scope's activities from [duties.md](duties.md), keep those whose framework is in scope, add the ones the policies or the audit name, drop the rest. Cite each row's duties from [frameworks/](frameworks/), never from memory: its ISO 27001 ref from `iso27001.md`, then, for each framework in scope, the rows of its `<id>.md` (Mapping and Extras) that hold that ref or name the activity; a framework in scope with no file: cite it and write "clause to confirm". Roles from `grc/roles.md`, else the policies, else the defaults in [duties.md](duties.md). Fill each cell with your proposal.

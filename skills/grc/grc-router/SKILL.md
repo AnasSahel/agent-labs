@@ -32,6 +32,8 @@ Send each GRC request to the one skill that **owns** it, in the right order when
 
 > Audit prep for ISO 27001: `gap-analysis` first (no gap analysis since 2025), then `audit-evidence` on the controls it marks in place. Go?
 
+**Company first.** List `grc/*/COMPANY.md`. With one folder, work in it and say which. With several, ask once in plain chat text which company, unless the request or the calling skill already names one, then read and write `grc/<slug>/` wherever this skill says `grc/`. With none, use `grc/` as written. Never keep an active company between runs.
+
 1. **Read.** Look at `grc/`: `context.md` (sector, frameworks in scope, appetite), `risk-register.md`, and the newest files in `risks/`, `policies/`, `evidence/`, `reports/`, `traces/`. Note any trace still `status: in progress`. Done when you know what exists and what is missing.
 
 2. **Pick.** Match the request to the **owners** table by what the user wants as a result, not by the words used ("our vendors are a risk" about one supplier is `vendor-risk`; about the list is `risk-register`). Then:
@@ -46,7 +48,7 @@ Send each GRC request to the one skill that **owns** it, in the right order when
 
 3. **Say** in one or two lines which skill runs, why, and for a chain the order (`gap-analysis, then risk-assessment for each gap above appetite, then committee-report`). Write it as text **before** the first Skill call: never call first and explain after. For a chain, stop after the plan and wait for go. Done when the user has seen the plan (and, for a chain, said go) before the first call.
 
-4. **Call** the Skill tool with the owner, passing the request in the user's words plus what you read in step 1 that bears on it. For a chain, call the next step only once the last one hands back, and pass along its outputs (gap ids, risk ids, report path). When an owner is not installed, say which skill is missing and stop that branch; never do its work yourself. Done when every owner in the plan has run or is reported missing.
+4. **Call** the Skill tool with the owner, passing the request in the user's words, the company folder you chose, and what you read in step 1 that bears on it. For a chain, call the next step only once the last one hands back, and pass along its outputs (gap ids, risk ids, report path). When an owner is not installed, say which skill is missing and stop that branch; never do its work yourself. Done when every owner in the plan has run or is reported missing.
 
 5. **Next.** After the last call, suggest the one next step the flow gives, in one line (`3 risks are above appetite: take them to committee-report?`). Done when the user has one clear next step.
 

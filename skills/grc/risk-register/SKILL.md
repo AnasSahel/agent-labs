@@ -10,6 +10,8 @@ Keep `grc/risk-register.md` the **register**: the one source of truth every GRC 
 
 ## Steps
 
+**Company first.** List `grc/*/COMPANY.md`. With one folder, work in it and say which. With several, ask once in plain chat text which company, unless the request or the calling skill already names one, then read and write `grc/<slug>/` wherever this skill says `grc/`. With none, use `grc/` as written. Never keep an active company between runs.
+
 1. **Read.** Load `grc/risk-register.md` (create it from the template when missing), the appetite in `grc/context.md`, and each row's report in `grc/risks/` for its controls' status. Work out each risk's **current level**: the residual once every treatment control is `in place`, else the inherent. Done when you know every row, its current level and the appetite.
 
 2. **Act** on what the user asked, one of:

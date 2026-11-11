@@ -11,6 +11,8 @@ Keep `grc/evidence/` the proof that controls work, ready for the auditor any day
 
 ## Steps
 
+**Company first.** List `grc/*/COMPANY.md`. With one folder, work in it and say which. With several, ask once in plain chat text which company, unless the request or the calling skill already names one, then read and write `grc/<slug>/` wherever this skill says `grc/`. With none, use `grc/` as written. Never keep an active company between runs.
+
 1. **Read.** Load `grc/context.md` (frameworks in scope, the audit date and scope, the **SoA**: the controls declared applicable and why the others are not), `grc/evidence/index.md` (create it from the template when missing), `grc/risk-register.md` and each report in `grc/risks/` (the controls claimed `in place`), and the latest audit in `grc/evidence/audits/`. Look refs up in [frameworks/](frameworks/), never from memory: a ref missing from `iso27001.md` does not exist. No SoA: the scope is every clause 4 to 10 and all 93 Annex A controls of `iso27001.md`; say so in one line. Done when you know every control in scope and every evidence on file.
 
 2. **Act** on what the user asked, one of:

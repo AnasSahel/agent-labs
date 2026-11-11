@@ -22,6 +22,8 @@ A calling skill sets these. Standalone, infer them from the request and say in o
 
 ## Steps
 
+**Company first.** List `grc/*/COMPANY.md`. With one folder, work in it and say which. With several, ask once in plain chat text which company, unless the request or the calling skill already names one, then read and write `grc/<slug>/` wherever this skill says `grc/`. With none, use `grc/` as written. Never keep an active company between runs.
+
 1. **Read.** Read every doc. Fill each field a doc answers as a **fact**, with its source (file and section). A profile in `grc/profiles/` (from `company-profiling`) counts as a doc: its identity, size and scope rows are facts, but their "to confirm" items are asked. When `grc/context.md` is missing, its questions come first (sector, frameworks in scope, risk scales, risk appetite) outside the budget, one decision each (sector, then the entity status under NIS2 or DORA: never both in one question), and you write the file from the answers. For the risk scales, recommend the default scales of `risk-assessment` word for word: severity G1 minor to G4 critical, likelihood V1 unlikely to V4 near certain, and its level rule; never a multiplied score. Done when every field is either filled or known to be open.
 
 2. **Grill.** One question per message, one decision per question (never parts (a), (b), (c): each is its own question), the most consequential open field first, built on the last answer:

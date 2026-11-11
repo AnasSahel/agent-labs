@@ -95,6 +95,9 @@ C["evidence-unproven"] = ("audit-evidence", "Catches controls the register calls
 SCAFFOLD = {}
 EMPTY = "#!/usr/bin/env bash\n# Empty sandbox: no grc/ yet\nset -euo pipefail\nmkdir -p ./grc\n"
 COMPANY = "#!/usr/bin/env bash\n# One filled company folder (evals/fixture/company/grc/northwind-bank)\nset -euo pipefail\ncp -R \"@FIXTURE@/company/grc\" ./grc\n"
+TWO = "#!/usr/bin/env bash\n# Two company folders: northwind-bank and contoso-bank\nset -euo pipefail\ncp -R \"@FIXTURE@/company/grc\" ./grc\ncp -R ./grc/northwind-bank ./grc/contoso-bank\n"
+C["company-ask"] = ("risk-register", "With two company folders and no company named, the skill asks which one, in plain text, before reading or writing anything.", "Show me the risk register.",
+  [llm("asks-which", "PASS if the reply asks which company to work on and names both northwind-bank and contoso-bank (or Northwind Bank and Contoso Bank), as a plain question. FAIL if it picks one without asking, or reads or writes a register for either company first.", focus="trace")], 10, "two")
 C["init-new"] = ("grc-init", "Sets up a new company folder: 10 OKF files, no placeholder left, COMPANY.md honest without a profile, then asks about the report in plain text.", "Set up Northwind Bank as a new client. The folder name northwind-bank is fine.",
   [rx("company-type", r"^type: Company", path="grc/northwind-bank/COMPANY.md", flags="m"),
    fe("regulations", "grc/northwind-bank/REGULATIONS.md"), fe("assets", "grc/northwind-bank/ASSETS.md"), fe("log", "grc/northwind-bank/log.md"),
@@ -129,8 +132,8 @@ for name, v in C.items():
     kind = v[5] if len(v) > 5 else None
     d = f"cases/{name}"
     os.makedirs(d, exist_ok=True)
-    if name.startswith(("init-", "report-")):
-        open(f"{d}/scaffold.sh", "w").write(COMPANY if kind == "company" else EMPTY)
+    if name.startswith(("init-", "report-", "company-")):
+        open(f"{d}/scaffold.sh", "w").write(COMPANY if kind == "company" else TWO if kind == "two" else EMPTY)
         os.chmod(f"{d}/scaffold.sh", 0o755)
     lines = ['schema_version: "1.1"', f"name: {name}", f"description: {json.dumps(desc)}", f"tags: [{skill}]",
              "context:", "  scaffold_script: scaffold.sh", "execution:", f"  max_turns: {turns}", "  timeout_seconds: 600",

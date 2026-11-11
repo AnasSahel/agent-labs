@@ -11,6 +11,8 @@ Turn a question ("can we let staff use their own phones for work email?") into a
 
 ## Steps
 
+**Company first.** List `grc/*/COMPANY.md`. With one folder, work in it and say which. With several, ask once in plain chat text which company, unless the request or the calling skill already names one, then read and write `grc/<slug>/` wherever this skill says `grc/`. With none, use `grc/` as written. Never keep an active company between runs.
+
 1. **Read.** Take the question and everything that comes with it: the email thread, a vendor's reply, `grc/context.md` when it exists. Write down:
    - what triggers the reply (a request from a colleague, a vendor's answer, a meeting) and who will read it;
    - **every question the thread asks**, with who asked it;
