@@ -1,0 +1,24 @@
+#!/usr/bin/env python3
+# Check every skills/**/SKILL.md: its front matter parses as YAML (an unquoted "a: b" in a description breaks it),
+# its name is its folder's, and its description fits in 1024 characters.
+# Usage: scripts/check-skills
+import glob, os, sys, yaml
+os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+bad = 0
+for path in sorted(glob.glob("skills/**/SKILL.md", recursive=True)):
+    parts = open(path, encoding="utf-8").read().split("---", 2)
+    try:
+        meta = yaml.safe_load(parts[1]) if len(parts) == 3 else None
+    except yaml.YAMLError as e:
+        print(f"{path}: front matter isn't valid YAML: {' '.join(str(e).split())[:200]}"); bad = 1; continue
+    if not isinstance(meta, dict):
+        print(f"{path}: no front matter"); bad = 1; continue
+    folder = os.path.basename(os.path.dirname(path))
+    if meta.get("name") != folder:
+        print(f"{path}: name is {meta.get('name')!r}, its folder is {folder!r}"); bad = 1
+    desc = meta.get("description")
+    if not isinstance(desc, str) or not desc.strip():
+        print(f"{path}: no description"); bad = 1
+    elif len(desc) > 1024:
+        print(f"{path}: description is {len(desc)} characters, over 1024"); bad = 1
+sys.exit(bad)

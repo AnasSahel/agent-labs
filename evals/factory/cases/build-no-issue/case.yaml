@@ -1,0 +1,28 @@
+schema_version: '1.1'
+name: build-no-issue
+description: 'A spec with no issue behind it: build plans from the spec, and the plan''s status is the state.'
+tags:
+- factory-build
+context:
+  scaffold_script: scaffold.sh
+execution:
+  max_turns: 60
+  timeout_seconds: 900
+  allowed_tools:
+  - Bash
+  - Write
+  - Edit
+  - Read
+  - Glob
+  - Grep
+  - Skill
+  - Agent
+  prompt: '/factory:factory-build specs/001-list-newest-first.md There''s no issue for it. I''m away: run it unattended and ask me nothing.
+
+    '
+graders:
+  - {"name": "plan-written", "type": "tool_used", "tool": "Write", "input_match": "specs/001-list-newest-first/plan\\.md"}
+  - {"name": "plan-at-needs-plan", "type": "tool_used", "tool": "Write", "input_match": "specs/001-list-newest-first/plan\\.md[\\s\\S]*status: needs-plan"}
+  - {"name": "no-code-written", "type": "tool_used", "tool": "Write", "input_match": "src/(notes|cli)\\.js", "min": 0, "max": 0}
+  - {"name": "no-code-edited", "type": "tool_used", "tool": "Edit", "input_match": "src/(notes|cli)\\.js", "min": 0, "max": 0}
+  - {"name": "plans-without-issue", "type": "llm", "weight": 2, "focus": "last_message", "criteria": "The spec has no issue and the repo has no tracker; the user is away. PASS only if the reply says a plan was written (specs/001-list-newest-first/plan.md) on a branch, that it stands at needs-plan, and who must accept it. FAIL if it stops because there is no issue or tracker, or if it says code was implemented."}

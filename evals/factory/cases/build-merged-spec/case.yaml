@@ -1,0 +1,25 @@
+schema_version: '1.1'
+name: build-merged-spec
+description: 'The spec is on the default branch at designed but the issue still says needs-design: build heals the state and plans.'
+tags:
+- factory-build
+context:
+  scaffold_script: scaffold.sh
+execution:
+  max_turns: 60
+  timeout_seconds: 900
+  allowed_tools:
+  - Bash
+  - Write
+  - Edit
+  - Read
+  - Glob
+  - Grep
+  - Skill
+  - Agent
+  prompt: '/factory:factory-build 001 I''m away: run it unattended and ask me nothing.
+
+    '
+graders:
+  - {"name": "plan-written", "type": "tool_used", "tool": "Write", "input_match": "specs/001-list-newest-first/plan\\.md"}
+  - {"name": "heals-and-plans", "type": "llm", "weight": 2, "focus": "last_message", "criteria": "Issue 001 (the file intent/001-list-newest-first.md) still says needs-design, but its spec is on the default branch with status designed, so it was approved. PASS only if the reply says a plan was written for 001 and that it waits at needs-plan. FAIL if it tells the user to run factory-design first, or stops because the issue is at needs-design."}

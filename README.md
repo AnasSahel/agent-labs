@@ -29,6 +29,8 @@ Skills and agents for Claude Code.
 
 [agents/](agents) holds the agents skills hand work to, such as the security and privacy reviewers. A skill lists the ones it needs in its front matter (`metadata.agents`) and carries a copy in its own `agents/` folder, so it stays standalone when installed alone.
 
+- `scripts/check-skills` fails when a `SKILL.md`'s front matter isn't valid YAML (quote a description that holds `: `), its name isn't its folder's, or its description is over 1024 characters. CI runs it.
+- The factory skills' evals are in [evals/factory](evals/factory): `evals/factory/run.sh`.
 - Edit an agent in `agents/` only, then run `scripts/sync-agents` and commit the copies with it, scoped by each skill that carries it (`fix(factory-design): …`): that's what bumps the skill's version.
 - CI (`agents.yml`) fails when a copy is missing, stale or no longer listed.
 - The files also work as Claude Code agents: copy them to `~/.claude/agents/`.
