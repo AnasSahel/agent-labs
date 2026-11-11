@@ -12,13 +12,12 @@ sources: []
 
 # Authorities
 
-Derived from [REGULATIONS.md](/REGULATIONS.md): one row per regulation that is `likely` or `possible`.
+Derived from [REGULATIONS.md](/REGULATIONS.md): one row per regulation that `applies` or is `likely`.
 
 | Authority | Because of | What it expects (notification, deadline) |
 |---|---|---|
 | CNIL | GDPR | personal data breach notification within 72 hours |
 | ACPR | DORA | major ICT incident reporting |
-| ANSSI | NIS2 | incident notification if NIS2 applies |
 
 # Open questions
 

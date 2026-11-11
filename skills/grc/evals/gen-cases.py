@@ -104,13 +104,13 @@ C["init-new"] = ("grc-init", "Sets up a new company folder: 10 OKF files, no pla
    llm("slug-then-report", "PASS only if, across the run, the agent confirmed the folder name `northwind-bank` (or created it and said so), never invented company facts (no headcount, turnover or address unless a source was fetched), and its last message asks, as plain text and in one message, whether the user wants a full report or the ID card (one page) and in which format (HTML default, PDF, Word or PowerPoint), or says it could not run the profiling and offers that next step.", focus="trace")], 30)
 C["init-exists"] = ("grc-init", "An existing company folder is never recreated or overwritten.", "Set up Northwind Bank.",
   [rx("client-text-kept", r"Northwind Payments", path="grc/northwind-bank/COMPANY.md"),
-   llm("says-exists", "PASS only if the reply says the Northwind Bank folder already exists and nothing was recreated or changed, and offers to refresh or report instead.", focus="trace")], 20, "company")
+   llm("says-exists", "PASS if the reply says the Northwind Bank folder already exists, says it will not recreate or overwrite it, and offers a refresh or a report. FAIL only if it recreates the folder or says it overwrote files.", focus="trace")], 20, "company")
 C["report-id-card"] = ("company-report", "Writes the one-page ID card from the folder only, in the repo look.", "Make the ID card for Northwind Bank, HTML.",
   [fe("id-card", "grc/northwind-bank/id-card.html"),
    rx("has-company", r"Northwind", path="grc/northwind-bank/id-card.html"),
    {"name": "no-example-leftover", "type": "regex", "pattern": r"Acme", "target": {"source": "file", "path": "grc/northwind-bank/id-card.html"}, "match": "count:0"},
    rx("has-regulated-sub", r"Northwind Payments", path="grc/northwind-bank/id-card.html"),
-   llm("faithful-one-page", "PASS only if the written id-card.html shows only facts that are in the Northwind Bank folder (3 subsidiaries with Northwind Payments regulated, GDPR likely, DORA and NIS2 possible, authorities CNIL, ACPR, ANSSI), keeps `not found` for the balance sheet, does not invent a CISO, DPO or certification, and is a short one-page version (headline, In short, group, regulations, at most 3 questions), not the full report.", focus="trace")], 30, "company")
+   llm("faithful-one-page", "PASS only if the written id-card.html shows only facts that are in the Northwind Bank folder (3 subsidiaries with Northwind Payments regulated, GDPR applies, DORA likely, NIS2 unlikely, one `Reaches you through others` row, authorities CNIL and ACPR), keeps `not found` for the balance sheet, does not invent a CISO, DPO or certification, and is a short one-page version (headline, In short, group, regulations, at most 3 questions), not the full report.", focus="trace")], 30, "company")
 C["report-full"] = ("company-report", "Writes the full report with every section and every open question, no invented fact.", "Write the full report for Northwind Bank, HTML.",
   [fe("report", "grc/northwind-bank/report.html"),
    rx("group-section", r"Northwind IT Services", path="grc/northwind-bank/report.html"),
