@@ -1,6 +1,6 @@
 ---
 name: factory-plan
-description: Plan phase. Turn a bug, idea or request into an intent — the problem in the originator's words, brainstormed until concrete — proposed to the repo as intent/<id>-<slug>.md in a pull request, whose merge is the user's go, and tracked by an issue in any tracker (GitHub, Linear, Plane, a folder in the repo…), one per feature that ships on its own. Use when someone brings a new bug, idea or request.
+description: "Plan phase. Turn a bug, idea or request into an intent — the problem in the originator's words, brainstormed until concrete — proposed to the repo as intent/<id>-<slug>.md in a pull request, whose merge is the user's go, and tracked by an issue in any tracker (GitHub, Linear, Plane, a folder in the repo…), one per feature that ships on its own. Use this, instead of writing an issue or an intent file by hand, whenever the user reports a new bug, idea or feature request and wants it filed, logged or tracked (\"file this\", \"open an issue\", \"track it\", \"add it to the backlog\"), before any design or code. Not for planning how to build an issue or a spec that exists: that's factory-build."
 metadata:
   author: Anas Sahel
   version: 1.2.0 # x-release-please-version

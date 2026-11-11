@@ -1,0 +1,22 @@
+schema_version: '1.1'
+name: trigger-spec-intent
+description: '''Spec out intent 002'' goes to factory-design.'
+tags:
+- triggers
+context:
+  scaffold_script: scaffold.sh
+execution:
+  max_turns: 12
+  timeout_seconds: 420
+  allowed_tools:
+  - Read
+  - Glob
+  - Grep
+  - Skill
+  prompt: 'Spec out intent 002.
+
+    '
+graders:
+  - {"name": "calls-factory-design", "type": "tool_used", "tool": "Skill", "input_match": "\"skill\"\\s*:\\s*\"(factory:)?factory-design\"", "arm": "both"}
+  - {"name": "no-factory-plan", "type": "tool_used", "tool": "Skill", "input_match": "\"skill\"\\s*:\\s*\"(factory:)?factory-plan\"", "arm": "both", "min": 0, "max": 0}
+  - {"name": "no-factory-build", "type": "tool_used", "tool": "Skill", "input_match": "\"skill\"\\s*:\\s*\"(factory:)?factory-build\"", "arm": "both", "min": 0, "max": 0}

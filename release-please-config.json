@@ -25,6 +25,10 @@
     "skills/grc/gap-analysis": { "component": "gap-analysis", "extra-files": ["SKILL.md"] },
     "skills/grc/framework-mapper": { "component": "framework-mapper", "extra-files": ["SKILL.md"] },
     "skills/grc/grc-init": { "component": "grc-init", "extra-files": ["SKILL.md"] },
-    "skills/grc/company-report": { "component": "company-report", "extra-files": ["SKILL.md"] }
+    "skills/grc/company-report": { "component": "company-report", "extra-files": ["SKILL.md"] },
+    "skills/grc/company-profiling": { "component": "company-profiling", "extra-files": ["SKILL.md"] },
+    "skills/productivity/meeting-minutes": { "component": "meeting-minutes", "extra-files": ["SKILL.md"] },
+    "skills/grc/security-advice": { "component": "security-advice", "extra-files": ["SKILL.md"] },
+    "skills/watch/cyber-scout": { "component": "cyber-scout", "extra-files": ["SKILL.md"] }
   }
 }

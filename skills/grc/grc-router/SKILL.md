@@ -16,9 +16,11 @@ Send each GRC request to the one skill that **owns** it, in the right order when
 | Who is responsible, accountable, consulted, informed for a process or control; who signs off, approves or owns X | `raci-builder` | Governance |
 | Report to a committee, board or management; record its decisions | `committee-report` | Governance |
 | Assess, score or treat one risk, threat or scenario; reassess one | `risk-assessment` | Risk |
+| An opinion or a position on a security question or a choice between options, a reply to a colleague or a vendor, a quick risk level with nothing recorded | `security-advice` | Risk |
 | See, filter, update, import or export the list of risks | `risk-register` | Risk |
 | Combine or chain risks, how an attacker gets from X to Y, the worst case across risks | `attack-chain` | Risk |
 | Assess a supplier, vendor, cloud or ICT third party | `vendor-risk` | Risk |
+| Profile, onboard or scope a company; which regulations apply to it (NIS2, DORA, GDPR) | `company-profiling` | Compliance |
 | Map controls between frameworks, show which clauses a control covers | `framework-mapper` | Compliance |
 | Measure where we stand against a framework, find what is missing | `gap-analysis` | Compliance |
 | Collect, check or list proof for an audit or a control | `audit-evidence` | Compliance |
