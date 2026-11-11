@@ -1,5 +1,5 @@
 ---
-issue: 001
+issue: "001"
 title: The list shows the oldest notes first
 source: user
 kind: improvement

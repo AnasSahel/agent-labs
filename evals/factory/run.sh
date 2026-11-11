@@ -3,6 +3,7 @@
 # The four skills are wrapped in one throwaway plugin, `factory`, so they call each other as they would installed.
 # Each case's scaffold copies evals/factory/fixture (a tiny notes app, files tracker, no remote) into its sandbox.
 # Extra arguments pass through, e.g. --runs 1 --case 'trigger-*'.
+# On a machine with no sandbox backend the shell grant is refused: ALLOW_TOOLS='Write Edit' runs the trigger cases anyway.
 set -euo pipefail
 HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT="$(cd "$HERE/../.." && pwd)"
@@ -28,6 +29,6 @@ claude plugin eval "$WRAP" \
   --trust-plugin \
   --ablation none \
   --judge-model sonnet \
-  --allow-tools Bash Write Edit \
+  --allow-tools ${ALLOW_TOOLS:-Bash Write Edit} \
   "$@"
 echo "$OUT"

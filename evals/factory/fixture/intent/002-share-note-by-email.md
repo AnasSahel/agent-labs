@@ -1,5 +1,5 @@
 ---
-issue: 002
+issue: "002"
 title: A note can't be sent to someone else
 source: user
 kind: feature
