@@ -6,7 +6,7 @@ status: draft, general knowledge of public threat reporting, NOT yet validated. 
 
 # Threat actor rules
 
-Edit this file to change the skill's reasoning. The list is **hypotheses**: plausible actors for a sector and size, never observed ones. Never state that an actor attacked or targets a named company. Group names are examples only; vendors name and merge groups differently, so prefer the actor **type** and give at most one example name, marked "example".
+Edit this file to change the skill's reasoning. The list is **hypotheses**: plausible actors for a sector and size, never observed ones. Never state that an actor attacked or targets a named company. Group names are examples only; vendors name and merge groups differently. Always give the actor **type**, plus at most one example name per row, written "(example: ...)". The type carries the reasoning.
 
 ## 1. Actor types
 
@@ -31,7 +31,7 @@ Edit this file to change the skill's reasoning. The list is **hypotheses**: plau
 
 | Signal | Add actors | Reason |
 |---|---|---|
-| Banking, payment, e-money, prepaid (64.xx, 66.19x, DORA signal) | FIN, HKT, APT, DPRK | Direct monetisation; public sites attract DDoS; (?) DPRK only when crypto or payment services are exposed |
+| Banking, payment, e-money, prepaid (64.xx, 66.19x, DORA signal) | FIN, HKT, APT, DPRK | Direct monetisation; public sites attract DDoS; DPRK only when crypto or payment services are exposed |
 | Insurance (65.xx) | RW, DATA, FIN | Large personal and health data; claims fraud |
 | Health or health software (86.xx, 62.0x with health clients) | RW, DATA, APT, HKT | Sensitive data, public-health impact |
 | Retail and e-commerce (47.xx) | DATA, FIN | Customer accounts (credential stuffing), card skimming |
@@ -53,8 +53,11 @@ Edit this file to change the skill's reasoning. The list is **hypotheses**: plau
 - Each unknown becomes a question for the scoping interview (suppliers, group entities, real activity, past incidents).
 - No claims about real incidents. If the user asks about one, say it is out of scope here.
 
-## 6. Open questions for Anas
+## 6. Decisions and open questions
 
-1. Keep named example groups, or only actor types?
-2. Which public sources can later back this (ANSSI CTI reports, CERT-FR)? Not used in v1.
-3. DPRK: keep only for payment and crypto, or drop?
+Decided by Anas (2026-11-11):
+1. Types plus one example, always marked "example".
+2. DPRK stays only for payment and crypto exposure.
+
+Still open:
+1. Public sources to back this later (ANSSI CTI reports, CERT-FR). Not used in v1.
