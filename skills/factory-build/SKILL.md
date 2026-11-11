@@ -1,6 +1,6 @@
 ---
 name: factory-build
-description: "Build phase. Turn an approved spec into code in two halves: first a plan (plan.md, the files that change, the order, the risks and the tests that prove each criterion), drafted in plan mode without touching the code and accepted by the user (and the tech lead for a high-risk change); then the code and its tests, in one pass on a branch, done only when build, tests and lint pass and a verifier agent, in a fresh context, has run the app against the spec, with a pull request when the repo has a code host. Works with any tracker (GitHub, Linear, Plane, a folder in the repo…) and any code host (GitHub, GitLab, none). Use when the user asks to plan or build an issue, a spec or an intent, or to implement a designed feature."
+description: "Build phase. Turn an approved spec into code in two halves: first a plan (plan.md, the files that change, the order, the risks and the tests that prove each criterion), drafted in plan mode without touching the code and accepted by the user (and the tech lead for a high-risk change); then the code and its tests, in one pass on a branch, done only when build, tests and lint pass and a verifier agent, in a fresh context, has run the app against the spec, with a pull request when the repo has a code host. Works with any tracker (GitHub, Linear, Plane, a folder in the repo…) and any code host (GitHub, GitLab, none). Use when the user asks to build or implement an issue or a spec that's already designed, or to write or accept its implementation plan. Not for filing a new request: that's factory-plan."
 metadata:
   author: Anas Sahel
   version: 1.0.0 # x-release-please-version
@@ -16,9 +16,9 @@ Turn an approved **spec** (`specs/<id>-<slug>.md`, from the factory-design skill
 
 Everything happens on one branch, `<id>-<slug>`, and reaches the default branch only through its pull request: never push to the default branch.
 
-You write the plan and you implement it: the plan's author keeps it true. Once you believe the work is done, the `verifier` in this skill's `agents/` folder checks it: start it as a fresh subagent with its file as its instructions, so its verdict isn't shaped by the assumptions behind the code.
+You write the plan and you implement it: the plan's author keeps it true. Once you believe the work is done, the `verifier` in this skill's `agents/` folder checks it: start it as a fresh subagent with its file as its instructions (and say it in the hand-off too, since the file's `tools` line isn't enforced there: it fixes nothing and edits no file), so its verdict isn't shaped by the assumptions behind the code.
 
-The skill works with any **tracker**. It needs three operations: read an issue with its comments, comment, and set labels (or the tracker's own fields). And with any **code host**:
+The skill works with any **tracker**. It needs three operations: read an issue with its comments, comment, and set labels (or the tracker's own fields). An issue carries one **state** at a time: setting a state removes the previous state's label (or `status`), and creates the label when the tracker doesn't have it yet. And with any **code host**:
 
 | Tracker or host | Tool |
 |---|---|
@@ -26,9 +26,10 @@ The skill works with any **tracker**. It needs three operations: read an issue w
 | GitLab | `glab` CLI: issues, and a draft merge request |
 | Linear, Plane, Jira… | its MCP server or CLI, when one is connected |
 | Files | the intent file is the issue: its state is its front matter `status`, never a label; comment by appending `## Comment` with the template's body under it, its own heading dropped (edit that section in place). Once the branch exists, write and read the intent on the branch: its state reaches the default branch with the pull request |
+| No issue | factory-design ran without one: the spec and the plan are the tracker. The state is the plan's front matter `status`, and the spec's `status: designed` until there's a plan; what would be a comment goes in the reply |
 | No remote | the branch is the delivery: no push, no pull request |
 
-When the tracker has no tool in this session, say so and stop.
+When the repo names a tracker that has no tool in this session, say so and stop.
 
 ## When it plans, when it builds
 
@@ -95,6 +96,8 @@ Starts only from an accepted plan: the state is `planned`, `building` or `blocke
 
 6. **Blocked.** When a question only a person can answer comes up (a departure from what was accepted, a criterion no test can check, 3 failed tries at the same step), commit the steps that pass, push the branch when there's a remote, comment on the issue with the blocked comment, and set the state `blocked`. Once answered, running the skill again resumes at the first step without a commit. Done when the issue is `blocked` with the question on it.
 
+Before replying, remove the worktree (`git worktree remove`): the branch keeps everything, and step 4 adds it again.
+
 Reply with the links (issue, plan, pull request or branch) and where it stands: `needs-plan` and who must accept, `built` with the commands' results and what the tests can't cover, or `blocked` with the question.
 
 <plan-template>
@@ -102,7 +105,7 @@ Reply with the links (issue, plan, pull request or branch) and where it stands: 
 ---
 issue: <tracker reference>
 spec: specs/<id>-<slug>.md
-status: <needs-plan | planned>
+status: <needs-plan | planned; with no issue, then building | built | blocked>
 accepted: <who, date; for a higher-risk change, the tech lead too>
 ---
 
