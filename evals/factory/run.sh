@@ -18,6 +18,8 @@ cp -R "$HERE/cases" "$HERE/fixture" "$WRAP/evals/"
 # Scaffolds find the fixture through this absolute path.
 find "$WRAP/evals" -name scaffold.sh -exec sed -i.bak "s|@FIXTURE@|$WRAP/evals/fixture|g" {} +
 find "$WRAP/evals" -name '*.bak' -delete
+# macOS /usr/bin/git is a launcher the sandbox cannot run; Homebrew git has no launcher.
+[ -x /opt/homebrew/bin/git ] && export PATH="/opt/homebrew/bin:$PATH"
 OUT="$HERE/results/$(date -u +%Y%m%dT%H%M%SZ)"
 mkdir -p "$OUT"
 claude plugin eval "$WRAP" \

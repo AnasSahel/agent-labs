@@ -44,7 +44,7 @@ Tell the user how far they are from each framework in scope and what to fix firs
    3. **Leverage**: the number of framework rows one fix closes.
    4. Effort: `S` (days), `M` (weeks), `L` (months), your call, marked `call`.
 
-   Each gap gets a fix in one plain line, an owner from `grc/context.md` (else `to name`), and a due date before the target date. Done when every gap has a rank, a fix and an owner.
+   Each gap gets a fix in one plain line, an owner from `grc/context.md` (else `to name`), and a due date before the target date. Prose, fixes and messages follow `writing.md` of the `risk-assessment` skill (read it from that skill's folder; without it: plain, correct and professional, never familiar, the organisation's own words, no crafted phrasing; each fix starts with a verb, in one list by priority, with no owner, date or launch condition the documents or the user did not give). Done when every gap has a rank, a fix and an owner.
 
 6. **Write.** Save the analysis as `grc/gaps/<YYYY-MM-DD>-<frameworks>.md` from the template, **snapshot included** (the next run shows what moved from it). Then render each format picked:
    - `md`, `csv`, `json`: write them yourself next to the analysis, plain.
