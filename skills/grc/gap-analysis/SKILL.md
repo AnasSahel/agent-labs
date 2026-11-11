@@ -11,6 +11,8 @@ Tell the user how far they are from each framework in scope and what to fix firs
 
 ## Steps
 
+**Company first.** List `grc/*/COMPANY.md`. With one folder, work in it and say which. With several, ask once in plain chat text which company, unless the request or the calling skill already names one, then read and write `grc/<slug>/` wherever this skill says `grc/`. With none, use `grc/` as written. Never keep an active company between runs.
+
 1. **Read.** Load `grc/context.md` (frameworks in scope, sector, scope of the ISMS, owners), `grc/policies/`, `grc/evidence/`, `grc/risk-register.md` with the reports in `grc/risks/`, and the **last gap analysis** in `grc/gaps/` (its snapshot). Done when you know the frameworks in scope and what each doc covers.
 
 2. **Build the checklist** from the files, one line per row, in this order:

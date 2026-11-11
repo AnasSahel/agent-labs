@@ -13,6 +13,8 @@ Answer "what does this control cover?" and "what meets this clause?" from the **
 
 ## Steps
 
+**Company first.** List `grc/*/COMPANY.md`. With one folder, work in it and say which. With several, ask once in plain chat text which company, unless the request or the calling skill already names one, then read and write `grc/<slug>/` wherever this skill says `grc/`. With none, use `grc/` as written. Never keep an active company between runs.
+
 1. **Scope.** Read the frameworks in scope from `grc/context.md` (every file in `frameworks/` when it is missing or names none; the user's request wins). A framework in scope without a file in `frameworks/`: say `<framework>: not mapped yet` and carry on with the others. When `grc/context.md` names a national law for NIS2, say its article numbers win and these are the EU reference. Done when you know the framework ids to pass.
 
 2. **Resolve** what the user named into the script's terms:

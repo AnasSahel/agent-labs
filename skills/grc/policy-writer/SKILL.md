@@ -11,6 +11,8 @@ Turn a topic ("we need an access control policy") into one policy in `grc/polici
 
 ## Steps
 
+**Company first.** List `grc/*/COMPANY.md`. With one folder, work in it and say which. With several, ask once in plain chat text which company, unless the request or the calling skill already names one, then read and write `grc/<slug>/` wherever this skill says `grc/`. With none, use `grc/` as written. Never keep an active company between runs.
+
 1. **Find.** Read `grc/context.md` (organisation, sector, frameworks in scope), `grc/policies/index.md` and the policy on the same topic, **by meaning, not title** ("IAM policy" = "access control policy").
    - An `in progress` trace in `grc/traces/` for it: **resume** it, say so in one line, hand it to grc-grill.
    - A policy on the topic: this run is a **review** of it, same id, next version.

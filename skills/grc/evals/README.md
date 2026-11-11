@@ -1,6 +1,6 @@
 # GRC evals
 
-28 cases for the 14 GRC skills, run with `claude plugin eval` against the Acme Pay sample in [fixture/grc](fixture/grc).
+29 cases for the 14 GRC skills, run with `claude plugin eval` against the Acme Pay sample in [fixture/grc](fixture/grc).
 
 ```bash
 skills/grc/evals/run.sh --runs 3 --keep-temp -j 6 --max-cost-usd 100

@@ -10,6 +10,8 @@ Turn risks already in `grc/risk-register.md` into one **chain**: what the attack
 
 ## Steps
 
+**Company first.** List `grc/*/COMPANY.md`. With one folder, work in it and say which. With several, ask once in plain chat text which company, unless the request or the calling skill already names one, then read and write `grc/<slug>/` wherever this skill says `grc/`. With none, use `grc/` as written. Never keep an active company between runs.
+
 1. **Find.** Load the register, each risk's `grc/risks/<id>-attack-path.html` JSON (its routes with `needs`, its `gives`), `grc/context.md` (appetite) and `grc/chains/`. Build every chain of 2 to 4 links that ends at the asked impact, or, with none asked, at an impact of Serious (G3) or worse: start from routes that need `outside`, then follow `gives` to a route of another risk that `needs` it. A risk without `needs` or `gives` (assessed before chains existed): read its report and propose them, marked `proposed`.
    - A chain in `grc/chains/` with the same links: this run **updates** it, same id.
    - A missing link (no risk gives what the next one needs): keep it as an **assumed step**, `"assumed": true`.

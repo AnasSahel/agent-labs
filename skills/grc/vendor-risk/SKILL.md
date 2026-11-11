@@ -11,6 +11,8 @@ Turn "can we use this vendor?" into one **verdict** a manager can sign: approve,
 
 ## Steps
 
+**Company first.** List `grc/*/COMPANY.md`. With one folder, work in it and say which. With several, ask once in plain chat text which company, unless the request or the calling skill already names one, then read and write `grc/<slug>/` wherever this skill says `grc/`. With none, use `grc/` as written. Never keep an active company between runs.
+
 1. **Read.** Load `grc/context.md` (sector, frameworks in scope, scales, appetite), `grc/vendors/vendors.md` (the **inventory**), the vendor's file in `grc/vendors/<slug>.md` when it exists (this run is a **review**, same id), and every document the user gave: questionnaire, SOC 2 or ISO 27001 certificate and its scope, pentest summary, contract, DPA, sub-processor list. Note each document's date: evidence older than 12 months counts as missing. Done when you know whether the vendor is new and what each document shows.
 
 2. **Tier.** Settle the four **tier facts** from the documents first, then from the user: what data it touches (none, internal, personal, sensitive or payment), what breaks if it stops (nothing, a team, a key process, a critical or important function), how it connects (none, user login, API or network link, admin access), and whether it is easy to replace. Then:

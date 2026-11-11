@@ -11,6 +11,8 @@ Turn a worry ("what if our payroll supplier gets ransomware?") into one scored, 
 
 ## Steps
 
+**Company first.** List `grc/*/COMPANY.md`. With one folder, work in it and say which. With several, ask once in plain chat text which company, unless the request or the calling skill already names one, then read and write `grc/<slug>/` wherever this skill says `grc/`. With none, use `grc/` as written. Never keep an active company between runs.
+
 1. **Frame.** Write the risk as one **scenario**: `<risk source> could <feared event: disclosed, altered, lost, unavailable> <asset>`. The ways in are its **routes**. Then look for the same risk, **by meaning, not wording**: same asset and same risk source or entry point count as the same risk, however it is phrased ("ex-dev still has GitHub write access" = "former developer can change payment code").
    - An `in progress` trace in `grc/traces/` for it: this run **resumes** it. Say so in one line (`Resuming R-004: 3 of 10 answers kept`) and hand the trace to grc-grill.
    - A row in `grc/risk-register.md` for it: this run is a **reassessment** of that row, same id.
