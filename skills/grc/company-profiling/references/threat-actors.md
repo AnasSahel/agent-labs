@@ -6,7 +6,7 @@ status: draft, general knowledge of public threat reporting, NOT yet validated. 
 
 # Threat actor rules
 
-Edit this file to change the skill's reasoning. The list is **hypotheses**: plausible actors for a sector and size, never observed ones. Never state that an actor attacked or targets a named company. Group names are examples only; vendors name and merge groups differently. Always give the actor **type**, plus at most one example name per row, written "(example: ...)". The type carries the reasoning.
+Edit this file to change the skill's reasoning. The list is **hypotheses**: plausible actors for a sector and size, never observed ones. Never state that an actor attacked or targets a named company. Group names are examples only; vendors name and merge groups differently. Always give the actor **type**, plus at most one example name per row, written "(example: NAME, ATT&CK ID)". The type carries the reasoning. Take the example only from [threat-actors-sources.md](threat-actors-sources.md); never from memory. No row for the sector: type only.
 
 ## 1. Actor types
 
@@ -59,4 +59,4 @@ Decided by Anas (2026-11-11):
 1. Types plus one example, always marked "example".
 2. DPRK stays only for payment and crypto exposure.
 
-Later improvement (not v1): back the actor lists with public reporting such as ANSSI threat overviews and CERT-FR alerts. Until then the list is general knowledge and says so.
+Examples are sourced from MITRE ATT&CK (threat-actors-sources.md). Still to add: ANSSI threat overview and CERT-FR reports for French relevance, and the ENISA threat landscape, once reachable. Until then the profile says "France relevance to confirm".
