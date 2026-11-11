@@ -24,6 +24,7 @@
     "skills/grc/audit-evidence": { "component": "audit-evidence", "extra-files": ["SKILL.md"] },
     "skills/grc/gap-analysis": { "component": "gap-analysis", "extra-files": ["SKILL.md"] },
     "skills/grc/framework-mapper": { "component": "framework-mapper", "extra-files": ["SKILL.md"] },
+    "skills/grc/security-advice": { "component": "security-advice", "extra-files": ["SKILL.md"] },
     "skills/watch/cyber-scout": { "component": "cyber-scout", "extra-files": ["SKILL.md"] }
   }
 }

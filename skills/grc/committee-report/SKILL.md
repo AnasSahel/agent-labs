@@ -30,7 +30,7 @@ Turn `grc/risk-register.md` into one report a committee reads in five minutes an
    - **Executive summary**, 4 lines, 120 words at most: **Where we stand** (counts by level, against appetite), **What changed** (the moves that matter), **What is late** (overdue fixes, with owner), **What we need** (the decisions, numbered).
    - **Decisions**: each one a question the committee answers with a yes or a choice, with the options, the cost when known, and your recommendation in one line (`Accept R-004 until 2027-03-31 while the fix lands. Recommended: yes, residual is within appetite once A.8.5 is in place.`).
 
-   Plain words for managers: "High (G4·V3)" first in words, scenarios in one line, no control ids outside tables. Done when every number traces back to a row.
+   Plain words for managers: "High (G4·V3)" first in words, scenarios in one line, no control ids outside tables. Prose, fixes and messages follow `writing.md` of the `risk-assessment` skill (read it from that skill's folder; without it: plain, correct and professional, never familiar, the organisation's own words, no crafted phrasing; each fix starts with a verb, in one list by priority, with no owner, date or launch condition the documents or the user did not give). Done when every number traces back to a row.
 
 4. **Write.** Save the report as `grc/reports/<YYYY-MM-DD>-<audience>.md` from the template, **snapshot included** (the next report computes its moves from it). Then render each format picked:
    - `md`, `csv`, `json`: write them yourself next to the report, plain.
