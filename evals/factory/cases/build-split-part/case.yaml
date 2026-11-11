@@ -1,0 +1,26 @@
+schema_version: '1.1'
+name: build-split-part
+description: 'A part of a split has no spec of its own: build reads the parent''s spec, narrowed to the part''s criteria.'
+tags:
+- factory-build
+context:
+  scaffold_script: scaffold.sh
+execution:
+  max_turns: 60
+  timeout_seconds: 900
+  allowed_tools:
+  - Bash
+  - Write
+  - Edit
+  - Read
+  - Glob
+  - Grep
+  - Skill
+  - Agent
+  prompt: '/factory:factory-build 003 I''m away: run it unattended and ask me nothing.
+
+    '
+graders:
+  - {"name": "plan-under-the-part", "type": "tool_used", "tool": "Write", "input_match": "specs/003-[a-z0-9-]+/plan\\.md"}
+  - {"name": "plan-points-to-parent-spec", "type": "tool_used", "tool": "Write", "input_match": "specs/003-[a-z0-9-]+/plan\\.md[\\s\\S]*specs/001-list-newest-first\\.md"}
+  - {"name": "only-the-parts-criteria", "type": "llm", "weight": 2, "focus": "last_message", "criteria": "Issue 003 is part 1 of a split of issue 001. Its criteria are AC1 (newest first) only; AC2 (the --limit option) belongs to part 004. PASS only if the reply says a plan was written for 003, built from the parent's spec specs/001-list-newest-first.md, and that it waits at needs-plan. FAIL if it says the spec for 003 is missing, or if the plan it describes includes the --limit option."}
