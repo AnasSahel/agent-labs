@@ -24,11 +24,14 @@ Skills and agents for Claude Code.
 - [raci-builder](skills/grc/raci-builder/SKILL.md): build a RACI matrix (who does, signs off, is asked, is told) for a security process or the whole programme, each activity tied to an ISO 27001, NIS2, DORA or GDPR duty, after a hard grill on who answers for what. Then checks it for missing or double sign-off, conflicts of interest, empty seats, missing deputies and accountability handed to a supplier. Excel by default.
 - [audit-evidence](skills/grc/audit-evidence/SKILL.md): keep `grc/evidence/` audit-ready: file each piece of evidence against the ISO 27001 controls it proves, with its hash and expiry date, see which controls are evidenced, stale or missing for ISO 27001, NIS2, DORA or GDPR, catch controls the register calls in place with nothing to prove it, send precise requests to control owners, build the auditor's pack, and record the findings. No grilling.
 - [framework-mapper](skills/grc/framework-mapper/SKILL.md): map controls and clauses across ISO 27001 and the 14 frameworks mapped to it (NIS2, DORA, GDPR, SOC 2, PCI DSS, NIST CSF...) from the fixed files in [frameworks/](frameworks), never from memory: what a control covers, what meets a clause (with the duties ISO 27001 misses), a full crosswalk, or which clauses your risk register's controls touch and which they leave untouched. No grilling; a small script reads the files so no row is skipped.
+- [cyber-scout](skills/watch/cyber-scout/SKILL.md): find fresh, real cyber incidents for a given period and return a sourced shortlist: every claim with its URL and who says it (victim, authority, press, attacker), and what was dropped and why. Generic: reads and writes no files, keeps no state. First step of the Watch line; fact-check, write-up and tagging come after.
 
 ## Agents
 
 [agents/](agents) holds the agents skills hand work to, such as the security and privacy reviewers. A skill lists the ones it needs in its front matter (`metadata.agents`) and carries a copy in its own `agents/` folder, so it stays standalone when installed alone.
 
+- `scripts/check-skills` fails when a `SKILL.md`'s front matter isn't valid YAML (quote a description that holds `: `), its name isn't its folder's, or its description is over 1024 characters. CI runs it.
+- The factory skills' evals are in [evals/factory](evals/factory): `evals/factory/run.sh`.
 - Edit an agent in `agents/` only, then run `scripts/sync-agents` and commit the copies with it, scoped by each skill that carries it (`fix(factory-design): …`): that's what bumps the skill's version.
 - CI (`agents.yml`) fails when a copy is missing, stale or no longer listed.
 - The files also work as Claude Code agents: copy them to `~/.claude/agents/`.

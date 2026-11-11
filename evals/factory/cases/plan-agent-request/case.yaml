@@ -1,0 +1,27 @@
+schema_version: '1.1'
+name: plan-agent-request
+description: 'A request from another agent, with the files tracker and no code host: nothing is asked, the intent is committed at needs-go.'
+tags:
+- factory-plan
+context:
+  scaffold_script: scaffold.sh
+execution:
+  max_turns: 40
+  timeout_seconds: 420
+  allowed_tools:
+  - Bash
+  - Write
+  - Edit
+  - Read
+  - Glob
+  - Grep
+  - Skill
+  - Agent
+  prompt: '/factory:factory-plan This request comes from the nightly monitoring agent (agent:nightly-check), not from a person: `notes list` crashes with a JSON parse error when notes.json exists but is empty.
+
+    '
+graders:
+  - {"name": "intent-003-written", "type": "tool_used", "tool": "Write", "input_match": "intent/003-[a-z0-9-]+\\.md"}
+  - {"name": "status-needs-go", "type": "tool_used", "tool": "Write", "input_match": "intent/003-[a-z0-9-]+\\.md[\\s\\S]*status: needs-go"}
+  - {"name": "source-is-the-agent", "type": "tool_used", "tool": "Write", "input_match": "intent/003-[a-z0-9-]+\\.md[\\s\\S]*source: agent:nightly-check"}
+  - {"name": "asks-nothing", "type": "llm", "weight": 2, "focus": "last_message", "criteria": "The request came from another agent, the tracker is files (an intent/ folder) and there is no code host. PASS only if the reply asks the user no question, gives the path of a new intent file under intent/ numbered 003, and says it waits for the user's go (needs-go). FAIL if it asks for a tracker, opens or mentions opening a pull request, or says the intent is approved."}
