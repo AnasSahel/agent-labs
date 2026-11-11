@@ -26,6 +26,7 @@ Plain means simple, correct and professional. It reads as the user wrote it on a
 A **measure** is one thing to do that lowers the risk: a control in a treatment, a fix for a gap, a condition on a vendor.
 
 - **A verb and a thing.** It starts with a verb and names what is done (`Turn on two-step login for the admin accounts`), never an intention (`Strengthen authentication`). A measure that asks for a document says what goes in it.
+- **It leaves something behind.** Once done, something exists that one can look at: a setting changed, a document written, a check that recurs, a decision recorded. `Raise awareness`, `stay vigilant` or `strengthen X` leave nothing: rewrite them until they do, or drop them.
 - **One list, by priority.** The measure that lowers the risk most comes first, and one line says the list is in priority order. No split between "before go-live" and "later", and no measure made a condition of a launch: that is the owner's decision. Ask it when it matters, never assume it.
 - **Who does it is a fact or a question.** A team, a role or a person comes from the documents or the user. Unknown: the measure is to decide it (`Define who handles it and write it down`), or the owner is `to name`. Never a role you find likely (the CISO, legal).
 - **Its state is a fact too.** Not known to be in place: `If not already in place, ...`. Said to be planned: written as planned, with its date asked.
