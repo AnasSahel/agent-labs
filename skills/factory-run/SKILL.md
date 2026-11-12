@@ -27,6 +27,8 @@ The lane comes from, in this order: the user's word ("fast lane", "full lane"); 
 
 **Public repo**: factory-design's public-repo rule holds for the proposal too: no finding is named, and each question is worded as a plain decision.
 
+**Mergeable**: a stop is a pull request the user can merge as it is. Before you open one or reply about one, and each time you read the board, compare its branch with the default branch. When the default branch moved and the two conflict (another item landed first), merge the default branch into the branch, resolve, and push: never rebase a pushed branch. A file that lists items (an index, a changelog) keeps both sides. Check that what the conflict touched still holds: ids, numbers and links in the spec and the plan, and the build, test and lint commands on a code branch. A conflict that needs a decision is a question, with your recommendation.
+
 **No code host**: there's no pull request, so a stop is the user's yes, in the conversation or on the issue. Show what the pull request would hold; on yes, merge the proposal's branch into the default branch yourself. The code branch stays the delivery, as factory-build says. Unattended, stop there and say what waits.
 
 ## Steps
@@ -48,7 +50,7 @@ The lane comes from, in this order: the user's word ("fast lane", "full lane"); 
    4. `fast`: let `factory-build` go on with Part 2 on the same branch. Its pull request, ready for review, is the one stop.
    5. `standard` and `full`: push the branch and open the proposal's pull request, titled `Proposal · <title>`, with the proposal template as its body. Open it ready for review: one merge is all the user owes, and the questions that are theirs alone already have their recommended answer applied (factory-design, step 9). It is a draft only while a question waits for someone else (another owner, the tech lead), so it can't be merged before they answer. Set the state `needs-plan` (`needs-design` when the proposal holds the spec alone).
 
-   Done when the item's pull request for this stop is open, or the item is `blocked` with its question.
+   Done when the item's pull request for this stop is open and merges cleanly, or the item is `blocked` with its question.
 
 4. **After a stop.** Read the pull request the item waits on:
    - **review comments, or an answer to a question**: hand each to the station that owns the file it is about (the intent: factory-plan; the spec: factory-design, step 9; the plan: factory-build, step 3), still carried and on the same branch. Push, and answer each comment. Mark a draft proposal ready for review once no question waits for someone else.
@@ -56,11 +58,11 @@ The lane comes from, in this order: the user's word ("fast lane", "full lane"); 
    - **intent merged** (`full`): step 3.
    - **code pull request**: factory-build's "After the pull request".
    - **closed without merge**: a no. Close the issue with the reason from the pull request (a code pull request: factory-build decides).
-   - **open, nothing new**: it waits for the user; say so.
+   - **open, nothing new**: it waits for the user. Make sure it still merges cleanly, then say so.
 
    Done when the item stands at its next stop, is shipped, or is closed.
 
-Reply with one board line per item you touched, each with its link, then the assumptions you made (count, and where to read them), and any bump. A stop asks the user for one action, the merge: list the applied questions so they can object, but never ask for a reply before the merge.
+Reply with one board line per item you touched, each with its link, then the assumptions you made (count, and where to read them), and any bump. A stop asks the user for one action, the merge: list the applied questions so they can object, and each `high` finding with how it was answered, but never ask for a reply before the merge.
 
 <board-template>
 
