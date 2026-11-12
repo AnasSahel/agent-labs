@@ -27,7 +27,7 @@ The go needs a **code host**: the repo's remote, with a tool that opens pull req
 
 1. **Find the tracker.** Use the tracker and project the request names; otherwise the one the repo's `AGENTS.md`, `CLAUDE.md` or README points to; otherwise files, when the repo has an `intent/` folder; otherwise ask, offering what's connected in this session. Done when you know the repo, the tracker, the project in it, and the tool for each operation.
 
-2. **Brainstorm.** Restate the request as the **problem**: who is affected, which systems are involved, and what goes wrong. When the request proposes a solution, keep it as evidence. Fill **title**, **problem**, **why now**, **success looks like** (what the affected people can do once it's solved, observable, never a solution), **out of scope**, **constraints** (what any solution must respect: a deadline, a budget, a rule, a system it can't change), **open questions** (what the brainstorm left unknown, for the spec to answer), **evidence** (logs, links, screenshots) and **source** (`user`, or `agent:<name>`). When the repo has its own `intent/TEMPLATE.md`, its sections and front matter fields replace these, `source` aside: the team chose them. Keep the originator's words wherever they're clear.
+2. **Brainstorm.** When the repo has a `factory/lessons.md`, read it first: each line marked `intake` or `all` is a rule for this run. Restate the request as the **problem**: who is affected, which systems are involved, and what goes wrong. When the request proposes a solution, keep it as evidence. Fill **title**, **problem**, **why now**, **success looks like** (what the affected people can do once it's solved, observable, never a solution), **out of scope**, **constraints** (what any solution must respect: a deadline, a budget, a rule, a system it can't change), **open questions** (what the brainstorm left unknown, for the spec to answer), **evidence** (logs, links, screenshots) and **source** (`user`, or `agent:<name>`). When the repo has its own `intent/TEMPLATE.md`, its sections and front matter fields replace these, `source` aside: the team chose them. Keep the originator's words wherever they're clear.
 
    When the user made the request and the `factory-brainstorm` skill is installed, call it with these fields as its destination, no trace path (the file name needs the issue's id: keep the trace it hands back as a draft and write it at step 7), scope inside (the problem lives in this project) and approaches skipped (an intent names no solution), and take its summary as the draft. Otherwise, run this short version: ask what the request and the code can't answer: at most 3 questions per round, each with a proposed default, and the draft built on those defaults beside them, so one answer settles both. Go round after round until each field is concrete; stop asking when the user says it's ready. When another agent made the request (a Claude session or a bot, not a person), ask nothing, but still look up the facts the code answers (what goes wrong today, where) and put them in the problem and the evidence; only decisions it didn't state (who matters most, why now, success, out of scope, constraints) stay `[to fill]`.
 
@@ -62,6 +62,13 @@ A later run on an issue whose intent pull request exists reads the decision from
 - **closed without merge**: a no. Close the issue with the reason from the pull request, when there's one.
 - **open, nothing new**: it waits for the user's merge; say so.
 
+## Carried by factory-run
+
+When the factory-run skill says it **carries** the request, it owns the stops. After step 4, give it the size and take the **lane** it names:
+
+- `full`: go on as written. The intent has its own pull request, and its merge is the go.
+- `fast` or `standard`: skip step 5 (show nothing, ask for no go). Publish the issue (step 6) without `needs-go`. Then write the intent and its trace (step 7's names and template, with `lane: <lane>` added to the front matter) on the branch factory-run names, created from the default branch in its own worktree, and commit them there as `Intent · <title>`. Open no pull request: the go comes with the lane's stop. The issue's pointer links the intent on that branch.
+
 <intent-template>
 
 ---
@@ -71,6 +78,7 @@ source: <source>
 kind: <kind>
 priority: <priority>
 size: <size>
+lane: <fast | standard | full, when factory-run carries it; otherwise drop the line>
 status: <files only: open; with no code host, needs-go | open>
 ---
 
