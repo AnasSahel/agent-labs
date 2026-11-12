@@ -103,6 +103,7 @@ Starts only from an accepted plan: the state is `planned`, `building` or `blocke
    - **Learn.** Collect what this item taught: each correction the user or an owner made at a stop (a review comment, a changed assumption, a plan sent back), each check the verifier failed, each departure, each question that blocked the build, each correction noted in step 4. Keep one only when it would change what a station does on another item, and word it as what to do next time. Add it to `factory/lessons.md` with the lessons template (create the file when it's missing), or raise `Seen` on the line that already says it, and commit as `Lessons · <id>`. When a line reaches `Seen` 2, propose under the pull request's Lessons to make it a rule in `rules/`, where factory-design checks it on every spec: the user's call, never write in `rules/` yourself. A lesson about the factory's own skills, not about this project (a question that didn't need asking, a stop that added nothing), goes under Lessons marked `factory` and stays out of the file: the user reports it to the skills' repo. A lesson never names a finding or a way to attack the project. Nothing learned: write nothing.
 
    Then deliver:
+   - When the default branch moved since the branch was created, merge it into the branch first (never rebase a pushed branch), resolve any conflict, and run the three commands again: the pull request must merge as it is.
    - Push the branch when there's a remote, replace the draft pull request's body with the PR template, and mark it ready for review (`gh pr ready`, `glab mr update --ready`): the verifier passed, so the user can review it.
    - Comment on the issue with the build comment, editing it in place when it exists, and set the state `built`.
    - On a public repo, the branch, the commits and the pull request name behaviours, never a finding (no `F<n>`, no finding text): the spec's constraints are already plain requirements.
@@ -118,7 +119,7 @@ A later run on an issue at `built` reads the decision from its pull request:
 - **review comments**: apply them on the branch (a failing test first when one can show the problem), run the three commands again, push, and answer each comment. A comment that changes a criterion, a constraint or what the gate accepted is a question: go to step 6. Run **Learn** again for what the review corrected.
 - **merged**: the item is shipped. Close the issue when the merge didn't (a tracker the closing keyword doesn't reach); with files, `built` on the default branch means shipped. Say so: nothing else waits.
 - **closed without merge**: a no. Set the state `planned`, comment the reason from the pull request, and stop: the user says whether to build it again or drop it.
-- **open, nothing new**: it waits for the user's review; say so.
+- **open, nothing new**: it waits for the user's review. When it no longer merges cleanly, merge the default branch into the branch, run the three commands again and push; then say so.
 
 ## Carried by factory-run
 
