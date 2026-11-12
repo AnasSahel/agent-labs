@@ -1,5 +1,6 @@
 ---
 name: factory-design
+argument-hint: "An issue or intent id, or what to design"
 description: Design phase. Turn an intent or an issue into a spec, what to build and how, in one unattended session, reviewed while it's written by specialized agents (security by OWASP, risk by EBIOS RM and ISO 27005, privacy by GDPR, and each of the project's own rules), then one pull request the user merges to approve it. Works with any tracker (GitHub, Linear, Plane, a folder in the repo…). Use when the user asks to design, spec, scope or split an intent or an issue.
 metadata:
   author: Anas Sahel
@@ -28,9 +29,18 @@ The intent and the issue are each optional:
 
 The approval needs a **code host**: the repo's remote, with a tool that opens pull requests (`gh` for GitHub, `glab` for GitLab, an MCP server). With none, the spec is committed on the default branch and the user approves it in the conversation or on the issue.
 
+The spec and the issue comment each have a template in [templates.md](templates.md): read it before step 8.
+
 ## Steps
 
-1. **Load.** Find the tracker (named in the request → the repo's `AGENTS.md`, `CLAUDE.md` or README → an `intent/` folder → none). Check the **go**, when there's an intent: it must be on the default branch. While its pull request is open, stop: it waits for the user's merge; closed without merge, stop: it was rejected. When the issue still carries `needs-go` with its intent merged, remove the label. When the spec's pull request (`spec/<id>-<slug>`) already exists, load what it holds and go to step 9. Read the intent (`intent/<id>-<slug>.md`, from the factory-plan skill), or the issue standing in for it: its problem, success, scope and constraints bind the spec, and its open questions are yours to answer. Read the issue and every comment, the code it touches, the README, docs, existing screens and related specs in `specs/`. Read `factory/lessons.md` when the repo has one: each line marked `design` or `all` is a rule for this run. Collect the **rules**: the built-in security, risk and privacy reviewers, every rule the repo's `AGENTS.md` or `CLAUDE.md` names, and each file in `rules/` (`rules/risk-context.md` aside: it's the risk agent's context, not a rule). Read the settings there too: the review **rounds** (`factory-design: review rounds <n>`, 1 by default), the **threshold** (`factory-design: ask from <low | medium | high>`, `medium` by default), the **frames** (`factory-design: frames text` for text only, text and mockup by default), and the **owners**: who settles each reviewer's questions (`factory-design: owner <security | risk | privacy> <who>`, or `owner:` in a rule file's front matter) and the **tech lead** (`factory-design: tech lead <who>`). Anyone unnamed is the user. Done when you can name who is affected, which code areas change, and every rule.
+1. **Load.** Find the tracker (named in the request → the repo's `AGENTS.md`, `CLAUDE.md` or README → an `intent/` folder → none). Then:
+   - **The go**, when there's an intent: it must be on the default branch. While its pull request is open, stop: it waits for the user's merge; closed without merge, stop: it was rejected. When the issue still carries `needs-go` with its intent merged, remove the label.
+   - **A spec in progress**: when the spec's pull request (`spec/<id>-<slug>`) already exists, load what it holds and go to step 9.
+   - **Read** the intent (`intent/<id>-<slug>.md`, from the factory-plan skill), or the issue standing in for it: its problem, success, scope and constraints bind the spec, and its open questions are yours to answer. Read the issue and every comment, the code it touches, the README, docs, existing screens and related specs in `specs/`. Read `factory/lessons.md` when the repo has one: each line marked `design` or `all` is a rule for this run.
+   - **The rules**: the built-in security, risk and privacy reviewers, every rule the repo's `AGENTS.md` or `CLAUDE.md` names, and each file in `rules/` (`rules/risk-context.md` aside: it's the risk agent's context, not a rule).
+   - **The settings**, read in the same files: the review **rounds** (`factory-design: review rounds <n>`, 1 by default), the **threshold** (`factory-design: ask from <low | medium | high>`, `medium` by default), the **frames** (`factory-design: frames text` for text only, text and mockup by default), and the **owners**: who settles each reviewer's questions (`factory-design: owner <security | risk | privacy> <who>`, or `owner:` in a rule file's front matter) and the **tech lead** (`factory-design: tech lead <who>`). Anyone unnamed is the user.
+
+   Done when you can name who is affected, which code areas change, and every rule.
 
 2. **Define what.** Problem and users in 2 to 4 sentences. When the change is size `M` or bigger, 2 to 5 goals and non-goals. Acceptance criteria AC1, AC2… as Given / When / Then: one behaviour each, observable results, numbers instead of adjectives. Done when a test author could write a failing test for each without asking anything.
 
@@ -52,15 +62,28 @@ The approval needs a **code host**: the repo's remote, with a tool that opens pu
 
 7. **Split.** Look for 2 to 4 groups of criteria that each give users something that works on its own. Propose a split when the change is size `L`, or when the change has a `high` finding and a group carries none, so it could ship with less scrutiny. For each part, in build order (safest first): title, problem in one sentence, size, its criteria and findings by ID, the parts it comes after. A criterion that spans parts is reworded so each part tests its share alone, written in full and marked `(reworded)`. Done when every criterion and finding has a part, or there's no split.
 
-8. **Publish.** Write `specs/<id>-<slug>.md`, with the intent's id and slug (the issue's, or the next free number, when there's no intent), using the template below. With a code host, create the branch `spec/<id>-<slug>` from the default branch in its own worktree (`git worktree add`), commit the spec with the mockup and its image there, push, and open a **draft** pull request titled `Spec · <title>`, its body the comment template and the issue's reference without a closing keyword (`Refs #42`, never `Closes #42`). With no code host, commit them on the default branch. Comment on the issue with the comment template and the pull request's link, criteria in full, the mockup's image when there is one, editing that comment in place when it exists, and label it `needs-design`.
+8. **Publish.** Write `specs/<id>-<slug>.md`, with the intent's id and slug (the issue's, or the next free number, when there's no intent), using the spec template. With a code host, create the branch `spec/<id>-<slug>` from the default branch in its own worktree (`git worktree add`), commit the spec with the mockup and its image there, push, and open a **draft** pull request titled `Spec · <title>`, its body the comment template and the issue's reference without a closing keyword (`Refs #42`, never `Closes #42`). With no code host, commit them on the default branch. Comment on the issue with the comment template and the pull request's link, criteria in full, the mockup's image when there is one, editing that comment in place when it exists, and label it `needs-design`.
 
-   **Public repo or tracker** (or unknown): no finding ever reaches it. The committed spec, the pull request and the comment keep the constraints as plain requirements, with no `For` column, and drop the Findings section. The **questions stay**, because owners answer them in the pull request: each is reworded as a plain product or requirement decision ("How long are notes kept? Recommended: 30 days"), with no finding ID, no reviewer, no harm and no attack named. Say "Review notes kept privately."; write the findings, with the full questions, to the private path the repo's `AGENTS.md` or `CLAUDE.md` names. With none named, write them to `~/.claude/factory-design/<repo>/<id>-<slug>.md` only when a person runs this in their own session (say where in the reply); in an unattended run that disk is lost with the runner, so put them in the run's reply, say they are not saved, and suggest naming a private path in `AGENTS.md`. A question that can't be reworded without revealing its finding goes only to the private notes and the reply, and the pull request stays a draft until it is answered.
+   **Public repo or tracker** (or unknown): no finding ever reaches it.
+   - The committed spec, the pull request and the comment keep the constraints as plain requirements, with no `For` column, and drop the Findings section. Say "Review notes kept privately."
+   - The **questions stay**, because owners answer them in the pull request: each is reworded as a plain product or requirement decision ("How long are notes kept? Recommended: 30 days"), with no finding ID, no reviewer, no harm and no attack named.
+   - The findings, with the full questions, go to the private path the repo's `AGENTS.md` or `CLAUDE.md` names. With none named, write them to `~/.claude/factory-design/<repo>/<id>-<slug>.md` only when a person runs this in their own session (say where in the reply); in an unattended run that disk is lost with the runner, so put them in the run's reply, say they are not saved, and suggest naming a private path in `AGENTS.md`.
+   - A question that can't be reworded without revealing its finding goes only to the private notes and the reply, and the pull request stays a draft until it is answered.
 
    Done when the spec's pull request is open, or the spec committed, and the issue shows the comment and `needs-design`.
 
-9. **Gate.** The spec's pull request is the gate: merge = approve, close = reject, review comments = changes. When the user is in the conversation, show in one message: the pull request's link, the criteria, the chosen approach, the frames, then four lists: **assumptions**, the **questions** (one per decision, covering every finding it settles, each with its owner and your recommended answer), findings accepted below the threshold, and the split. A question's **owners** are the owners of the reviewers that raised its findings; a `high` finding's question also goes to the tech lead, who must agree. Each owner answers their own questions in the pull request's review, in the conversation or on the issue (read them all); the user answers the rest and decides the spec: approve, change, or reject. "yes" takes every recommended answer the speaker owns. A settled finding becomes a constraint, a scope change, or `accepted` (with the date and who accepted it: only an owner accepts a risk). On a change (a review comment or a message), revise from the step it touches, commit it to the spec's branch, push, answer each comment, and show again. While a finding is `needs-decision`, the pull request stays a draft, so it can't be merged; once none is left, set the spec's `status: designed`, commit, and mark it ready for review. The user approves by merging it, or by saying so here: then merge it yourself. On reject, close the pull request when the user said it here, keep their reason under Open questions, and when they want another design, return to step 2 on the same branch with the pull request reopened. Once it's merged, label the issue `designed` (an approved split: create each part as its own issue linked to the parent, labelled `designed`, and the parent `split`. A part has no spec file: its issue body says "Part <n> of <parent reference>. Spec: `specs/<parent id>-<slug>.md`, its row in Proposed split", lists its criteria and constraints by ID, and names the parts it comes after, so factory-build can find them). When no one is in the conversation, stop at `needs-design`: the owners answer in the pull request, the user merges or closes it, and a later run reads its review and its state.
+9. **Gate.** The spec's pull request is the gate: merge = approve, close = reject, review comments = changes. When no one is in the conversation, stop at `needs-design`: the owners answer in the pull request, the user merges or closes it, and a later run reads its review and its state. When the user is in the conversation:
+   - **Show**, in one message: the pull request's link, the criteria, the chosen approach, the frames, then four lists: **assumptions**, the **questions** (one per decision, covering every finding it settles, each with its owner and your recommended answer), findings accepted below the threshold, and the split.
+   - **Who answers.** A question's **owners** are the owners of the reviewers that raised its findings; a `high` finding's question also goes to the tech lead, who must agree. Each owner answers their own questions in the pull request's review, in the conversation or on the issue (read them all); the user answers the rest and decides the spec: approve, change, or reject. "yes" takes every recommended answer the speaker owns. A settled finding becomes a constraint, a scope change, or `accepted` (with the date and who accepted it: only an owner accepts a risk).
+   - **A change** (a review comment or a message): revise from the step it touches, commit it to the spec's branch, push, answer each comment, and show again.
+   - **Ready.** While a finding is `needs-decision`, the pull request stays a draft, so it can't be merged; once none is left, set the spec's `status: designed`, commit, and mark it ready for review.
+   - **Approve.** The user approves by merging it, or by saying so here: then merge it yourself. Once it's merged, label the issue `designed`.
+   - **An approved split**: create each part as its own issue linked to the parent, labelled `designed`, and the parent `split`. A part has no spec file: its issue body says "Part <n> of <parent reference>. Spec: `specs/<parent id>-<slug>.md`, its row in Proposed split", lists its criteria and constraints by ID, and names the parts it comes after, so factory-build can find them.
+   - **Reject**: close the pull request when the user said it here, keep their reason under Open questions, and when they want another design, return to step 2 on the same branch with the pull request reopened.
 
    With no code host, the user approves or rejects in the conversation or on the issue; on approval, commit the updated spec on the default branch and label the issue as above.
+
+   Done when the issue is `designed` or `split`, the spec is rejected, or it waits at `needs-design` with what waits and for whom.
 
 Before replying, remove the worktree (`git worktree remove`): the branch keeps everything, and a later run adds it again.
 
@@ -68,116 +91,4 @@ Reply with the links (issue, spec pull request or spec, each part) and where it 
 
 ## Carried by factory-run
 
-When the factory-run skill says it **carries** the item, it owns the stops and names a branch. Then:
-
-- **Step 1**: the go is the intent on that branch or on the default branch. Don't wait for a merge.
-- **Step 8**: commit the spec, the mockup and its image on that branch as `Spec · <title>`, in its worktree. Open no pull request. Comment on the issue and set `needs-design` as written.
-- **Step 9**: no gate here. Set the spec's `status: designed` when no finding is `needs-decision`. Hand back the highest finding level, the questions that wait with their owners, the assumptions, and the split when one is proposed: factory-run puts them in front of the user at its stop. When it later brings an answer or a review comment, settle it as step 9 says, on the same branch.
-
-The public-repo rule of step 8 holds in every lane.
-
-<spec-template>
-
----
-issue: <tracker reference>
-intent: <path of the intent, when there is one>
-title: <title>
-size: <S | M | L>
-status: <needs-design | designed>
----
-
-# <title>
-
-## Problem and users
-
-## Goals · Non-goals
-
-<size M or bigger>
-
-## Acceptance criteria
-
-**AC1 · <name>**
-- Given <context>
-- When <action>
-- Then <observable result>
-
-## Approach
-
-**Chosen**: <option>. <why, in one or two sentences>
-
-| Option | How | Cost | Risk |
-|---|---|---|---|
-
-## Structure
-
-| Path | Holds | Criteria |
-|---|---|---|
-
-## Data
-
-## Build order
-
-1. **AC<n> · <name>**: <why it comes here>
-
-## Frames
-
-Mockup: [frames.html](<id>-<slug>/frames.html) <and its image, when rendered>
-
-<the ui-designer's text frames, or the flowchart; drop the section when there's neither>
-
-## Constraints
-
-| ID | For | Constraint | Where | Test |
-|---|---|---|---|---|
-| C1 | F1 | <safe behaviour, one line> | <file or module> | <how a test checks it> |
-
-A constraint you recommend in a question is listed too, its ID marked `(proposed, Q<n>)` until the question is settled.
-
-## Findings
-
-| ID | From | Finding | Level | Answer | Status |
-|---|---|---|---|---|---|
-| F1 | security | <effect, never an attack> | <level> | C1 | open |
-
-Status is `open` (a constraint answers it, waiting for code), `needs-decision` (waits for its owner), `mitigated` (a test proves its constraint), `accepted` (by its owner, with the date, or "below threshold") or `dropped` (the scope changed). A finding partly answered carries both, e.g. `open (C1) · needs-decision (Q2)`. "No finding." when there's none.
-
-## Questions
-
-<one per decision: **Q1 · @owner** (and the tech lead, for a high finding): the question, the findings it settles, your recommended answer; "None." when nothing waits>
-
-## Assumptions
-
-## Proposed split
-
-<when step 7 proposes one>
-
-| Part | Title | Criteria | Findings | Size | After |
-|---|---|---|---|---|---|
-
-## Open questions
-
-</spec-template>
-
-<comment-template>
-
-## Spec
-
-**Criteria** <n> · **Constraints** <n> · **Questions** <n> · **Spec** <link or path>
-
-<details>
-<summary>Criteria (<n>)</summary>
-
-**AC1 · <name>**
-- Given <context>
-- When <action>
-- Then <observable result>
-
-</details>
-
-<when there's a mockup:> ![Frames](<link to frames.png>) · [mockup](<link to frames.html>)
-
-<when questions wait:> **Waiting for** <each owner, mentioned in the tracker's way>: Q1, Q2…
-
-<when a split is proposed:> **Split proposed** into <n> parts: <part titles>.
-
-</comment-template>
+When the factory-run skill says it **carries** the item, read [carried.md](carried.md) before step 1: it owns the stops, and this skill opens no pull request and waits at no gate of its own.
