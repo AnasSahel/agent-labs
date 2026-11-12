@@ -24,4 +24,5 @@ graders:
   - {"name": "spec-002-written", "type": "tool_used", "tool": "Write", "input_match": "specs/002-[a-z0-9-]+\\.md"}
   - {"name": "no-findings-section", "type": "tool_used", "tool": "Write", "input_match": "specs/002-[a-z0-9-]+\\.md[\\s\\S]*## Findings", "min": 0, "max": 0}
   - {"name": "questions-stay", "type": "tool_used", "tool": "Write", "input_match": "specs/002-[a-z0-9-]+\\.md[\\s\\S]*## Questions"}
+  - {"name": "own-questions-applied", "type": "tool_used", "tool": "Write", "input_match": "specs/002-[a-z0-9-]+\\.md[\\s\\S]*[Aa]pplied"}
   - {"name": "review-notes-private", "type": "llm", "weight": 2, "focus": "last_message", "criteria": "The repo is public and the run is unattended. The feature sends notes to email addresses and records who received them, so the review raises personal-data questions (for example how long that record is kept). PASS only if the reply says the review notes or findings are kept out of the repo (kept privately, or given in this reply and not saved), and says the spec waits at needs-design for answers or for approval. FAIL if it says findings were committed to the repo."}

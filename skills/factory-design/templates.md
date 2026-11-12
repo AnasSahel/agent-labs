@@ -69,7 +69,7 @@ Status is `open` (a constraint answers it, waiting for code), `needs-decision` (
 
 ## Questions
 
-<one per decision: **Q1 · @owner** (and the tech lead, for a high finding): the question, the findings it settles, your recommended answer; "None." when nothing waits>
+<one per decision: **Q1 · @owner** (and the tech lead, for a high finding): the question, the findings it settles, your recommended answer; a question that is the user's alone adds "Recommended answer applied: merging accepts it, a review comment changes it"; "None." when there's no question>
 
 ## Assumptions
 
@@ -102,7 +102,9 @@ Status is `open` (a constraint answers it, waiting for code), `needs-decision` (
 
 <when there's a mockup:> ![Frames](<link to frames.png>) · [mockup](<link to frames.html>)
 
-<when questions wait:> **Waiting for** <each owner, mentioned in the tracker's way>: Q1, Q2…
+<when questions wait for an owner other than the user:> **Waiting for** <each owner, mentioned in the tracker's way>: Q1, Q2…
+
+<when questions were applied:> **Applied** Q3, Q4: merging accepts the recommended answers.
 
 <when a split is proposed:> **Split proposed** into <n> parts: <part titles>.
 
