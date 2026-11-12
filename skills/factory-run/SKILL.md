@@ -29,6 +29,8 @@ The lane comes from, in this order: the user's word ("fast lane", "full lane"); 
 
 **Mergeable**: a stop is a pull request the user can merge as it is. Before you open one or reply about one, and each time you read the board, compare its branch with the default branch. When the default branch moved and the two conflict (another item landed first), merge the default branch into the branch, resolve, and push: never rebase a pushed branch. A file that lists items (an index, a changelog) keeps both sides. Check that what the conflict touched still holds: ids, numbers and links in the spec and the plan, and the build, test and lint commands on a code branch. A conflict that needs a decision is a question, with your recommendation.
 
+**One merge breaks the others**: stops that wait side by side share files (an index, a migration number), so each merge can break the ones still open. Each time one item's pull request merges, and before you reply about any item, run the mergeable check on every open stop on the board, not only the item in hand: the code host's own verdict (`mergeable`, a conflict banner) is the test, not your last push. Never tell the user a pull request is ready while the code host says it conflicts.
+
 **No code host**: there's no pull request, so a stop is the user's yes, in the conversation or on the issue. Show what the pull request would hold; on yes, merge the proposal's branch into the default branch yourself. The code branch stays the delivery, as factory-build says. Unattended, stop there and say what waits.
 
 ## Steps
