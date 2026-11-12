@@ -9,7 +9,7 @@ metadata:
 
 Take a **request** to working code with as few **stops** as its size allows. A stop is a gate that needs the user, and the only moment they are needed: one pull request to merge. Between two stops you **carry** the item: call each station with the Skill tool (`factory-plan`, `factory-design`, `factory-build`), tell it you carry the item, and name the lane and the branch. A carried station writes on that branch, opens no pull request of its own and waits at no gate of its own (its "Carried by factory-run" section).
 
-While you carry, ask nothing: take every recommended answer and keep it as an **assumption**. The user corrects assumptions at the stop, in one place, instead of answering them one by one. The only questions asked before a stop are the intake's brainstorm, when the user is in the conversation.
+Hand a station whatever the request came with, a link to frames drawn elsewhere included. While you carry, ask nothing: take every recommended answer and keep it as an **assumption**. The user corrects assumptions at the stop, in one place, instead of answering them one by one. The only questions asked before a stop are the intake's brainstorm, when the user is in the conversation.
 
 ## Lanes
 
@@ -80,13 +80,14 @@ Reply with one board line per item you touched, each with its link, then the ass
 
 **Lane** <lane> · **Size** <size> · **Criteria** <n> · **Constraints** <n> · **Questions** <n>
 
-Merge = go for <the intent, the spec and the plan | the spec and the plan> · close = reject · review comments = changes.
+Merge = go for <the intent, the spec and the plan | the spec and the plan>, frames included · close = reject · review comments = changes.
 
 ## Read in this order
 
 1. [Intent](<path>): the problem <drop the line in the `full` lane>
 2. [Spec](<path>): what gets built, and how
 3. [Plan](<path>): the files, the order, the tests <drop the line with a split>
+4. [Frames](<the mockup in the spec's folder, or the link to frames drawn elsewhere>): what users will see <drop the line when no screen changes>
 
 ## Questions
 
