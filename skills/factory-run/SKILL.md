@@ -1,12 +1,13 @@
 ---
 name: factory-run
+argument-hint: "A request to build, an item id to carry on, \"status\", or nothing for the board"
 description: "Driver of the factory. Takes a bug, idea or feature request all the way to a pull request with working code, running factory-plan, factory-design and factory-build itself and stopping for the user as few times as the change's size allows: once for a small change, twice for a normal one, three times for a large one. With no request, shows the board (where each item stands, what waits for whom) and moves on every item whose stop was passed. Use this, instead of calling the factory skills one by one, when the user wants a new request built end to end (\"build me…\", \"take this to a pull request\", \"run the factory on…\", \"fix this and open a PR\"), asks where things stand (\"factory status\", \"what's waiting for me?\"), or says to carry on after merging a factory pull request. Not for filing a request to deal with later (that's factory-plan), nor for one station on an item that exists (\"spec out 12\", \"plan issue 12\", \"build issue 12\": factory-design, factory-build)."
 metadata:
   author: Anas Sahel
   version: 1.0.0 # x-release-please-version
 ---
 
-Take a **request** to working code with as few **stops** as its size allows. A stop is the only moment the user is needed: one pull request to merge. Between two stops you **carry** the item: call each station with the Skill tool (`factory-plan`, `factory-design`, `factory-build`), tell it you carry the item, and name the lane and the branch. A carried station writes on that branch, opens no pull request of its own and waits at no gate of its own (its "Carried by factory-run" section).
+Take a **request** to working code with as few **stops** as its size allows. A stop is a gate that needs the user, and the only moment they are needed: one pull request to merge. Between two stops you **carry** the item: call each station with the Skill tool (`factory-plan`, `factory-design`, `factory-build`), tell it you carry the item, and name the lane and the branch. A carried station writes on that branch, opens no pull request of its own and waits at no gate of its own (its "Carried by factory-run" section).
 
 While you carry, ask nothing: take every recommended answer and keep it as an **assumption**. The user corrects assumptions at the stop, in one place, instead of answering them one by one. The only questions asked before a stop are the intake's brainstorm, when the user is in the conversation.
 
