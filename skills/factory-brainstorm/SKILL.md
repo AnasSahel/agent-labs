@@ -1,5 +1,6 @@
 ---
 name: factory-brainstorm
+argument-hint: "The idea, plan or decision to think through"
 description: Brainstorm an idea, plan or decision with the user until it's concrete enough to write down, in short rounds of questions with recommended answers, then a builder check that ends it, and keeps a trace of every question and answer. Works inside the current project's limits or outside them. Use when the user wants to brainstorm, explore an idea, think something through or flesh it out, or before writing an intent or a spec.
 metadata:
   author: Anas Sahel
@@ -28,7 +29,7 @@ A caller may set four things: the **trace** path, the **destination** (what must
 
    Ask only what's **theirs**: a decision that changes what gets built. A **fact** is yours to look up, never to ask. A **minor** choice a sensible builder could settle is yours: decide it and say so. Open questions first ("what should someone do when they land on it?"); menus only when they're stuck. The first round also offers one way out: "Or say go and I'll work with my recommendations." As soon as one part is clear, play it back in a few lines, theirs as theirs and your fills as your proposals, then move on. Done when the destination is covered.
 
-3. **Lay out approaches.** Skip it when the caller says so. Otherwise give 2 or 3 real ways to do it, each grounded in the scope and with its trade-off, recommend one, and let the user pick. When there's one sensible way, say why the others don't fit.
+3. **Lay out approaches.** Skip it when the caller says so. Otherwise give 2 or 3 real ways to do it, each grounded in the scope and with its trade-off, recommend one, and let the user pick. When there's one sensible way, say why the others don't fit. Done when one approach is picked, or the step is skipped.
 
 4. **Builder check.** Start a fresh subagent (or read it yourself without one) with the summary and this brief: "You must build from this and can't ask its author. List only the questions where a wrong guess would matter, most important first, or say nothing important is left." Sort what comes back: **answered** (fill it in), **minor** (decide, mark as your call), **theirs**. Ask the theirs pile in one last round. Done when that round is answered: there is no other round.
 
