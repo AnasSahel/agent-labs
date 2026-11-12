@@ -1,6 +1,7 @@
 ---
 name: factory-plan
-description: "Plan phase. Turn a bug, idea or request into an intent — the problem in the originator's words, brainstormed until concrete — proposed to the repo as intent/<id>-<slug>.md in a pull request, whose merge is the user's go, and tracked by an issue in any tracker (GitHub, Linear, Plane, a folder in the repo…), one per feature that ships on its own. Use this, instead of writing an issue or an intent file by hand, whenever the user reports a new bug, idea or feature request and wants it filed, logged or tracked (\"file this\", \"open an issue\", \"track it\", \"add it to the backlog\"), before any design or code. Not for planning how to build an issue or a spec that exists: that's factory-build."
+argument-hint: "The bug, idea or request, or an issue id to follow up"
+description: "Plan phase. Turn a bug, idea or request into an intent (the problem in the originator's words, brainstormed until concrete), proposed to the repo as intent/<id>-<slug>.md in a pull request, whose merge is the user's go, and tracked by an issue in any tracker (GitHub, Linear, Plane, a folder in the repo…), one per feature that ships on its own. Use this, instead of writing an issue or an intent file by hand, whenever the user reports a new bug, idea or feature request and wants it filed, logged or tracked (\"file this\", \"open an issue\", \"track it\", \"add it to the backlog\"), before any design or code. Not for planning how to build an issue or a spec that exists: that's factory-build."
 metadata:
   author: Anas Sahel
   version: 1.2.0 # x-release-please-version
@@ -35,11 +36,13 @@ The go needs a **code host**: the repo's remote, with a tool that opens pull req
 
 3. **Check for duplicates.** List the project's open issues and compare problems: same users and same failure means duplicate. On a duplicate, comment the new evidence on the existing issue and stop. Done when you've compared against every open issue.
 
-4. **Triage.** Set **kind** (`bug`, `feature`, `improvement`, `chore`), **priority** (`urgent`, `high`, `normal`, `low`) and **size** from the code it touches (`S` one file, `M` a few files, `L` several areas or a migration). Read the code when it is at hand; pick the bigger size when unsure. Give one line of reasoning for each.
+4. **Triage.** Set **kind** (`bug`, `feature`, `improvement`, `chore`), **priority** (`urgent`, `high`, `normal`, `low`) and **size** from the code it touches (`S` one file, `M` a few files, `L` several areas or a migration). Read the code when it is at hand; pick the bigger size when unsure. Give one line of reasoning for each. Done when each intent has its kind, priority and size.
 
 5. **Prepare the go.** With a code host, the go is the merge of the intent's pull request, so don't ask for it here. When the user made the request, show the draft intents: they correct them, so what's proposed is in their words, and they can merge drafts back into one. On a change, apply it and show it again; on no, publish nothing and stop; otherwise publish (steps 6 and 7). When another agent made the request, publish without showing anything: the user fills the `[to fill]` fields in the pull request's review.
 
    With no code host, ask for **go** instead. A go covers every intent shown; on a change, apply it and show it again; on no, publish nothing and stop. When another agent made the request, skip the question: publish the issue with the draft as its body and the extra label `needs-go` (with files, `status: needs-go`), and stop at step 6; when the user later says go on that issue, take its body as the draft and run step 7.
+
+   Done when each draft is ready to publish as the user corrected it, or nothing is published.
 
 6. **Publish the issue.** Create each issue with its kind, priority and size: the tracker's native field when it has one (Linear's priority, for instance), labels `kind:<kind>`, `priority:<priority>`, `size:<size>` otherwise. With a code host, add `needs-go`: the issue waits for its intent's merge. Reuse existing labels; create only the missing ones, so existing ones keep their colors. Done when each issue exists and you have its id.
 
@@ -64,10 +67,7 @@ A later run on an issue whose intent pull request exists reads the decision from
 
 ## Carried by factory-run
 
-When the factory-run skill says it **carries** the request, it owns the stops. After step 4, give it the size and take the **lane** it names:
-
-- `full`: go on as written. The intent has its own pull request, and its merge is the go.
-- `fast` or `standard`: skip step 5 (show nothing, ask for no go). Publish the issue (step 6) without `needs-go`. Then write the intent and its trace (step 7's names and template, with `lane: <lane>` added to the front matter) on the branch factory-run names, created from the default branch in its own worktree, and commit them there as `Intent · <title>`. Open no pull request: the go comes with the lane's stop. The issue's pointer links the intent on that branch.
+When the factory-run skill says it **carries** the request, read [carried.md](carried.md) before step 1: it owns the stops, and this skill opens no pull request and waits at no gate of its own.
 
 <intent-template>
 
