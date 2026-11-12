@@ -1,0 +1,24 @@
+schema_version: '1.1'
+name: design-reads-lessons
+description: A line marked for design in factory/lessons.md is applied to the next spec without being asked.
+tags:
+- factory-design
+context:
+  scaffold_script: scaffold.sh
+execution:
+  max_turns: 80
+  timeout_seconds: 900
+  allowed_tools:
+  - Bash
+  - Write
+  - Edit
+  - Read
+  - Glob
+  - Grep
+  - Skill
+  - Agent
+  prompt: '/factory:factory-design Add a `notes count` command that prints how many notes there are. There''s no issue and no intent for this. I''m away: run it unattended and ask me nothing.
+
+    '
+graders:
+  - {"name": "spec-applies-the-lesson", "type": "tool_used", "tool": "Write", "input_match": "specs/001-[a-z0-9-]+\\.md[\\s\\S]*--json"}

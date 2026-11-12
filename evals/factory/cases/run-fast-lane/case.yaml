@@ -1,0 +1,27 @@
+schema_version: '1.1'
+name: run-fast-lane
+description: 'A small bug carried unattended in the fast lane, with no remote: intent, spec, plan and code on one branch, one stop at the end.'
+tags:
+- factory-run
+context:
+  scaffold_script: scaffold.sh
+execution:
+  max_turns: 200
+  timeout_seconds: 2400
+  allowed_tools:
+  - Bash
+  - Write
+  - Edit
+  - Read
+  - Glob
+  - Grep
+  - Skill
+  - Agent
+  prompt: '/factory:factory-run `notes list` crashes with a JSON parse error when notes.json exists but is empty. It should print nothing and exit 0, like when the file is missing. I''m away: run it unattended and ask me nothing.
+
+    '
+graders:
+  - {"name": "intent-in-fast-lane", "type": "tool_used", "tool": "Write", "input_match": "intent/003-[a-z0-9-]+\\.md[\\s\\S]*lane: fast"}
+  - {"name": "spec-written", "type": "tool_used", "tool": "Write", "input_match": "specs/003-[a-z0-9-]+\\.md"}
+  - {"name": "plan-written", "type": "tool_used", "tool": "Write", "input_match": "specs/003-[a-z0-9-]+/plan\\.md"}
+  - {"name": "one-stop-at-the-end", "type": "llm", "weight": 3, "focus": "last_message", "criteria": "A small bug (size S) was carried by factory-run with the files tracker, no remote, and the user away. PASS only if the reply says the item went through the fast lane, that the code was written and its tests pass (the item is built, on a branch), and that the only thing waiting is the user's review or approval of that branch. FAIL if it stopped earlier to wait for a go on the intent, an approval of the spec or an acceptance of the plan, or if it asked the user a question."}
