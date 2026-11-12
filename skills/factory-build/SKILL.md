@@ -1,5 +1,6 @@
 ---
 name: factory-build
+argument-hint: "An issue id or a spec path"
 description: "Build phase. Turn an approved spec into code in two halves: first a plan (plan.md, the files that change, the order, the risks and the tests that prove each criterion), drafted in plan mode without touching the code and accepted by the user (and the tech lead for a high-risk change); then the code and its tests, in one pass on a branch, done only when build, tests and lint pass and a verifier agent, in a fresh context, has run the app against the spec, with a pull request when the repo has a code host. Works with any tracker (GitHub, Linear, Plane, a folder in the repo…) and any code host (GitHub, GitLab, none). Use when the user asks to build or implement an issue or a spec that's already designed, or to write or accept its implementation plan. Not for filing a new request: that's factory-plan."
 metadata:
   author: Anas Sahel
@@ -30,6 +31,8 @@ The skill works with any **tracker**. It needs three operations: read an issue w
 | No remote | the branch is the delivery: no push, no pull request |
 
 When the repo names a tracker that has no tool in this session, say so and stop.
+
+The plan, the pull request body, the lessons file and the issue comments each have a template in [templates.md](templates.md): read it before step 3.
 
 ## When it plans, when it builds
 
@@ -73,7 +76,7 @@ In the conversation, one run does both parts: Part 2 starts as soon as the plan 
    - **Unattended**: publish the plan, set the state `needs-plan`, and stop: the gate runs when they answer.
    - **At `needs-plan`** (a later run): read the decisions. Accepted by everyone who must: write who and when in the plan's front matter, commit it on the branch, set the state `planned`, and go on to Part 2. A change or a reject: revise from step 2, and publish again.
 
-   **Publish** means: create the branch `<id>-<slug>` from the default branch in its own worktree (`git worktree add`); write `specs/<id>-<slug>/plan.md` with the template below and commit it alone, as the branch's first commit: `Plan · <title>` (with files, the intent's state and comment come in the next commit). Push the branch when there's a remote and open a draft pull request (merge request on GitLab) titled after the issue, with the plan comment as its body: the plan is reviewed there, line by line. Comment on the issue with the plan comment and the pull request's link, editing it in place when it exists.
+   **Publish** means: create the branch `<id>-<slug>` from the default branch in its own worktree (`git worktree add`); write `specs/<id>-<slug>/plan.md` with the plan template and commit it alone, as the branch's first commit: `Plan · <title>` (with files, the intent's state and comment come in the next commit). Push the branch when there's a remote and open a draft pull request (merge request on GitLab) titled after the issue, with the plan comment as its body: the plan is reviewed there, line by line. Comment on the issue with the plan comment and the pull request's link, editing it in place when it exists.
 
    Done when the plan is the branch's first commit, and the issue is `planned` or waits at `needs-plan` with the plan comment.
 
@@ -97,9 +100,14 @@ Starts only from an accepted plan: the state is `planned`, `building` or `blocke
 
    Then close the loop, before the push:
    - **Findings.** In the spec's Findings, set `mitigated` on each finding whose constraints all have a passing test that the verifier also observed, and commit it. Where the findings are kept privately (a public repo), update the private notes when this session can reach them; otherwise name them in the reply.
-   - **Learn.** Collect what this item taught: each correction the user or an owner made at a stop (a review comment, a changed assumption, a plan sent back), each check the verifier failed, each departure, each question that blocked the build, each correction noted in step 4. Keep one only when it would change what a station does on another item, and word it as what to do next time. Add it to `factory/lessons.md` with the template below (create the file when it's missing), or raise `Seen` on the line that already says it, and commit as `Lessons · <id>`. When a line reaches `Seen` 2, propose under the pull request's Lessons to make it a rule in `rules/`, where factory-design checks it on every spec: the user's call, never write in `rules/` yourself. A lesson about the factory's own skills, not about this project (a question that didn't need asking, a stop that added nothing), goes under Lessons marked `factory` and stays out of the file: the user reports it to the skills' repo. A lesson never names a finding or a way to attack the project. Nothing learned: write nothing.
+   - **Learn.** Collect what this item taught: each correction the user or an owner made at a stop (a review comment, a changed assumption, a plan sent back), each check the verifier failed, each departure, each question that blocked the build, each correction noted in step 4. Keep one only when it would change what a station does on another item, and word it as what to do next time. Add it to `factory/lessons.md` with the lessons template (create the file when it's missing), or raise `Seen` on the line that already says it, and commit as `Lessons · <id>`. When a line reaches `Seen` 2, propose under the pull request's Lessons to make it a rule in `rules/`, where factory-design checks it on every spec: the user's call, never write in `rules/` yourself. A lesson about the factory's own skills, not about this project (a question that didn't need asking, a stop that added nothing), goes under Lessons marked `factory` and stays out of the file: the user reports it to the skills' repo. A lesson never names a finding or a way to attack the project. Nothing learned: write nothing.
 
-   Then push the branch when there's a remote, replace the draft pull request's body with the PR template below, and mark it ready for review (`gh pr ready`, `glab mr update --ready`): the verifier passed, so the user can review it. Comment on the issue with the build comment, editing it in place when it exists, and set the state `built`. On a public repo, the branch, the commits and the pull request name behaviours, never a finding (no `F<n>`, no finding text): the spec's constraints are already plain requirements. Done when the verifier passed, the pull request is ready for review, and the issue is `built` with its build comment pointing to the pull request or the branch.
+   Then deliver:
+   - Push the branch when there's a remote, replace the draft pull request's body with the PR template, and mark it ready for review (`gh pr ready`, `glab mr update --ready`): the verifier passed, so the user can review it.
+   - Comment on the issue with the build comment, editing it in place when it exists, and set the state `built`.
+   - On a public repo, the branch, the commits and the pull request name behaviours, never a finding (no `F<n>`, no finding text): the spec's constraints are already plain requirements.
+
+   Done when the verifier passed, the pull request is ready for review, and the issue is `built` with its build comment pointing to the pull request or the branch.
 
 6. **Blocked.** When a question only a person can answer comes up (a departure from what was accepted, a criterion no test can check, 3 failed tries at the same step), commit the steps that pass, push the branch when there's a remote, comment on the issue with the blocked comment, and set the state `blocked`. Once answered, running the skill again resumes at the first step without a commit. Done when the issue is `blocked` with the question on it.
 
@@ -114,149 +122,8 @@ A later run on an issue at `built` reads the decision from its pull request:
 
 ## Carried by factory-run
 
-When the factory-run skill says it **carries** the item, it owns the stops and names the lane and the branch. Then:
-
-- **Part 1**: write the plan on that branch and commit it as `Plan · <title>`. Open no pull request and run no gate: set the state `needs-plan` and hand back whether the tech lead must accept (step 3's rule), with the assumptions.
-- **`fast` lane**: Part 2 follows at once on the same branch, which is the code branch `<id>-<slug>` and already holds the intent, the spec and the plan. The plan's `accepted` is `with the pull request`. Step 5 opens the pull request, ready for review, its body starting with: "Fast lane: this pull request also carries the intent, the spec and the plan. Merging it approves them."
-- **`standard` and `full` lanes**: Part 2 starts once factory-run says the proposal's pull request is merged. That merge accepted the plan: create the code branch `<id>-<slug>` from the default branch, write who merged and when in the plan's `accepted` as its first commit, and build.
+When the factory-run skill says it **carries** the item, read [carried.md](carried.md) before step 1: it owns the stops, and this skill opens no pull request and waits at no gate of its own.
 
 Before replying, remove the worktree (`git worktree remove`): the branch keeps everything, and step 4 adds it again.
 
 Reply with the links (issue, plan, pull request or branch) and where it stands: `needs-plan` and who must accept, `built` with the commands' results and what the tests can't cover, or `blocked` with the question.
-
-<plan-template>
-
----
-issue: <tracker reference>
-spec: specs/<id>-<slug>.md
-status: <needs-plan | planned; with no issue, then building | built | blocked>
-accepted: <who, date; for a higher-risk change, the tech lead too>
----
-
-# Plan · <title>
-
-**Approach**: <the spec's chosen option, in one or two sentences>
-
-## Files
-
-| Path | Change | For |
-|---|---|---|
-| <path> | <add, change, remove: what> | AC1, C2 |
-
-## Order
-
-1. **AC1 · <name>**: <files> · tests: <test names>
-
-## Tests
-
-| For | Test | Type | Entry point |
-|---|---|---|---|
-| AC1 | <test name: case> | <unit, integration, end to end> | <page, route, command, function> |
-
-## Risks
-
-| Risk | Effect | Kept safe by |
-|---|---|---|
-
-"None." when there's none.
-
-## Commands
-
-- Build: `<command>`
-- Test: `<command>`
-- Lint: `<command>`
-
-## Assumptions
-
-## Departures
-
-<written while building: each change to this plan, and why; "None." until then>
-
-</plan-template>
-
-<plan-comment>
-
-## Plan
-
-**Steps** <n> · **Tests** <n> · **Risks** <n> · **Plan** <link or path>
-
-<details>
-<summary>Order (<n>)</summary>
-
-1. **AC1 · <name>**: <files>
-
-</details>
-
-**Waiting for** <who accepts, mentioned in the tracker's way>: reply "yes", or what to change.
-
-</plan-comment>
-
-<pr-template>
-
-Closes <issue reference>. Spec: <link> · Plan: <link>
-
-## Criteria
-
-- [x] **AC1 · <name>** · `<test file>`
-
-## Check it
-
-```
-<the build, test and lint commands, and their summary lines>
-```
-
-## Departures from the plan
-
-<each line from the plan's Departures, or "None.">
-
-## Not covered by tests
-
-<what no automated test can check, or "Nothing.">
-
-## Verifier
-
-**Verdict** <pass | fail> · **Checks** <n> · **App** <started | not started: why>
-
-<runs: <n>. Each failed check: what it saw, and the commit that fixed it>
-
-## Lessons
-
-<each line added to `factory/lessons.md` or raised, a line at `Seen` 2 with "make it a rule in `rules/`?", and each `factory` lesson; or drop the section>
-
-## For AGENTS.md or CLAUDE.md
-
-<each line proposed in step 4, or drop the section>
-
-</pr-template>
-
-<lessons-template>
-
-# Lessons
-
-What the factory learned on this project. Each station reads the lines marked for it before it starts. Delete a line that's wrong.
-
-| Lesson | For | From | Seen |
-|---|---|---|---|
-| <what to do next time, one line> | <intake · design · plan · build · all> | <issue ids> | <n> |
-
-</lessons-template>
-
-<build-comment>
-
-## Build
-
-**Criteria** <n> · **Branch** `<branch>` · **Pull request** <link, or "none (no remote)"> · **Departures** <n>
-
-</build-comment>
-
-<blocked-comment>
-
-## Blocked in Build
-
-**Stopped at** <AC<n> · <name>, or "setup"> · **Branch** `<branch>`
-
-<the question, with your recommended answer>
-
-Answer here, then run the skill again.
-
-</blocked-comment>
