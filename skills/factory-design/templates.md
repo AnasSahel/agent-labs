@@ -47,7 +47,7 @@ status: <needs-design | designed>
 
 ## Frames
 
-Mockup: [frames.html](<id>-<slug>/frames.html) <and its image, when rendered>
+Mockup: [frames.html](<id>-<slug>/frames.html) <and its image, when rendered; external frames: their link instead, or "Frames: to come">
 
 <the ui-designer's text frames, or the flowchart; drop the section when there's neither>
 
@@ -101,6 +101,8 @@ Status is `open` (a constraint answers it, waiting for code), `needs-decision` (
 </details>
 
 <when there's a mockup:> ![Frames](<link to frames.png>) · [mockup](<link to frames.html>)
+
+<when the frames are external:> **Frames** <link>: approving this also approves them.
 
 <when questions wait for an owner other than the user:> **Waiting for** <each owner, mentioned in the tracker's way>: Q1, Q2…
 
