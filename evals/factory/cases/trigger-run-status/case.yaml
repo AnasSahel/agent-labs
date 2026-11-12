@@ -1,0 +1,23 @@
+schema_version: '1.1'
+name: trigger-run-status
+description: '''What''s waiting for me?'' goes to factory-run, which shows the board and builds nothing.'
+tags:
+- triggers
+- factory-run
+context:
+  scaffold_script: scaffold.sh
+execution:
+  max_turns: 20
+  timeout_seconds: 420
+  allowed_tools:
+  - Read
+  - Glob
+  - Grep
+  - Skill
+  prompt: 'Factory status only: where does each item stand, and what''s waiting for me?
+
+    '
+graders:
+  - {"name": "calls-factory-run", "type": "tool_used", "tool": "Skill", "input_match": "\"skill\"\\s*:\\s*\"(factory:)?factory-run\"", "arm": "both"}
+  - {"name": "no-factory-build", "type": "tool_used", "tool": "Skill", "input_match": "\"skill\"\\s*:\\s*\"(factory:)?factory-build\"", "arm": "both", "min": 0, "max": 0}
+  - {"name": "shows-the-board", "type": "llm", "weight": 2, "focus": "last_message", "criteria": "The repo tracks its items as files in intent/: item 001 (the list shows the oldest notes first) and item 002 (share a note by email). PASS only if the reply lists both items, each with where it stands (its state) and what or who it waits for or what comes next. FAIL if it lists only one item, starts designing or building something, or asks the user which item they mean."}
