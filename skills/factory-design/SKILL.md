@@ -30,7 +30,7 @@ The approval needs a **code host**: the repo's remote, with a tool that opens pu
 
 ## Steps
 
-1. **Load.** Find the tracker (named in the request → the repo's `AGENTS.md`, `CLAUDE.md` or README → an `intent/` folder → none). Check the **go**, when there's an intent: it must be on the default branch. While its pull request is open, stop: it waits for the user's merge; closed without merge, stop: it was rejected. When the issue still carries `needs-go` with its intent merged, remove the label. When the spec's pull request (`spec/<id>-<slug>`) already exists, load what it holds and go to step 9. Read the intent (`intent/<id>-<slug>.md`, from the factory-plan skill), or the issue standing in for it: its problem, success, scope and constraints bind the spec, and its open questions are yours to answer. Read the issue and every comment, the code it touches, the README, docs, existing screens and related specs in `specs/`. Collect the **rules**: the built-in security, risk and privacy reviewers, every rule the repo's `AGENTS.md` or `CLAUDE.md` names, and each file in `rules/` (`rules/risk-context.md` aside: it's the risk agent's context, not a rule). Read the settings there too: the review **rounds** (`factory-design: review rounds <n>`, 1 by default), the **threshold** (`factory-design: ask from <low | medium | high>`, `medium` by default), the **frames** (`factory-design: frames text` for text only, text and mockup by default), and the **owners**: who settles each reviewer's questions (`factory-design: owner <security | risk | privacy> <who>`, or `owner:` in a rule file's front matter) and the **tech lead** (`factory-design: tech lead <who>`). Anyone unnamed is the user. Done when you can name who is affected, which code areas change, and every rule.
+1. **Load.** Find the tracker (named in the request → the repo's `AGENTS.md`, `CLAUDE.md` or README → an `intent/` folder → none). Check the **go**, when there's an intent: it must be on the default branch. While its pull request is open, stop: it waits for the user's merge; closed without merge, stop: it was rejected. When the issue still carries `needs-go` with its intent merged, remove the label. When the spec's pull request (`spec/<id>-<slug>`) already exists, load what it holds and go to step 9. Read the intent (`intent/<id>-<slug>.md`, from the factory-plan skill), or the issue standing in for it: its problem, success, scope and constraints bind the spec, and its open questions are yours to answer. Read the issue and every comment, the code it touches, the README, docs, existing screens and related specs in `specs/`. Read `factory/lessons.md` when the repo has one: each line marked `design` or `all` is a rule for this run. Collect the **rules**: the built-in security, risk and privacy reviewers, every rule the repo's `AGENTS.md` or `CLAUDE.md` names, and each file in `rules/` (`rules/risk-context.md` aside: it's the risk agent's context, not a rule). Read the settings there too: the review **rounds** (`factory-design: review rounds <n>`, 1 by default), the **threshold** (`factory-design: ask from <low | medium | high>`, `medium` by default), the **frames** (`factory-design: frames text` for text only, text and mockup by default), and the **owners**: who settles each reviewer's questions (`factory-design: owner <security | risk | privacy> <who>`, or `owner:` in a rule file's front matter) and the **tech lead** (`factory-design: tech lead <who>`). Anyone unnamed is the user. Done when you can name who is affected, which code areas change, and every rule.
 
 2. **Define what.** Problem and users in 2 to 4 sentences. When the change is size `M` or bigger, 2 to 5 goals and non-goals. Acceptance criteria AC1, AC2… as Given / When / Then: one behaviour each, observable results, numbers instead of adjectives. Done when a test author could write a failing test for each without asking anything.
 
@@ -65,6 +65,16 @@ The approval needs a **code host**: the repo's remote, with a tool that opens pu
 Before replying, remove the worktree (`git worktree remove`): the branch keeps everything, and a later run adds it again.
 
 Reply with the links (issue, spec pull request or spec, each part) and where it stands: `designed`, `split`, or `needs-design` with what waits, and for whom.
+
+## Carried by factory-run
+
+When the factory-run skill says it **carries** the item, it owns the stops and names a branch. Then:
+
+- **Step 1**: the go is the intent on that branch or on the default branch. Don't wait for a merge.
+- **Step 8**: commit the spec, the mockup and its image on that branch as `Spec · <title>`, in its worktree. Open no pull request. Comment on the issue and set `needs-design` as written.
+- **Step 9**: no gate here. Set the spec's `status: designed` when no finding is `needs-decision`. Hand back the highest finding level, the questions that wait with their owners, the assumptions, and the split when one is proposed: factory-run puts them in front of the user at its stop. When it later brings an answer or a review comment, settle it as step 9 says, on the same branch.
+
+The public-repo rule of step 8 holds in every lane.
 
 <spec-template>
 
