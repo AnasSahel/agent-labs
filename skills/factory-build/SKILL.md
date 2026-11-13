@@ -17,7 +17,7 @@ Turn an approved **spec** (`specs/<id>-<slug>.md`, from the factory-design skill
 
 Everything happens on one branch, `<id>-<slug>`, and reaches the default branch only through its pull request: never push to the default branch.
 
-You write the plan and you implement it: the plan's author keeps it true. Once you believe the work is done, the `verifier` in this skill's `agents/` folder checks it: start it as a fresh subagent with its file as its instructions (and say it in the hand-off too, since the file's `tools` line isn't enforced there: it fixes nothing and edits no file), so its verdict isn't shaped by the assumptions behind the code.
+You write the plan and you implement it: the plan's author keeps it true. Once you believe the work is done, the `verifier` in this skill's `agents/` folder checks it: start it as a fresh subagent with its file as its instructions (and say it in the hand-off too, since the file's `tools` line isn't enforced there: it fixes nothing and edits no file), so its verdict isn't shaped by the assumptions behind the code. Its file names its **model tier** on its `model` line, `opus`: the last check before the user must not be the cheapest one. When the harness lets you choose a subagent's model, start it there, or on your own model when yours is stronger; when it doesn't, it runs on yours.
 
 The skill works with any **tracker**. It needs three operations: read an issue with its comments, comment, and set labels (or the tracker's own fields). An issue carries one **state** at a time: setting a state removes the previous state's label (or `status`), and creates the label when the tracker doesn't have it yet. And with any **code host**:
 

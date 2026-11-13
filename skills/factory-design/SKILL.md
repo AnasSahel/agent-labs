@@ -13,6 +13,8 @@ Turn an **intent** (or an issue) into a **spec**: what to build and how, in one 
 
 The spec is written by you, the **designer**. Specialized agents in this skill's `agents/` folder do the rest: the `ui-designer` draws frames, the reviewers (`security`, `risk`, `privacy`, `rule-reviewer`) raise **findings**. Start each as a fresh subagent with its file as its instructions, and say it in the hand-off too, since the file's `tools` line isn't enforced there: a reviewer reads only, changes no file and starts no subagent; the `ui-designer` writes the mockup path it's handed and nothing else. Reviewers never write fixes and you never judge your own: that keeps the review independent.
 
+Each agent's file names its **model tier** on its `model` line: `opus` for `security` (a missed flaw costs the most), `sonnet` for the reviewers that check against a list, none for the `ui-designer`, which runs on your model. When the harness lets you choose a subagent's model, start each on its tier, and keep your own model for `security` when yours is stronger. When it doesn't, they run on yours.
+
 The skill works with any **tracker**. It needs five operations: read an issue with its comments, comment, set labels (or the tracker's own fields), create an issue, and link one to a parent. An issue carries one **state** at a time: setting a state removes the previous state's label (or `status`), and creates the label when the tracker doesn't have it yet.
 
 | Tracker | Tool |
