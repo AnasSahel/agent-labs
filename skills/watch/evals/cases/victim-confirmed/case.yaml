@@ -1,0 +1,32 @@
+schema_version: "1.1"
+name: victim-confirmed
+description: "A victim statement is solid; a press figure that differs from it is contradicted, not averaged."
+tags: [incident-fact-check]
+context:
+  scaffold_script: scaffold.sh
+execution:
+  max_turns: 15
+  timeout_seconds: 400
+  allowed_tools: [Read, Glob, Grep, Skill]
+  prompt: |
+    /watch:incident-fact-check Check this incident. The cited pages are already saved as files in ./sources (named by the last part of each URL), so read them instead of fetching.
+    
+    candidate:
+      headline: Fabrikam Cloud breach exposes customer emails
+      victim: Fabrikam Cloud
+      claims:
+        - claim: Customer email addresses were exposed through the support database
+          said_by: victim
+          url: https://status.fabrikam.example.test/status-update
+        - claim: About 210,000 customers affected
+          said_by: victim
+          url: https://status.fabrikam.example.test/status-update
+        - claim: 2.1 million customers affected
+          said_by: press
+          url: https://dailywire.example.test/news-article
+        - claim: No payment data involved
+          said_by: victim
+          url: https://status.fabrikam.example.test/status-update
+graders:
+  - {"name": "figures", "type": "llm", "weight": 2, "focus": "last_message", "criteria": "The victim states about 210,000; the press article says 2.1 million. PASS only if the 210,000 claim is `verified`, the 2.1 million claim is `contradicted` (or at minimum not verified) with the victim page named as the source that settles it, and the reply never averages, rounds or merges the two figures."}
+  - {"name": "decision", "type": "llm", "weight": 2, "focus": "last_message", "criteria": "PASS only if the decision is `pass` or `hold` (never reject), because the victim itself confirms the incident and names itself."}

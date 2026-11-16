@@ -1,0 +1,25 @@
+schema_version: "1.1"
+name: victim-from-attacker
+description: "A victim name that rests only on the attacker is held back as undisclosed even when a security firm confirms the incident."
+tags: [incident-fact-check]
+context:
+  scaffold_script: scaffold.sh
+execution:
+  max_turns: 15
+  timeout_seconds: 400
+  allowed_tools: [Read, Glob, Grep, Skill]
+  prompt: |
+    /watch:incident-fact-check Check this incident. The cited pages are already saved as files in ./sources (named by the last part of each URL), so read them instead of fetching.
+    
+    candidate:
+      headline: Wide World Retail hit by Velvet Crow ransomware
+      victim: Wide World Retail
+      claims:
+        - claim: A European retailer was hit by ransomware that began with a phished VPN credential
+          said_by: security-firm
+          url: https://aurora.example.test/blog-analysis
+        - claim: The retailer is Wide World Retail
+          said_by: attacker
+          url: https://leaks.example.test/leak-entry
+graders:
+  - {"name": "victim-undisclosed", "type": "llm", "weight": 2, "focus": "last_message", "criteria": "The security firm confirms an incident at an unnamed retailer; only the attacker names Wide World Retail. PASS only if the reply gives decision `hold`, writes the victim as `undisclosed` (the name Wide World Retail is not presented as confirmed, and the `incident:` headline line does not name it), labels the naming claim `unverified` or `(unverified)`, and verifies the phished-VPN claim."}

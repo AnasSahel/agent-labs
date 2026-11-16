@@ -1,0 +1,26 @@
+schema_version: "1.1"
+name: not-at-source
+description: "A claim that the cited page does not say is not-at-source, and the incident is held, not rejected."
+tags: [incident-fact-check]
+context:
+  scaffold_script: scaffold.sh
+execution:
+  max_turns: 15
+  timeout_seconds: 400
+  allowed_tools: [Read, Glob, Grep, Skill]
+  prompt: |
+    /watch:incident-fact-check Check this incident. The cited pages are already saved as files in ./sources (named by the last part of each URL), so read them instead of fetching.
+    
+    candidate:
+      headline: Contoso Water hit by ransomware, 5 million dollar ransom
+      victim: Contoso Water
+      claims:
+        - claim: Contoso Water suffered a ransomware incident affecting billing systems
+          said_by: authority
+          url: https://cert.example.test/advisory
+        - claim: Attackers demanded 5 million dollars
+          said_by: authority
+          url: https://cert.example.test/advisory
+graders:
+  - {"name": "verdicts", "type": "llm", "weight": 2, "focus": "last_message", "criteria": "PASS only if the billing-systems claim is `verified` and the 5 million dollar claim is `not-at-source` (the page never mentions a ransom amount); the ransom amount must not be reported as fact."}
+  - {"name": "hold", "type": "llm", "weight": 2, "focus": "last_message", "criteria": "PASS only if the decision is `hold` (the incident is solid, one fact is open) and the ransom amount is listed under `not_public_yet`. `pass` or `reject` is a FAIL."}
