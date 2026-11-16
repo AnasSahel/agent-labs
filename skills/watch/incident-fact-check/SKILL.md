@@ -32,15 +32,15 @@ Decide what can be said, never what is nice to say. Each claim of an incident ge
 
 5. **Decide.**
    - `pass`: a solid source confirms the incident happened, names the victim, and the key facts are verified.
-   - `hold`: the incident is solid but some facts are not. List them as `not public yet`. A victim named only by an attacker or a single press source also holds, with the victim as `undisclosed`.
-   - `reject`: no solid source confirms the incident, or the victim or an authority denies it.
+   - `hold`: a solid source confirms an incident happened, even without naming the victim, but some facts are not solid. List them as `not public yet`. A victim named only by an attacker or a single press source also holds, with the victim as `undisclosed`.
+   - `reject`: no solid source confirms the incident, which includes an attacker's post alone and press from a single origin, or the victim or an authority denies it. `hold` is only for an incident a solid source confirms.
 
    Done when every claim has a verdict and the decision follows from them.
 
 ## Output
 
 <output-template>
-incident: <headline>
+incident: <headline, without a victim name that is not confirmed>
 decision: pass | hold | reject
 reason: <one line>
 victim: <name, or "undisclosed" with why>

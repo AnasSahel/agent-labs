@@ -1,0 +1,25 @@
+schema_version: "1.1"
+name: attacker-only
+description: "An incident known only from the attacker's own leak-site post is rejected, the claims labelled unverified."
+tags: [incident-fact-check]
+context:
+  scaffold_script: scaffold.sh
+execution:
+  max_turns: 15
+  timeout_seconds: 400
+  allowed_tools: [Read, Glob, Grep, Skill]
+  prompt: |
+    /watch:incident-fact-check Check this incident. The cited pages are already saved as files in ./sources (named by the last part of each URL), so read them instead of fetching.
+    
+    candidate:
+      headline: Velvet Crow says it breached Northwind Logistics
+      victim: Northwind Logistics
+      claims:
+        - claim: Northwind Logistics was breached and 4 TB of data stolen
+          said_by: attacker
+          url: https://leaks.example.test/leak-post
+        - claim: Ransom of 3 BTC demanded
+          said_by: attacker
+          url: https://leaks.example.test/leak-post
+graders:
+  - {"name": "reject-unverified", "type": "llm", "weight": 2, "focus": "last_message", "criteria": "The only source is the attacker's own post. PASS only if the reply gives decision `reject` (not pass, and hold is a FAIL because no solid source confirms the incident), labels every claim `unverified` and writes `(unverified)` on the attacker claims, and does not present the breach or the 4 TB as fact."}

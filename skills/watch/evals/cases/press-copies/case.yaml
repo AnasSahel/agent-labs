@@ -1,0 +1,25 @@
+schema_version: "1.1"
+name: press-copies
+description: "Two outlets that copy one origin count once, so the incident is not solid."
+tags: [incident-fact-check]
+context:
+  scaffold_script: scaffold.sh
+execution:
+  max_turns: 15
+  timeout_seconds: 400
+  allowed_tools: [Read, Glob, Grep, Skill]
+  prompt: |
+    /watch:incident-fact-check Check this incident. The cited pages are already saved as files in ./sources (named by the last part of each URL), so read them instead of fetching.
+    
+    candidate:
+      headline: Tailspin Bank hit by ransomware
+      victim: Tailspin Bank
+      claims:
+        - claim: Tailspin Bank suffered a ransomware attack
+          said_by: press
+          url: https://ledger.example.test/scoop
+        - claim: Tailspin Bank suffered a ransomware attack
+          said_by: press
+          url: https://financetoday.example.test/rewrite
+graders:
+  - {"name": "counts-once", "type": "llm", "weight": 2, "focus": "last_message", "criteria": "The second article only repeats the first ('as reported by The Ledger'). PASS only if the reply treats the two as one origin (says they are not independent, or counts them once), grades the claim `unverified` (not verified), and gives decision `reject` or `hold` (not pass) with the victim as `undisclosed` or flagged, because no victim, authority or security firm confirms it."}
