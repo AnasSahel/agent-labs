@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>R-003 Payroll Provider Risk</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+  /* Theme: skills/grc/risk-assessment/theme.md. Newsroom layout, one blue accent, flat, light only. */
+  :root { --accent:#2F5BFF; --accent-soft:#E6ECFF; --bg:#F1F2F3; --surface:#FAFAFA; --surface-2:#E7E8EA;
+          --ink:#111418; --ink-2:#3D434C; --muted:#6F757E; --line:#D9DBDE;
+          --high:#C4314B; --high-soft:#F8E6E9; --medium:#A86400; --medium-soft:#F7EEDF; --low:#2E7D4F; --low-soft:#E4F1E9;
+          --sans:Geist, system-ui, -apple-system, sans-serif; --mono:"Geist Mono", ui-monospace, Menlo, monospace; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.6 var(--sans); }
+  main { max-width:76rem; margin:0 auto; padding:0 1.25rem 64px; }
+  @media (min-width:40rem) { main { padding:0 2rem 64px; } }
+  header { padding:56px 0 40px; }
+  .eyebrow { font:400 11px var(--mono); letter-spacing:.08em; text-transform:uppercase; color:var(--accent); margin-bottom:18px; }
+  h1 { margin:0 0 20px; font-size:clamp(30px,4.6vw,52px); line-height:1.08; font-weight:600; letter-spacing:-.02em; max-width:22em; text-wrap:balance; }
+  h1 .accent { display:block; color:var(--accent); }
+  .intro { margin:0; color:var(--ink-2); max-width:40rem; }
+  .meta { display:flex; flex-wrap:wrap; gap:6px 24px; margin-top:20px; font:400 12px var(--mono); color:var(--muted); letter-spacing:.04em; }
+  .meta b { color:var(--ink); font-weight:500; }
+  section { margin-top:40px; border-top:1px solid var(--ink); }
+  section > h2 { margin:0 0 20px; padding:12px 0; border-bottom:1px solid var(--line); font-size:12px; font-weight:600; }
+  p, ul { max-width:44rem; color:var(--ink-2); } ul { padding-left:20px; } li { margin-bottom:6px; } li b { color:var(--ink); }
+  .tag { display:inline-block; border-radius:2px; padding:1px 6px; font:500 12px var(--mono); }
+  .high { color:var(--high); background:var(--high-soft); } .medium { color:var(--medium); background:var(--medium-soft); } .low { color:var(--low); background:var(--low-soft); }
+  .scroll { overflow-x:auto; }
+  table { border-collapse:collapse; width:100%; min-width:720px; font-size:14px; background:var(--surface); }
+  th, td { text-align:left; padding:9px 12px; border-bottom:1px solid var(--line); vertical-align:top; }
+  th { background:var(--surface-2); font-weight:600; font-size:12px; border-bottom:1px solid var(--ink); }
+  td.ref { font:400 13px var(--mono); white-space:nowrap; }
+  .score { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:32px; align-items:start; }
+  @media (max-width:640px) { .score { grid-template-columns:1fr; } }
+  .grid { display:grid; grid-template-columns:28px repeat(4,44px); gap:3px; font:400 11px var(--mono); color:var(--muted); }
+  .grid span { display:grid; place-items:center; height:36px; }
+  .grid .c { font-size:18px; color:var(--ink); border-radius:2px; }
+  .path { background:var(--surface); border:1px solid var(--line); padding:16px; overflow-x:auto; }
+  a { color:var(--accent); }
+</style></head><body>
+<main>
+<header>
+  <div class="eyebrow">Risk · R-003 · Assessed 2026-10-30</div>
+  <h1>Breached payroll provider still connected to HR<span class="accent">High today, medium after fixes.</span></h1>
+  <p class="intro">The ransomware gang that hit our payroll provider last month could reuse the provider's live link into our HR system to steal all staff records and divert a payroll run. The link can write bank details, its key hasn't been reset since the attack, and nothing alerts on changes. Pausing the link and resetting its key closes the way in today.</p>
+  <div class="meta"><span>Owner <b>HR Director</b></span><span>Status <b>open</b></span><span>Due <b>2026-11-02</b> · <b>2026-11-20</b> · <b>2026-12-31</b></span><span>Frameworks <b>ISO 27001 · NIS2 · DORA · GDPR</b></span></div>
+</header>
+
+<section><h2>— Scenario</h2>
+<ul>
+  <li><b>Risk source</b>: the ransomware gang that hit the payroll provider last month. We have no proof it has been removed from the provider's systems.</li>
+  <li><b>Feared event</b>: staff personal and bank data stolen, and bank details changed so salaries go to the gang. Secondary route: a fake employee gets a real Microsoft 365 login, then AWS through single sign-on. Hire approval blocks most of this.</li>
+  <li><b>Asset</b>: the HR system, with ~200 staff records (identity, address, bank details). It is also the source for automatic account creation.</li>
+  <li><b>Why it works</b>: the link can write, its key is unchanged since the breach and its network limits are unknown. No bank-change check, no alerts, and no supplier-access rule in access-control policy v2.1.</li>
+  <li><b>Business value</b>: staff trust and payroll continuity. A leak triggers GDPR breach notification within 72 hours (Art. 33–34), and falls under DORA Art. 28 and NIS2 Art. 21(2)(d).</li>
+</ul>
+</section>
+
+<section><h2>— Attack path</h2>
+<p>Interactive version: <a href="R-003-attack-path.html">R-003-attack-path.html</a></p>
+<div class="path"><pre class="mermaid">
+%%{init: {"theme":"base","themeVariables":{"fontFamily":"Geist, system-ui","primaryColor":"#FAFAFA","primaryBorderColor":"#D9DBDE","lineColor":"#111418"}}}%%
+flowchart LR
+  S{{"<b>Ransomware gang</b><br/>Risk source"}} -- "hides in their network · high" --> N1("<b>Payroll provider</b><br/>Breached supplier")
+  N1 -- "reuses their stored key · high" --> N2("<b>Provider's access</b><br/>Live read/write link")
+  N2 -- "logs in as the provider · high" --> A[("<b>HR system</b><br/>Business asset")]
+  A -- "copies and changes records · high" --> F("<b>Data and pay stolen</b><br/>Impact · G3")
+  W1["⚠ Hit by ransomware last month · user"] -.- N1
+  W2["⚠ Clean-up not proven to us · to confirm"] -.- N1
+  W3["⚠ Key unchanged since the breach · grill Q3"] -.- N2
+  W4["⚠ Network limits unknown · grill Q3"] -.- N2
+  W5["⚠ No rule for supplier access · access-control.md v2.1"] -.- N2
+  W6["⚠ Bank changes not checked · grill Q3"] -.- A
+  W7["⚠ No alerts on link changes · grill Q3"] -.- A
+  K1["🛡 Link paused, key reset · A.5.17 · planned"] -.-x N2
+  K2["🛡 Provider addresses only · A.8.20 · planned"] -.-x A
+  K3["🛡 Read-only link · A.8.3 · planned"] -.-x F
+  classDef source fill:#111418,stroke:#111418,color:#fff
+  classDef hop fill:#FAFAFA,stroke:#D9DBDE,color:#111418
+  classDef asset fill:#2F5BFF,stroke:#2F5BFF,color:#fff
+  classDef impact fill:#F8E6E9,stroke:#C4314B,color:#111418
+  classDef weak fill:#FAFAFA,stroke:#C4314B,stroke-dasharray:3 3,color:#C4314B
+  classDef control fill:#E4F1E9,stroke:#2E7D4F,color:#2E7D4F
+  class S source
+  class N1,N2 hop
+  class A asset
+  class F impact
+  class W1,W2,W3,W4,W5,W6,W7 weak
+  class K1,K2,K3 control
+</pre></div>
+</section>
+
+<section><h2>— Score</h2>
+<div class="score">
+  <div class="scroll"><table style="min-width:420px">
+    <tr><th></th><th>Severity</th><th>Likelihood</th><th>Level</th></tr>
+    <tr><td>Inherent</td><td>G3 serious</td><td>V3 likely</td><td><span class="tag high">G3·V3 high</span> above appetite</td></tr>
+    <tr><td>Residual</td><td>G3 serious</td><td>V1 unlikely</td><td><span class="tag medium">G3·V1 medium</span> within appetite</td></tr>
+  </table>
+  <p>Severity stays G3: once data leaks, the harm is the same. The controls lower the likelihood by closing the gang's way in and removing its write access.</p></div>
+  <div aria-label="Score grid: inherent G3 V3, residual G3 V1">
+    <div class="grid">
+      <span></span><span>V1</span><span>V2</span><span>V3</span><span>V4</span>
+      <span>G4</span><span class="c medium"></span><span class="c high"></span><span class="c high"></span><span class="c high"></span>
+      <span>G3</span><span class="c medium">○</span><span class="c medium">←</span><span class="c high">●</span><span class="c high"></span>
+      <span>G2</span><span class="c low"></span><span class="c low"></span><span class="c medium"></span><span class="c medium"></span>
+      <span>G1</span><span class="c low"></span><span class="c low"></span><span class="c medium"></span><span class="c medium"></span>
+    </div>
+    <div class="meta" style="margin-top:8px"><span>● today</span><span>○ after fixes</span></div>
+  </div>
+</div>
+</section>
+
+<section><h2>— Treatment</h2>
+<p><b>Reduce.</b> The inherent level is high and the appetite caps residual risk at medium. Control 1 costs nothing and closes the link today.</p>
+<div class="scroll"><table>
+  <tr><th>#</th><th>Control</th><th>Due</th><th>ISO 27001</th><th>NIS2</th><th>DORA</th><th>GDPR</th></tr>
+  <tr><td>1</td><td>Pause the link until the provider shows its forensic report, then reset its key</td><td class="ref">2026-11-02</td><td class="ref">A.5.21, A.5.17</td><td class="ref">21(2)(d)</td><td class="ref">28(1), 28(7)</td><td class="ref">28(3)(c), 32</td></tr>
+  <tr><td>2</td><td>Allow the link only from the provider's known network addresses</td><td class="ref">2026-11-20</td><td class="ref">A.8.20</td><td class="ref">21(2)(d), (i)</td><td class="ref">9(4)(c)</td><td class="ref">32(1)(b)</td></tr>
+  <tr><td>3</td><td>Make the link read-only: no bank-detail or new-hire writes</td><td class="ref">2026-11-20</td><td class="ref">A.8.3</td><td class="ref">21(2)(i)</td><td class="ref">9(4)(c)</td><td class="ref">25(2), 32</td></tr>
+  <tr><td>4</td><td>Call the employee back before any bank change takes effect</td><td class="ref">2026-11-20</td><td class="ref">A.5.3</td><td class="ref">21(2)(a)</td><td class="ref">9(2)</td><td class="ref">32(1)(b)</td></tr>
+  <tr><td>5</td><td>Alert on bulk edits, bank changes and new hires made through the link</td><td class="ref">2026-11-20</td><td class="ref">A.8.16</td><td class="ref">21(2)(b)</td><td class="ref">10</td><td class="ref">33</td></tr>
+  <tr><td>6</td><td>Supplier-access rule in the access-control policy: review, reset after any supplier incident, breach-notice clause</td><td class="ref">2026-12-31</td><td class="ref">A.5.19, A.5.20, A.5.22</td><td class="ref">21(2)(d), 21(3)</td><td class="ref">28, 30</td><td class="ref">28(3)</td></tr>
+</table></div>
+<p>Already in place: approval before a new hire's account is created (A.5.16, A.5.18), which blocks the fake-hire route.</p>
+</section>
+
+<section><h2>— Decisions</h2>
+<p>Trace: <a href="../traces/2026-10-30-r-003-payroll-provider-hr-link.md">2026-10-30-r-003-payroll-provider-hr-link.md</a>. Calls made without the user:</p>
+<ul>
+  <li>Residual score G3·V1 medium.</li>
+  <li>Network restriction treated as absent (unknown; unproven controls aren't scored).</li>
+  <li>Fake-hire route kept in the scenario, not drawn: hire approval already blocks it.</li>
+  <li>Call-back (4) and alerts (5) in the table only, not on the path.</li>
+  <li>DORA Art. 28(7) and Art. 30 citations to confirm against the final texts.</li>
+</ul>
+</section>
+</main>
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({ startOnLoad: true, theme: "base", fontFamily: "Geist, system-ui" });
+</script>
+</body></html>

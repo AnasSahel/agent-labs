@@ -1,0 +1,148 @@
+<title>R-002 Admin Phishing Risk</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+  /* Layout: single reading column, register-style header, score grid beside the verdict */
+  :root {
+    --bg:#ffffff; --surface:#f4f6f9; --ink:#0f1b33; --muted:#5d6a82; --line:#dbe1ea;
+    --red:#c81e51; --red-soft:#fde8ef; --amber:#a15c00; --amber-soft:#fff4e0;
+    --green:#1a7f46; --green-soft:#e6f6ec; --teal:#0b8399;
+    --sans:"IBM Plex Sans", system-ui, -apple-system, sans-serif;
+    --mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+    --bg:#0f141c; --surface:#18202b; --ink:#e7ecf3; --muted:#9aa6b8; --line:#2a3443;
+    --red:#ff6b8f; --red-soft:#3a1622; --amber:#f2b552; --amber-soft:#33260f;
+    --green:#5fd394; --green-soft:#12301f; --teal:#4fc6da; color-scheme:dark } }
+  :root[data-theme="dark"] {
+    --bg:#0f141c; --surface:#18202b; --ink:#e7ecf3; --muted:#9aa6b8; --line:#2a3443;
+    --red:#ff6b8f; --red-soft:#3a1622; --amber:#f2b552; --amber-soft:#33260f;
+    --green:#5fd394; --green-soft:#12301f; --teal:#4fc6da; color-scheme:dark }
+  * { box-sizing:border-box }
+  body { background:var(--bg); color:var(--ink); font:15px/1.55 var(--sans);
+    padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px)); padding-block:32px 48px }
+  main { max-width:960px; margin:0 auto; display:grid; gap:36px }
+  .eyebrow { font:500 12px var(--mono); letter-spacing:.06em; text-transform:uppercase; color:var(--muted) }
+  h1 { font-size:clamp(22px, 3vw, 30px); line-height:1.2; margin:6px 0 12px; text-wrap:balance; font-weight:600 }
+  h2 { font-size:18px; margin:0 0 12px; font-weight:600 }
+  p { margin:0 0 10px; max-width:68ch }
+  .meta { display:flex; flex-wrap:wrap; gap:8px 18px; color:var(--muted); font-size:14px }
+  .meta b { color:var(--ink); font-weight:600 }
+  .pill { display:inline-block; border-radius:999px; padding:2px 10px; font-weight:600; font-size:13px; border:1px solid currentColor }
+  .high { color:var(--red); background:var(--red-soft) }
+  .medium { color:var(--amber); background:var(--amber-soft) }
+  .low { color:var(--green); background:var(--green-soft) }
+  .verdict { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:24px; align-items:start }
+  @media (max-width:640px) { .verdict { grid-template-columns:1fr } }
+  .grid { display:grid; grid-template-columns:28px repeat(4, 44px); gap:4px; font:500 12px var(--mono); color:var(--muted) }
+  .grid span { display:grid; place-items:center; height:36px }
+  .grid .c { border-radius:6px; font-size:18px; color:var(--ink) }
+  .grid .c.high { border:0 } .grid .c.medium { border:0 } .grid .c.low { border:0 }
+  .scroll { overflow-x:auto; border:1px solid var(--line); border-radius:10px }
+  table { border-collapse:collapse; width:100%; font-size:14px; min-width:640px }
+  th, td { text-align:left; padding:9px 12px; border-bottom:1px solid var(--line); vertical-align:top }
+  th { background:var(--surface); font-weight:600; font-size:13px }
+  tr:last-child td { border-bottom:0 }
+  td.ref { font-family:var(--mono); font-size:13px; white-space:nowrap }
+  .path { border:1px solid var(--line); border-radius:10px; padding:16px; overflow-x:auto; background:#fff }
+  .path a { color:var(--teal) }
+  ul { margin:0; padding-left:20px; max-width:68ch } li { margin-bottom:6px }
+  .status { font-size:12px; font-weight:600 }
+  .status.planned { color:var(--amber) } .status.inplace { color:var(--green) }
+</style>
+
+<main>
+  <header>
+    <div class="eyebrow">Risk register · R-002 · assessed 2026-10-30</div>
+    <h1>A phishing gang could take payments offline and steal customer data by phishing an IT admin's login, despite SMS codes</h1>
+    <div class="meta">
+      <span>Owner <b>CTO</b></span><span>Status <b>open</b></span>
+      <span>Due <b>2026-11-30</b> (entry point) · <b>2026-12-31</b> (all)</span>
+      <span>Frameworks <b>ISO 27001 · NIS2 · DORA · GDPR</b></span>
+    </div>
+  </header>
+
+  <section class="verdict">
+    <div>
+      <h2>Verdict</h2>
+      <p>Today the risk is <span class="pill high">high · G4·V3</span>, above the appetite (medium at most). SMS codes do not stop phishing: a fake Microsoft login page captures the password and the code and replays them within seconds. Admins sign in to AWS through Entra ID single sign-on, so one phished login opens production.</p>
+      <p>With the five controls below the risk drops to <span class="pill medium">medium · G4·V1</span>, within appetite. The worst case stays critical; the controls make it unlikely.</p>
+    </div>
+    <div aria-label="Score grid: inherent G4 V3, residual G4 V1">
+      <div class="grid">
+        <span></span><span>V1</span><span>V2</span><span>V3</span><span>V4</span>
+        <span>G4</span><span class="c medium">○</span><span class="c high"></span><span class="c high">●</span><span class="c high"></span>
+        <span>G3</span><span class="c medium"></span><span class="c medium"></span><span class="c high"></span><span class="c high"></span>
+        <span>G2</span><span class="c low"></span><span class="c low"></span><span class="c medium"></span><span class="c medium"></span>
+        <span>G1</span><span class="c low"></span><span class="c low"></span><span class="c medium"></span><span class="c medium"></span>
+      </div>
+      <div class="meta" style="margin-top:8px;font-size:12px"><span>● today</span><span>○ after fixes</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Attack path</h2>
+    <div class="path">
+<pre class="mermaid">
+flowchart LR
+  S{{"<b>Phishing gang</b><br/>Risk source"}} -- "sends to admins" --> N1("<b>Fake email</b><br/>Lure")
+  N1 -- "admin clicks link" --> N2("<b>Fake Microsoft login</b><br/>Lure site")
+  N2 -- "captures password + SMS" --> N3("<b>Admin Microsoft account</b><br/>Identity (Entra ID)")
+  N3 -- "opens AWS via single sign-on" --> A[("<b>AWS production</b><br/>Business asset")]
+  A -- "deletes or copies data" --> F("<b>Payments down, data stolen</b><br/>Impact · G4")
+  W1["⚠ Phishing wave under way"] -.- N1
+  W2["⚠ SMS only second factor"] -.- N3
+  W3["⚠ Admin rights reviewed every 6 months"] -.- N3
+  W5["⚠ No device or location checks"] -.- N3
+  K1["🛡 Separate admin accounts · A.8.2 · in place"] -.-x N2
+  K2["🛡 Security keys + company devices · A.8.5 · planned"] -.-x N3
+  K3["🛡 Admin rights need key + approval · A.8.2 · planned"] -.-x A
+  K4["🛡 Locked backups, separate account · A.8.13 · planned"] -.-x F
+  classDef source fill:#e0245e,stroke:#e0245e,color:#fff
+  classDef hop fill:#fff,stroke:#d7deea,color:#0f1b33
+  classDef asset fill:#0e9fb8,stroke:#0e9fb8,color:#fff
+  classDef impact fill:#fde8ef,stroke:#e0245e,color:#0f1b33
+  classDef weak fill:#fff,stroke:#e0245e,stroke-dasharray:3 3,color:#e0245e
+  classDef control fill:#e6f6ec,stroke:#1f9d55,color:#1f9d55
+  class S source
+  class N1,N2,N3 hop
+  class A asset
+  class F impact
+  class W1,W2,W3,W5 weak
+  class K1,K2,K3,K4 control
+</pre>
+    </div>
+    <p class="meta" style="margin-top:8px">SIM swap (hijacking the admin's phone number) reaches the same SMS code; rated low likelihood and closed by the same fix.</p>
+  </section>
+
+  <section>
+    <h2>Treatment: reduce</h2>
+    <div class="scroll"><table>
+      <thead><tr><th>#</th><th>Control</th><th>Due</th><th>ISO 27001</th><th>NIS2</th><th>DORA</th><th>GDPR</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Admins sign in with security keys or passkeys; SMS removed <div class="status planned">planned</div></td><td>2026-11-30</td><td class="ref">A.8.5, A.5.17</td><td class="ref">21(2)(j)</td><td class="ref">9(4)(d)</td><td class="ref">32(1)(b)</td></tr>
+        <tr><td>2</td><td>Admin sign-in allowed only from company devices <div class="status planned">planned</div></td><td>2026-11-30</td><td class="ref">A.8.5, A.8.1</td><td class="ref">21(2)(i), (j)</td><td class="ref">9(4)(c)</td><td class="ref">32(1)(b)</td></tr>
+        <tr><td>3</td><td>Getting admin rights (PIM) needs the key and a second person's approval <div class="status planned">planned</div></td><td>2026-11-30</td><td class="ref">A.8.2</td><td class="ref">21(2)(i)</td><td class="ref">9(4)(c)</td><td class="ref">32(1)(b)</td></tr>
+        <tr><td>4</td><td>Backups in a separate AWS account that cannot be deleted <div class="status planned">planned</div></td><td>2026-12-31</td><td class="ref">A.8.13</td><td class="ref">21(2)(c)</td><td class="ref">12</td><td class="ref">32(1)(c)</td></tr>
+        <tr><td>5</td><td>Risky sign-in alerts sent to the security on-call <div class="status planned">planned</div></td><td>2026-12-31</td><td class="ref">A.8.16</td><td class="ref">21(2)(b)</td><td class="ref">10</td><td class="ref">33</td></tr>
+        <tr><td>—</td><td>Separate admin accounts; PIM <div class="status inplace">in place</div></td><td>—</td><td class="ref">A.8.2</td><td class="ref">21(2)(i)</td><td class="ref">9(4)(c)</td><td class="ref">32(1)(b)</td></tr>
+      </tbody>
+    </table></div>
+    <p class="meta" style="margin-top:8px">Follow-up: amend access-control policy v2.1 so SMS is no longer allowed for privileged accounts (A.5.15).</p>
+  </section>
+
+  <section>
+    <h2>Decisions</h2>
+    <ul>
+      <li>Path, existing controls, treatment and owner decided by the user; severity G4, likelihood V3 and due dates accepted as recommended.</li>
+      <li>Calls made without the user: residual G4·V1; risky sign-in detection scored as absent (unknown, so unproven).</li>
+      <li>Trace: <code>grc/traces/2026-10-30-r-002-admin-sms-mfa-phishing.md</code></li>
+    </ul>
+  </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11.4.1/dist/mermaid.min.js"></script>
+<script>
+  try { mermaid.initialize({ startOnLoad: true, theme: 'base', themeVariables: { background: '#ffffff', fontFamily: 'IBM Plex Sans, system-ui, sans-serif' } }); } catch (e) {}
+</script>
